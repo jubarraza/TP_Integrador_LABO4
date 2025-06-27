@@ -1,0 +1,18 @@
+package dao;
+
+import java.util.List;
+import entidad.Cuenta;
+import entidad.TipoDeCuenta;
+
+public interface CuentaDao {
+	public boolean insert(Cuenta cuenta);
+	public int buscarId(String dni);
+	public int cantidadCuentas(String dni);
+	public boolean darDeBajaCuenta(String cuenta);
+	public List<Cuenta> readAll();
+	public List<Cuenta> readAll(String Condicion);
+	public List<TipoDeCuenta> readAllTipoDeCuenta();
+	public Cuenta obtenerCuentaPorNumero(String nroCuenta);
+	boolean update(Cuenta cuenta);
+
+}
