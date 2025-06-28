@@ -36,7 +36,7 @@ public class GestionUsuariosServlet extends HttpServlet {
             
             request.setAttribute("listaUsuarios", listaUsuarios);
             
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/ListaUser2.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/ListaUser.jsp");
             dispatcher.forward(request, response);
             
         } catch (Exception e) {
@@ -67,6 +67,6 @@ public class GestionUsuariosServlet extends HttpServlet {
                 try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
             }
         }
-        response.sendRedirect(request.getContextPath() + "/admin/usuarios");
+        response.sendRedirect(request.getContextPath() + "/ListaUser.jsp");
     }
 }

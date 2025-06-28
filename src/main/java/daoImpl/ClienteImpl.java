@@ -275,5 +275,37 @@ public class ClienteImpl implements ClienteDao{
 
 	    return cliente;
 	}
+	
+	@Override
+	public Cliente getPorIdUsuario(int idUsuario) {
+	    Cliente cliente = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    String query = "SELECT * FROM vista_clientes WHERE id_usuario = ?";
+
+	    try {
+	        stmt = this.conexion.prepareStatement(query);
+	        stmt.setInt(1, idUsuario);
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            cliente = getCliente(rs);
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error al obtener cliente por ID de usuario: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (stmt != null) stmt.close();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+
+	    return cliente;
+	}
 
 }

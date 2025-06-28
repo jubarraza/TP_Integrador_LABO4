@@ -71,7 +71,7 @@
                         </div>
                         
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="perfil" class="btn btn-secondary">Cancelar</a>
+                            <a href="ListaUser.jsp" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-success">Guardar Cambios</button>
                         </div>
                     </form>

@@ -16,5 +16,6 @@ public interface ClienteDao {
 	Cliente getCliente(ResultSet rs) throws SQLException;
 	Cliente getClientePorID(int id);
 	public Cliente ReadOne(int idCliente);
+	Cliente getPorIdUsuario(int idUsuario);
 	
 }
