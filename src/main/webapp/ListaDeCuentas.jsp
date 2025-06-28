@@ -211,9 +211,8 @@ footer {
  %>
 						</td>
 						<td><a type="submit" class="btn btn-outline-primary btn-sm btn-action"
-							href="EditarCuentas.jsp?cuenta=<%= cuenta.getNumDeCuenta() %>">
-								<i class="bi bi-pencil-fill"></i> Editar
-						</a></td>
+							href="ModificarCuentaServlet?nroCuenta=<%=cuenta.getNumDeCuenta()%>"><i
+								class="bi bi-pen"></i></a></td>
 						<%
 						if (!mostrarEliminar) {
 						%>

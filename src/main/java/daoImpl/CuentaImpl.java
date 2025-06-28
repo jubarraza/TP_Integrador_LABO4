@@ -336,6 +336,38 @@ public class CuentaImpl implements CuentaDao{
 
 		    return resultado;
 	}
+	
 
+	
+	@Override 
+	public boolean actualizarTipoCuentaYEstado(Cuenta cuenta) {
+	    PreparedStatement statement;
+	    Connection conexion = Conexion.getConexion().getSQLConexion();
+
+	    String query = "UPDATE cuentas SET id_tipocuenta = ?, estado = ? WHERE num_de_cuenta = ?";
+
+	    try {
+	        statement = conexion.prepareStatement(query);
+	        statement.setInt(1, cuenta.getTipoCuenta().getIdTipoCuenta());
+	        statement.setBoolean(2, cuenta.Estado());
+	        statement.setString(3, cuenta.getNumDeCuenta());
+
+	        if (statement.executeUpdate() > 0) {
+	            conexion.commit();
+	            return true;
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error al actualizar tipo de cuenta y estado:");
+	        e.printStackTrace();
+	        try {
+	            conexion.rollback();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+
+	    return false;
+	}
 
 }
