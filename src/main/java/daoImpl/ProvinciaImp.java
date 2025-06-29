@@ -19,7 +19,6 @@ public class ProvinciaImp implements ProvinciaDao{
 		ArrayList<Provincia> provinciaList = new ArrayList<Provincia>();
 		Conexion conexion = Conexion.getConexion();
 		
-		
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(readall);
 			result = statement.executeQuery();
@@ -27,14 +26,15 @@ public class ProvinciaImp implements ProvinciaDao{
 			while(result.next()) {
 				provinciaList.add(getProvincia(result));
 			}
+			System.out.println("Cantidad de provincias encontradas: " + provinciaList.size());
 		} catch(SQLException e) {
-			e.printStackTrace();
+			System.out.println("Error al leer provincias:");
+	        e.printStackTrace();
 		}
 		return provinciaList;
 	}
 
 	private Provincia getProvincia(ResultSet resultSet) throws SQLException{
-		
 		short id_provincia = resultSet.getShort("id_provincia");
 		String descripcion = resultSet.getString("descripcion");
 		return new Provincia(id_provincia, descripcion);

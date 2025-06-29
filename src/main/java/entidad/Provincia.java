@@ -8,11 +8,14 @@ public class Provincia {
     public Provincia() {
     }
 
-    public Provincia(short idProvincia, String descripcion) {
+    public Provincia(Short idProvincia, String descripcion) {
         this.idProvincia = idProvincia;
         this.descripcion = descripcion;
     }
     
+    public Provincia(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
     public short getIdProvincia() {
         return idProvincia;

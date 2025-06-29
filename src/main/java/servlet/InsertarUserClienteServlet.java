@@ -36,8 +36,12 @@ public class InsertarUserClienteServlet extends HttpServlet {
     }
 
 
+    @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ProvinciaImp provDao = new ProvinciaImp();
+    	String action = request.getParameter("action");
+    	
+    	if ("alta".equals(action)) {
+    	ProvinciaImp provDao = new ProvinciaImp();
 		List<Provincia> provinciaList = provDao.readAll();
 		request.setAttribute("provincias", provinciaList);
 		
@@ -47,6 +51,7 @@ public class InsertarUserClienteServlet extends HttpServlet {
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/ABMUsuarios.jsp");
 		rd.forward(request, response);
+    	}
 	}
 
 
@@ -122,8 +127,8 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	        conexion.setAutoCommit(false); // IMPORTANTE: para manejar manualmente la transacción
 
 	        // Insertar cliente
-	        ClienteImpl clienteDao = new ClienteImpl();
-	        int idGenerado = clienteDao.Insert(nuevoCliente); // método existente
+	        ClienteImpl clienteDao = new ClienteImpl(conexion);
+	        int idGenerado = clienteDao.Insert(nuevoCliente); 
 
 	        boolean insertado = false;
 
@@ -139,23 +144,24 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	            user.setTipoUser(tipoUser);
 
 	            UsuarioImpl dao = new UsuarioImpl();
-	            insertado = dao.Insert(user); // método existente
+	            insertado = dao.Insert(user);
 	        }
 
 	        if (idGenerado > 0 && insertado) {
-	            conexion.commit(); // Éxito: confirmar los cambios
-	            request.setAttribute("mensajeExito", "Cliente y usuario agregados correctamente.");
+	            conexion.commit(); 
+	            request.setAttribute("mensajeExito", "Usuario agregado exitosamente");
+	            request.getRequestDispatcher("Home.jsp").forward(request, response);
+
 	        } else {
-	        	conexion.rollback(); // Falla: revertir los cambios
-	            String mensajeError = "No se pudo agregar el cliente.";
-	            if (idGenerado <= 0) mensajeError += " Error al insertar cliente.";
-	            if (!insertado) mensajeError += " Error al insertar usuario.";
-	            request.setAttribute("mensajeError", mensajeError);
+	        	conexion.rollback(); 
+	        	RequestDispatcher rd = request.getRequestDispatcher("/ABMUsuarios.jsp");
+	        	rd.forward(request, response);
+
 	        }
 
 	    } catch (Exception e) {
 	        try {
-	            if (conexion != null) conexion.rollback(); // Falla general: rollback
+	            if (conexion != null) conexion.rollback(); 
 	        } catch (SQLException ex) {
 	            ex.printStackTrace();
 	        }

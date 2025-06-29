@@ -6,10 +6,11 @@ public class Localidad {
     private String descripcion;  
     private Provincia provincia;   
 
-    	
+    public Localidad() {}
    
-	public Localidad() {
-		super();
+	public Localidad(short id, String descripcion2) {
+		this.idLocalidad = id;
+	    this.descripcion = descripcion2;
 	}
 
 	public Localidad(short idLocalidad, String descripcion, Provincia provincia) {
@@ -18,12 +19,19 @@ public class Localidad {
         this.provincia = provincia;
     }
 
-    public Localidad(String descripcion, Provincia provincia) {
+	public Localidad(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public Localidad(String descripcion, Provincia provincia) {
         this.descripcion = descripcion;
         this.provincia = provincia;
     }
 
-    public short getIdLocalidad() {
+    
+    
+
+	public short getIdLocalidad() {
         return idLocalidad;
     }
 

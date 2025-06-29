@@ -31,11 +31,12 @@ public class ClienteImpl implements ClienteDao{
 	private static final String readall =  "select * from vista_clientes";
 	private static final String READ_ONE_BY_ID = "SELECT * FROM vista_clientes WHERE id_cliente = ?";
 	
+	
 	public ClienteImpl(Connection conexion) {
         this.conexion = conexion;
     }
-    
-    public ClienteImpl() {
+
+	public ClienteImpl() {
 		// TODO Auto-generated constructor stub
 	}
 

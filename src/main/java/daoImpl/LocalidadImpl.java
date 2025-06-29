@@ -1,3 +1,4 @@
+
 package daoImpl;
 
 import java.sql.Connection;
@@ -9,35 +10,36 @@ import java.util.List;
 
 import dao.LocalidadDao;
 import entidad.Localidad;
-import entidad.Provincia;
 
 public class LocalidadImpl implements LocalidadDao {
 
-	private Connection conexion;
-	private static final String READ_ALL = "SELECT l.id_localidad, l.descripcion AS localidad_desc, p.id_provincia, p.descripcion AS provincia_desc FROM localidades l INNER JOIN provincias p ON l.id_provincia = p.id_provincia ORDER BY l.descripcion ASC";
+	private static final String readall = "Select id_localidad, descripcion FROM localidades";
 
-	public LocalidadImpl(Connection conexion) {
-		this.conexion = conexion;
+	public LocalidadImpl(Connection conn) {
 	}
 
 	public LocalidadImpl() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public List<Localidad> readAll() {
-		ArrayList<Localidad> listaLocalidades = new ArrayList<>();
 		PreparedStatement statement;
 		ResultSet resultSet;
+		ArrayList<Localidad> listaLocalidades = new ArrayList<Localidad>();
+		Conexion conexion = Conexion.getConexion();
 
 		try {
-			statement = this.conexion.prepareStatement(READ_ALL);
+			statement = conexion.getSQLConexion().prepareStatement(readall);
 			resultSet = statement.executeQuery();
 
 			while (resultSet.next()) {
 				listaLocalidades.add(getLocalidadFromResultSet(resultSet));
+			    
 			}
+			System.out.println("Cantidad de localidades encontradas: " + listaLocalidades.size());
 		} catch (SQLException e) {
+			System.out.println("Error al leer Localidades:");
+	       
 			e.printStackTrace();
 		}
 
@@ -45,16 +47,11 @@ public class LocalidadImpl implements LocalidadDao {
 	}
 
 	private Localidad getLocalidadFromResultSet(ResultSet rs) throws SQLException {
-		Provincia provincia = new Provincia();
-		provincia.setIdProvincia((short) rs.getInt("id_provincia"));
-		provincia.setDescripcion(rs.getString("provincia_desc"));
+		short id = rs.getShort("id_localidad");
+		String descripcion = rs.getString("descripcion");
 
-		Localidad localidad = new Localidad();
-		localidad.setIdLocalidad((short) rs.getInt("id_localidad"));
-		localidad.setDescripcion(rs.getString("localidad_desc"));
-		localidad.setProvincia(provincia);
-
-		return localidad;
+	    return new Localidad(id, descripcion);
+	
 	}
 
 

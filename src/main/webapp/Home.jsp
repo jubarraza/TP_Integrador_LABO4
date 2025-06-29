@@ -101,6 +101,18 @@ main {
 	<jsp:include page="Nav.jsp" />
 
 	<main class="container mt-4">
+	
+	<%
+    String mensajeExito = (String) request.getAttribute("mensajeExito");
+    if (mensajeExito != null) {
+%>
+    <div class="alert alert-success text-center" role="alert">
+        <%= mensajeExito %>
+    </div>
+<%
+    }
+%>
+	
 
 		<%
 		if (tipoUsuario == 1) {
@@ -117,7 +129,7 @@ main {
 			</div>
 
 			<div class="admin-buttons">
-				<button class="btn-atajo" onclick="location.href='ListaUser.jsp'">
+				<button class="btn-atajo" onclick="location.href='listarClientes'">
 					<i class="fas fa-users fa-2x mb-2"></i> Usuarios
 				</button>
 				<button class="btn-atajo"
@@ -233,6 +245,7 @@ main {
 						</div>
 					</div>
 				</div>
+				
 
 <!-- 				Atajos Cliente -->
 				<div class="text-center">
@@ -264,5 +277,6 @@ main {
 	</main>
 
 	<jsp:include page="Footer.html" />
+	
 </body>
 </html>

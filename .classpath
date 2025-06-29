@@ -13,7 +13,15 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="C:/Users/julie/eclipse-workspace/Integrador_Grupo11_Lab4/javax.servlet-api-3.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/julie/eclipse-workspace/Integrador_Grupo11_Lab4/mysql-connector-java-5.1.47-bin.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/javax.servlet-api-3.1.0.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/mysql-connector-java-5.1.47-bin.jar">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
