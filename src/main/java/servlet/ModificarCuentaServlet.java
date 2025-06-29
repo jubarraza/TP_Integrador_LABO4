@@ -62,7 +62,7 @@ public class ModificarCuentaServlet extends HttpServlet {
 	        boolean exito = cuentaDao.actualizarTipoCuentaYEstado(cuenta);
 
 	        if (exito) {
-	            response.sendRedirect("ListaDeCuentas.jsp");
+	            response.sendRedirect("ListarCuentasServlet");
 	        } else {
 	            request.setAttribute("error", "Error al actualizar la cuenta");
 	            request.setAttribute("cuenta", cuenta);
