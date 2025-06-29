@@ -191,8 +191,9 @@ INSERT INTO usuarios (id_cliente, nombreusuario, contrasenia, id_tipouser, estad
 INSERT INTO usuarios (id_cliente, nombreusuario, contrasenia, id_tipouser, estado) VALUES (43, 'paula.moreno83', 'Password123!', 2, 1);
 INSERT INTO usuarios (id_cliente, nombreusuario, contrasenia, id_tipouser, estado) VALUES (44, 'juan.flores93', 'Password123!', 2, 1);
 
-INSERT INTO tipo_de_cuentas (descripcion) VALUES ('CAJA DE AHORRO');
-INSERT INTO tipo_de_cuentas (descripcion) VALUES ('CUENTA CORRIENTE');
+INSERT INTO tipo_de_cuentas (descripcion) VALUES ('Cuenta sueldo');
+INSERT INTO tipo_de_cuentas (descripcion) VALUES ('Caja de ahorro');
+INSERT INTO tipo_de_cuentas (descripcion) VALUES ('Cuenta corriente');
 
 INSERT INTO cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuenta, id_cliente, saldo, estado) VALUES ('5024-210196/9', '01401509375713426868508', '2023-11-28 17:34:06', NULL, 2, 1, 843105.80, 1);
 INSERT INTO cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuenta, id_cliente, saldo, estado) VALUES ('5024-192534/4', '01401344425713426868508', '2023-08-07 17:34:06', NULL, 1, 1, 574737.52, 1);
