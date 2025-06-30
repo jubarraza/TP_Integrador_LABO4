@@ -17,3 +17,35 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS ActualizarCliente;
+
+DELIMITER //
+CREATE PROCEDURE ActualizarCliente (
+    IN p_id_cliente INT,
+    IN p_direccion VARCHAR(100),
+    IN p_id_localidad SMALLINT,
+    IN p_correo VARCHAR(50),
+    IN p_telefono VARCHAR(15)
+)
+BEGIN
+    UPDATE clientes
+    SET
+        direccion = p_direccion,
+        id_localidad = p_id_localidad,
+        correo = p_correo,
+        telefono = p_telefono
+    WHERE
+        id_cliente = p_id_cliente;
+END //
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS EliminarLogicoUsuario;
+DELIMITER //
+CREATE PROCEDURE EliminarLogicoUsuario(IN p_id_usuario INT)
+BEGIN
+    UPDATE usuarios SET estado = 0 WHERE id_usuario = p_id_usuario;
+    
+END //
+DELIMITER ;
