@@ -245,15 +245,6 @@ INSERT INTO cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuen
 INSERT INTO cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuenta, id_cliente, saldo, estado) VALUES ('5024-900028/4', '01408170255713426868552', '2023-01-09 23:36:20', NULL, 1, 43, 888746.42, 1); 
 INSERT INTO cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuenta, id_cliente, saldo, estado) VALUES ('5024-900029/7', '01409029965713426868553', '2024-01-04 18:03:59', NULL, 1, 44, 483162.77, 1); 
 
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Deposito');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Extraccion');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Transferencia Entrada');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Transferencia Salida');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Pago Prestamo');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Acreditación Prestamo');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Alta de cuenta');
-INSERT INTO tipo_de_movimiento (descripcion) VALUES ('Pago Cuota Prestamo');
-
 INSERT INTO prestamos (num_de_cuenta, fecha, importe_pedido, cuotas, importe_mensual, estado, aprobado, finalizado) VALUES ('5024-210196/9', '2024-01-02 08:31:07', 294200.00, 24, 16648.75, 1, 1, 0);
 INSERT INTO prestamos (num_de_cuenta, fecha, importe_pedido, cuotas, importe_mensual, estado, aprobado, finalizado) VALUES ('5024-192534/4', '2024-02-15 11:45:20', 350000.00, 36, 13611.11, 1, 1, 0);
 INSERT INTO prestamos (num_de_cuenta, fecha, importe_pedido, cuotas, importe_mensual, estado, aprobado, finalizado) VALUES ('5024-747657/1', '2024-04-01 09:10:05', 150000.00, 12, 14375.00, 1, 1, 0);

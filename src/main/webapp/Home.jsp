@@ -139,7 +139,7 @@ main {
 					onclick="location.href='AutorizacionesPrestamos.jsp'">
 					<i class="fas fa-hand-holding-usd fa-2x mb-2"></i> Préstamos
 				</button>
-				<button class="btn-atajo" onclick="location.href='Reportes.jsp'">
+				<button class="btn-atajo" onclick="location.href='ReportesServlet'">
 					<i class="fas fa-chart-line fa-2x mb-2"></i> Informes
 				</button>
 			</div>
