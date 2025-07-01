@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="entidad.Usuario, entidad.Movimiento"%>
+<%@ page import="java.util.List, entidad.Cuenta, java.text.NumberFormat, java.util.Locale" %>	
 <%@ include file="fragmentos/VerificarSesion.jspf"%>
 
 <!DOCTYPE html>
@@ -110,9 +111,7 @@ main {
     </div>
 <%
     }
-%>
-	
-
+%>	
 		<%
 		if (tipoUsuario == 1) {
 		%>
@@ -171,82 +170,49 @@ main {
 					</div>
 
 					<div class="row justify-content-center mt-4">
-<!-- 						Card 1 -->
-						<div class="col-md-4 mb-4">
-							<div class="card card-cuenta">
-								<div class="card-body">
-									<h5 class="card-title">Caja de Ahorro</h5>
-									<p class="card-text">Nro: 1234 5678 9123</p>
-									<p class="card-text text-muted small">CBU:
-										0000111122223333444455</p>
-									<p class="card-text">Saldo: $100.000</p>
-									<div
-										class="d-flex justify-content-center align-items-center gap-2">
-										<button class="btn btn-light btn-sm" title="Copiar CBU">
-											<i class="fas fa-copy me-1"></i> Copiar CBU
-										</button>
-										<a href="Movimientos.jsp"
-											class="btn btn-outline-primary btn-sm"
-											title="Ver movimientos"> <i class="fas fa-search me-1"></i>
-											Ver movimientos
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
+        <%
+            List<Cuenta> listaCuentas = (List<Cuenta>) session.getAttribute("listaCuentas");
+            
+            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
 
-<!-- 						Card 2 -->
-						<div class="col-md-4 mb-4">
-							<div class="card card-cuenta">
-								<div class="card-body">
-									<h5 class="card-title">Cuenta Corriente</h5>
-									<p class="card-text">Nro: 4321 8765 3210</p>
-									<p class="card-text text-muted small">CBU:
-										0000111122223333444455</p>
-									<p class="card-text">Saldo: $250.000</p>
-									<div
-										class="d-flex justify-content-center align-items-center gap-2">
-										<button class="btn btn-light btn-sm" title="Copiar CBU">
-											<i class="fas fa-copy me-1"></i> Copiar CBU
-										</button>
-										<a href="Movimientos.jsp"
-											class="btn btn-outline-primary btn-sm"
-											title="Ver movimientos"> <i class="fas fa-search me-1"></i>
-											Ver movimientos
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-
-<!-- 						Card 3 -->
-						<div class="col-md-4 mb-4">
-							<div class="card card-cuenta">
-								<div class="card-body">
-									<h5 class="card-title">Caja de Ahorro USD</h5>
-									<p class="card-text">Nro: 1234 0000 5678</p>
-									<p class="card-text text-muted small">CBU:
-										0000111122223333444455</p>
-									<p class="card-text">Saldo: U$D 3.500</p>
-									<div
-										class="d-flex justify-content-center align-items-center gap-2">
-										<button class="btn btn-light btn-sm" title="Copiar CBU">
-											<i class="fas fa-copy me-1"></i> Copiar CBU
-										</button>
-										<a href="Movimientos.jsp"
-											class="btn btn-outline-primary btn-sm"
-											title="Ver movimientos"> <i class="fas fa-search me-1"></i>
-											Ver movimientos
-										</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+            if (listaCuentas != null && !listaCuentas.isEmpty()) {
+                for (Cuenta c : listaCuentas) {
+        %>
+                    <div class="col-md-4 mb-4">
+                        <div class="card card-cuenta">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold text-primary"><%= c.getTipoCuenta().getDescripcion() %></h5>
+                                <p class="card-text">Nro: <%= c.getNumDeCuenta() %></p>
+                                <p class="card-text text-muted small">CBU: <%= c.getCbu() %></p>
+                                <h5 class="card-text fw-bold"><%= formatter.format(c.getSaldo()) %></h5>
+                                <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
+                                    <button class="btn btn-light btn-sm" title="Copiar CBU">
+                                        <i class="fas fa-copy me-1"></i> Copiar CBU
+                                    </button>
+                                    <a href="MovimientosServlet?cbu=<%= c.getCbu() %>" class="btn btn-outline-primary btn-sm" title="Ver movimientos">
+                                        <i class="fas fa-search me-1"></i> Ver movimientos
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        <%
+                }
+            } else {
+        %>
+                <div class="col">
+                    <div class="alert alert-info">
+                        No tienes cuentas activas para mostrar en este momento.
+                    </div>
+                </div>
+        <%
+            }
+        %>
+    </div>
 				</div>
 				
 
-<!-- 				Atajos Cliente -->
+		<!-- Atajos Cliente -->
 				<div class="text-center">
 					<h4 class="mt-5 mb-3 ms-5">Accesos Rápidos</h4>
 					<div class="accesos-rapidos d-flex justify-content-center"

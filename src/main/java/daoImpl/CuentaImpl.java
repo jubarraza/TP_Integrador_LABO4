@@ -397,5 +397,29 @@ public class CuentaImpl implements CuentaDao{
 
 	    return false;
 	}
+	
+	@Override
+	public List<Cuenta> readAllByClienteId(int idCliente) {
+	    PreparedStatement statement;
+	    ResultSet resultSet;
+	    ArrayList<Cuenta> cuentas = new ArrayList<>();
+	    Connection conexion = Conexion.getConexion().getSQLConexion(); 
+	    
+	    String query = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
+	    
+	    try {
+	        statement = conexion.prepareStatement(query);
+	        statement.setInt(1, idCliente);
+	        resultSet = statement.executeQuery();
+	        while (resultSet.next()) {
+	            cuentas.add(getCuenta(resultSet)); 
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al leer las cuentas del cliente:");
+	        e.printStackTrace();
+	    }
+	    
+	    return cuentas;
+	}
 
 }
