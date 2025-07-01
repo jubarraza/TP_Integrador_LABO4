@@ -12,6 +12,7 @@ import java.sql.CallableStatement;
 import dao.UsuarioDao;
 import entidad.TipoUser;
 import entidad.Usuario;
+import dao.CuentaDao;
 
 public class UsuarioImpl implements UsuarioDao {
 	private static final String insert = "Insert into usuarios\r\n"
@@ -185,7 +186,7 @@ public class UsuarioImpl implements UsuarioDao {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
-		String query = readall + " where nombreUsuario = ? and contrasenia = ?";
+		String query = readall + " where nombreUsuario = ? and contrasenia = ? AND estado = 1";
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(query);
 			statement.setString(1, username);
@@ -204,34 +205,54 @@ public class UsuarioImpl implements UsuarioDao {
 
 	@Override
 	public boolean logicalDelete(int idUsuario) {
-		Connection cn = Conexion.getConexion().getSQLConexion();
-	    boolean isDeleted = false;
-	    CallableStatement cst = null;
+	    Connection cn = Conexion.getConexion().getSQLConexion();
+	    boolean isSuccess = false;
+
 	    try {
-	        cst = cn.prepareCall("CALL EliminarLogicoUsuario(?)");
-	        cst.setInt(1, idUsuario);
-	        
-	        if (cst.executeUpdate() > 0) {
-	            cn.commit();
-	            isDeleted = true;
-	        } else {
-	            cn.rollback();
+	        //  OBTENER EL ID DEL CLIENTE A PARTIR DEL ID DE USUARIO
+	        int idCliente = 0;
+	        String sqlGetClienteId = "SELECT id_cliente FROM usuarios WHERE id_usuario = ?";
+	        PreparedStatement psGetId = cn.prepareStatement(sqlGetClienteId);
+	        psGetId.setInt(1, idUsuario);
+	        ResultSet rs = psGetId.executeQuery();
+	        if (rs.next()) {
+	            idCliente = rs.getInt("id_cliente");
 	        }
+	        
+	        if (idCliente == 0) {
+	            throw new SQLException("No se encontró el cliente para el usuario ID: " + idUsuario);
+	        }
+
+	        //  DESACTIVAR LAS CUENTAS DE ESE CLIENTE
+	        CuentaDao cuentaDao = new CuentaImpl(); 
+	        boolean cuentasDesactivadas = cuentaDao.deactivateAccountsByClientId(idCliente);
+
+
+	        CallableStatement cst = cn.prepareCall("CALL EliminarLogicoUsuario(?)");
+	        cst.setInt(1, idUsuario);
+	        int filasUsuario = cst.executeUpdate();
+
+	        if (filasUsuario > 0 && cuentasDesactivadas) {
+	            cn.commit();
+	            isSuccess = true;
+	            System.out.println("TRANSACCIÓN EXITOSA: Usuario y Cuentas desactivadas.");
+	        } else {
+	            throw new SQLException("La desactivación no afectó las filas esperadas, revirtiendo transacción.");
+	        }
+
 	    } catch (SQLException e) {
-	        System.err.println("Error al dar de baja al usuario: " + e.getMessage());
+	        System.err.println("ERROR EN LA TRANSACCIÓN, revirtiendo cambios: " + e.getMessage());
 	        try {
 	            if (cn != null) cn.rollback();
 	        } catch (SQLException e2) {
 	            e2.printStackTrace();
 	        }
-	    } finally {
-	        try {
-	            if (cst != null) cst.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    return isDeleted;
+	        isSuccess = false;
+
+	    } 
+
+	    return isSuccess;
 	}
+
 
 }

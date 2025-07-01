@@ -17,5 +17,4 @@ public interface ClienteDao {
 	Cliente getClientePorID(int id);
 	public Cliente ReadOne(int idCliente);
 	Cliente getPorIdUsuario(int idUsuario);
-	
 }

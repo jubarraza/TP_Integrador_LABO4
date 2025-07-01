@@ -17,4 +17,7 @@ public interface CuentaDao {
 	boolean update(Cuenta cuenta);
 	public boolean actualizarTipoCuentaYEstado(Cuenta cuenta);
 	public List<Cuenta> getCuentaPorIDCliente(int id);
+	boolean deactivateAccountsByClientId(int idCliente);
+	List<Cuenta> readAllByClienteId(int idCliente);
+	
 }

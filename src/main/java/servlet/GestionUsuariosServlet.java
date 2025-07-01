@@ -41,10 +41,7 @@ public class GestionUsuariosServlet extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-            }
+        
         }
     }
 
@@ -62,11 +59,8 @@ public class GestionUsuariosServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-            }
         }
-        response.sendRedirect(request.getContextPath() + "/ListaUser.jsp");
+        response.sendRedirect(request.getContextPath() + "/listarClientes");
+
     }
 }
