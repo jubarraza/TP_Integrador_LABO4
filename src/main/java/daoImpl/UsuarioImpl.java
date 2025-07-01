@@ -186,7 +186,7 @@ public class UsuarioImpl implements UsuarioDao {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		Conexion conexion = Conexion.getConexion();
-		String query = readall + " where nombreUsuario = ? and contrasenia = ?";
+		String query = readall + " where nombreUsuario = ? and contrasenia = ? AND estado = 1";
 		try {
 			statement = conexion.getSQLConexion().prepareStatement(query);
 			statement.setString(1, username);
