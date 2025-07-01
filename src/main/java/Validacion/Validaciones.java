@@ -1,10 +1,18 @@
 package Validacion;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import daoImpl.Conexion;
+
 public class Validaciones {
+	
+	private static final String select = "select * from cuentas where num_de_cuenta like ?;";
     
     public static boolean Verificarfecha(String fecha) {    
         
@@ -27,4 +35,63 @@ public class Validaciones {
 
         return false;
     }
+    
+    public static boolean existeCuenta(String cbu) {
+        
+    	PreparedStatement statement = null;
+    	Connection conexion = (Connection) Conexion.getConexion().getSQLConexion();
+        ResultSet resultSet = null;       
+        boolean cuentaExiste = false;
+
+        try {
+                      
+            statement = (PreparedStatement) conexion.prepareStatement(select);
+            statement.setString(1, cbu); 
+            resultSet = statement.executeQuery(); 
+
+            if (resultSet.next()) { 
+                cuentaExiste = true; 
+            }
+            
+
+        } catch (SQLException e) {
+            System.err.println("Error SQL al buscar la cuenta" + e.getMessage());
+
+        } catch (Exception e) {
+           
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (resultSet != null) resultSet.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar ResultSet: " + e.getMessage());
+                e.printStackTrace();
+            }
+            try {
+                if (statement != null) statement.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar PreparedStatement: " + e.getMessage());
+                e.printStackTrace();
+            }           
+        }
+        return cuentaExiste;
+    }
+    
+    public static boolean MismaCuenta(String Cuenta1, String Cuenta2)
+    {	
+    	if(Cuenta1.equals(Cuenta2))
+    	{
+    		return true;
+    	}
+    	return false;
+    }
+
+    
+    
+    
+    
+    
+    
 }

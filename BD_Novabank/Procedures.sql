@@ -49,3 +49,43 @@ BEGIN
     
 END //
 DELIMITER ;
+
+
+Drop procedure if exists RealizarTransferencia;
+
+DELIMITER //
+
+
+CREATE PROCEDURE RealizarTransferencia(
+    IN p_numCuentaOrigen VARCHAR(13),
+    IN p_numCuentaDestino VARCHAR(13),
+    IN p_importe DECIMAL(15, 2),
+    IN p_fecha DATETIME,        
+    IN p_detalle VARCHAR(50)    
+)
+BEGIN
+
+    SELECT saldo FROM cuentas WHERE num_de_cuenta = p_numCuentaOrigen FOR UPDATE;
+    SELECT saldo FROM cuentas WHERE num_de_cuenta = p_numCuentaDestino FOR UPDATE;
+
+    UPDATE cuentas
+    SET saldo = saldo - p_importe
+    WHERE num_de_cuenta = p_numCuentaOrigen;
+
+    UPDATE cuentas
+    SET saldo = saldo + p_importe
+    WHERE num_de_cuenta = p_numCuentaDestino;
+
+    INSERT INTO transferencias (fecha, numCuentaDestino, numCuentaOrigen, importe)
+    VALUES (p_fecha, p_numCuentaDestino, p_numCuentaOrigen, p_importe);
+
+    INSERT INTO movimientos (fecha, detalle, importe, id_tipomovimiento, num_de_cuenta)
+    VALUES (p_fecha, p_detalle, p_importe, 4, p_numCuentaOrigen);
+    
+
+    INSERT INTO movimientos (fecha, detalle, importe, id_tipomovimiento, num_de_cuenta)
+    VALUES (p_fecha, p_detalle, p_importe, 3, p_numCuentaDestino);
+
+END //
+
+DELIMITER ;

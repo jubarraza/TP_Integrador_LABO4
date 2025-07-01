@@ -141,9 +141,9 @@ foreign key (id_tipomovimiento) references tipo_de_movimiento(id_tipomovimiento)
 foreign key (num_de_cuenta) references cuentas(num_de_cuenta)
 );
 
-drop table if exists transferencia;
+drop table if exists transferencias;
 
-create table transferencia(
+create table transferencias(
 id_transferencia int auto_increment,
 fecha datetime,
 numCuentaDestino varchar(13),
