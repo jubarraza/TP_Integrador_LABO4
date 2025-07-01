@@ -1,6 +1,7 @@
 package dao;
 
 import java.util.List;
+
 import entidad.Cuenta;
 import entidad.TipoDeCuenta;
 
@@ -15,6 +16,5 @@ public interface CuentaDao {
 	public Cuenta obtenerCuentaPorNumero(String nroCuenta);
 	boolean update(Cuenta cuenta);
 	public boolean actualizarTipoCuentaYEstado(Cuenta cuenta);
-
-
+	public List<Cuenta> getCuentaPorIDCliente(int id);
 }

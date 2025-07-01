@@ -59,6 +59,7 @@
             <tr>
                 <th><i class="bi bi-credit-card"></i> Número</th>
                 <th><i class="bi bi-card-list"></i> Tipo</th>
+                <th><i class="bi bi-card-list"></i> CBU</th>
                 <th><i class="bi bi-currency-dollar"></i> Saldo</th>
             </tr>
         </thead>
@@ -71,6 +72,7 @@
                 <tr>
                     <td><%= c.getNumDeCuenta() %></td>
                     <td><%= c.getTipoCuenta() %></td>
+                    <td><%= c.getCbu() %></td>
                     <td>$ <%= String.format("%.2f", c.getSaldo() != null ? c.getSaldo() : 0.0) %></td>
                 </tr>
             <%
@@ -93,9 +95,9 @@
         <select name="cuenta" id="cuentaSelect" class="form-select w-auto d-inline-block">
             <option value="">-- Seleccione una cuenta --</option>
             <% 
+            String cuentaSel = (String) request.getAttribute("cuentaSeleccionada");
                 if (cuentas != null) {
                     for (Cuenta c : cuentas) { 
-                        String cuentaSel = (String) request.getAttribute("cuentaSeleccionada");
             %>
                 <option value="<%= c.getNumDeCuenta() %>" 
                     <%= (cuentaSel != null && cuentaSel.equals(c.getNumDeCuenta())) ? "selected" : "" %>>
@@ -108,6 +110,8 @@
         </select>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
+    <p>Cuenta seleccionada (debug): <strong><%= request.getAttribute("cuentaSeleccionada") %></strong></p>
+    
 
     <h2 class="text-center text-success mt-5">
         <i class="bi bi-arrow-repeat"></i> Movimientos

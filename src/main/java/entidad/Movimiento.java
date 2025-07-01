@@ -3,12 +3,14 @@ package entidad;
 import java.time.LocalDate;
 
 public class Movimiento {
-	 private int idMovimiento;
+	 	private int idMovimiento;
 	    private LocalDate fecha;
 	    private String detalle;
 	    private Double importe;
 	    private TipoDeMovimiento tipoMovimiento; 
-	    private String numDeCuenta;     
+	    private String numDeCuenta; 
+	    
+	    public Movimiento() {}
 
 	    public Movimiento(int idMovimiento, LocalDate fecha, String detalle, Double importe,
 	    		TipoDeMovimiento tipoMovimiento, String numDeCuenta) {
@@ -28,7 +30,12 @@ public class Movimiento {
 	        this.numDeCuenta = numDeCuenta;
 	    }
 
-	    public int getIdMovimiento() {
+	    public Movimiento(int id, String detalle2) {
+	    	this.idMovimiento = id;
+	    	this.detalle = detalle2;
+		}
+
+		public int getIdMovimiento() {
 	        return idMovimiento;
 	    }
 

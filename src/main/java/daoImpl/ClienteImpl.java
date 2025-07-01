@@ -221,7 +221,7 @@ public class ClienteImpl implements ClienteDao{
 	public Cliente getCliente(ResultSet resultSet) throws SQLException {
 		
 		// Provincia
-	    short idProvincia = resultSet.getShort("id_provincia");
+	    short idProvincia = resultSet.getShort("idProvincia");
 	    String nombreProvincia = resultSet.getString("provincia");
 	    Provincia provincia = new Provincia(idProvincia, nombreProvincia);
 

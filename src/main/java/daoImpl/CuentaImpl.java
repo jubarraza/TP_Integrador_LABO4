@@ -13,10 +13,10 @@ import dao.CuentaDao;
 import entidad.Cliente;
 import entidad.Cuenta;
 import entidad.Localidad;
+import entidad.Movimiento;
 import entidad.Provincia;
 import entidad.TipoDeCuenta;
 import entidad.TipoUser;
-import entidad.Usuario;
 
 public class CuentaImpl implements CuentaDao{
 
@@ -24,7 +24,11 @@ public class CuentaImpl implements CuentaDao{
 	private static final String buscarId = "SELECT id_cliente FROM clientes WHERE dni = ?;";
 	private static final String cantCuentas = "select count(c.id_cliente) as cantidad from cuentas as c inner join clientes as cl on c.id_cliente = cl.id_cliente where cl.dni = ?;";
 	private static final String baja = "update cuentas set estado = 0, fecha_baja = (curdate()) where num_de_cuenta = ?;";
-	
+	private static final String listarCuentaID ="select num_de_cuenta, tc.descripcion as descripcion, cbu, saldo\r\n"
+			+ "from cuentas as c\r\n"
+			+ "inner join clientes as cl on c.id_cliente = cl.id_cliente\r\n"
+			+ "inner join tipo_de_cuentas as tc on c.id_tipocuenta = tc.id_tipocuenta\r\n"
+			+ "where cl.id_cliente = ? and c.estado = 1;";
 	private static final String readall = "select * from vista_cuentas";
 	
 	@Override
@@ -173,8 +177,7 @@ public class CuentaImpl implements CuentaDao{
 		return cuentas;
 	}
 	
-	
-	
+
 	@Override
 	public List<Cuenta> readAll(String Condicion) {
 		PreparedStatement statement;
@@ -369,5 +372,45 @@ public class CuentaImpl implements CuentaDao{
 
 	    return false;
 	}
+
+	@Override
+	public List<Cuenta> getCuentaPorIDCliente(int id) {
+		PreparedStatement statement;
+		
+		ArrayList<Cuenta> listCtas = new ArrayList<Cuenta>();
+		Conexion conexion = Conexion.getConexion();
+		
+		try 
+		{
+			System.out.println("ID recibido: " + id);
+			System.out.println("Conexión abierta: " + !conexion.getSQLConexion().isClosed());
+
+			
+			statement = conexion.getSQLConexion().prepareStatement(listarCuentaID);
+			statement.setInt(1, id); // Asignar el parámetro para filtrar por cliente
+			try (ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                Cuenta cuenta = new Cuenta();
+	                cuenta.setNumDeCuenta(resultSet.getString("num_de_cuenta"));
+	                cuenta.setCbu(resultSet.getString("cbu"));
+	                
+	                TipoDeCuenta tipo = new TipoDeCuenta();
+	                tipo.setDescripcion(resultSet.getString("descripcion"));
+	                cuenta.setTipoCuenta(tipo);
+
+	                cuenta.setSaldo(resultSet.getDouble("saldo"));
+
+	                listCtas.add(cuenta);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al leer la base de datos:");
+	        e.printStackTrace();
+	    }
+
+	    System.out.println("Total cuentas encontradas: " + listCtas.size());
+	    return listCtas;
+	}
+	
 
 }
