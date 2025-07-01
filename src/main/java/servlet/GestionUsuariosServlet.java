@@ -41,10 +41,7 @@ public class GestionUsuariosServlet extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-            }
+        
         }
     }
 
