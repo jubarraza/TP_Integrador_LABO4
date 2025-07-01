@@ -69,6 +69,34 @@ public class CuentaImpl implements CuentaDao{
 		return insertExitoso;
 	}
 	
+	// AGREGAR ESTE MÉTODO COMPLETO DENTRO DE CuentaImpl.java
+
+	@Override
+	public boolean deactivateAccountsByClientId(int idCliente) {
+	    PreparedStatement statement;
+	    Connection conexion = Conexion.getConexion().getSQLConexion();
+	    boolean isSuccess = false;
+
+	    // Esta consulta pone estado=0 y la fecha de baja a las cuentas activas de un cliente.
+	    String sql = "UPDATE cuentas SET estado = 0, fecha_baja = CURDATE() WHERE id_cliente = ? AND estado = 1";
+
+	    try {
+	        statement = conexion.prepareStatement(sql);
+	        statement.setInt(1, idCliente);
+
+	        // executeUpdate() devuelve el número de filas afectadas.
+	        // Si es > 0, significa que se desactivaron una o más cuentas.
+	        if (statement.executeUpdate() >= 0) {
+	            isSuccess = true;
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        isSuccess = false;
+	    }
+	    return isSuccess;
+	}
+	
 	public int buscarId(String dni) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
