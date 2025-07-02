@@ -42,7 +42,7 @@
 			    <a href="TransferenciaNueva.jsp" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">
 			        A un CBU
 			    </a>
-			    <a href="TransferenciaNueva.jsp" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">
+			    <a href="TransferenciaPropiaServlet" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">
 			        A una Cuenta Propia
 			    </a>
 			</article>

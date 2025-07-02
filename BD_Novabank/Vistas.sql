@@ -25,7 +25,7 @@ CREATE VIEW vista_cuentas AS
 SELECT 
 	cue.num_de_cuenta, cue.cbu, cue.fecha_creacion as altaCuenta, cue.fecha_baja as bajaCuenta, tc.id_tipocuenta, tc.descripcion as descTipoCuenta,
     c.id_cliente, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, c.nacionalidad, c.fechanacimiento, c.direccion, l.id_localidad ,l.descripcion AS localidad,
-    u.id_usuario, u.nombreusuario,u.contrasenia ,u.id_tipouser, tu.descripcion as descUsuario, u.estado as estadoUsuario, p.id_provincia, p.descripcion AS provincia, c.correo, 
+    u.id_usuario, u.nombreusuario,u.contrasenia ,u.id_tipouser, tu.descripcion as descUsuario, u.estado as estadoUsuario, p.id_provincia AS idProvincia, p.descripcion AS provincia, c.correo, 
     c.telefono, c.fecha_alta as altaCliente, c.estado as estadoCliente, cue.saldo, cue.estado as estadoCuenta
 FROM
     clientes AS c

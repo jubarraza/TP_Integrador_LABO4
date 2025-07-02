@@ -1,7 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ include file="fragmentos/VerificarSesion.jspf"%>
-    
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+    import="java.util.List, entidad.Cuenta" %>
+<%@ include file="fragmentos/VerificarSesion.jspf" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,6 +12,9 @@
 <body>
 <jsp:include page="Nav.jsp"/> 
 
+<%
+    List<Cuenta> cuentasCliente = (List<Cuenta>) request.getAttribute("cuentasCliente");
+%>
 
   <main class="container mt-5">
     <div class="row justify-content-center align-items-center">
@@ -21,23 +23,35 @@
           <h3 class="fw mb-4 text-center text-primary"><i class="bi bi-arrow-left-right"></i>  Transferencia a cuenta Propia </h3>
 
           <form>
-            <div class="mb-3">
-              <label for="cuentaOrigen" class="form-label text-primary"><i class="bi bi-wallet2 me-1"></i>Cuenta Origen</label>
-              <select class="form-select" id="cuentaOrigen" required>
-                <option selected disabled value="">Seleccionar cuenta</option>
-                <option>Cuenta Corriente - $12.000,00</option>
-                <option>Caja de Ahorro - $8.450,00</option>
-              </select>
-            </div>
+          	<!-- Cuenta de Origen -->
+			<div class="mb-3">
+			  <label for="cuentaOrigen" class="form-label">Cuenta Origen</label>
+			  <select class="form-select" id="cuentaOrigen" name="cuentaOrigen" required>
+			    <option selected disabled>Seleccionar cuenta</option>
+			    <% if (cuentasCliente != null) {
+			        for (Cuenta cuenta : cuentasCliente) { %>
+			          <option value="<%= cuenta.getNumDeCuenta() %>">
+			            <%= cuenta.getTipoCuenta().getDescripcion() %> - $<%= String.format("%.2f", cuenta.getSaldo()) %>
+			          </option>
+			    <%  }
+			       } %>	
+			  </select>
+			</div>
             
-            <div class="mb-3">
-              <label for="cuentaDestino" class="form-label text-primary"><i class="bi bi-wallet2 me-1"></i>Cuenta Destino</label>
-              <select class="form-select" id="cuentaDestino" required>
-                <option selected disabled value="">Seleccionar cuenta</option>
-                <option>Cuenta Corriente - $12.000,00</option>
-                <option>Caja de Ahorro - $8.450,00</option>
-              </select>
-            </div>
+            <!-- Cuenta de Destino -->
+			<div class="mb-3">
+			  <label for="cuentaDestino" class="form-label">Cuenta Destino</label>
+			  <select class="form-select" id="cuentaDestino" name="cuentaDestino" required>
+			    <option selected disabled>Seleccionar cuenta</option>
+			    <% if (cuentasCliente != null) {
+			        for (Cuenta cuenta : cuentasCliente) { %>
+			          <option value="<%= cuenta.getNumDeCuenta() %>">
+			            <%= cuenta.getTipoCuenta().getDescripcion() %> - $<%= String.format("%.2f", cuenta.getSaldo()) %>
+			          </option>
+			    <%  }
+			       } %>
+			  </select>
+			</div>
 
             <div class="mb-3">
               <label for="monto" class="form-label text-primary"><i class="bi bi-cash-coin me-1"></i>Monto a transferir ($)</label>
