@@ -15,6 +15,5 @@ public interface CuentaDao {
 	public Cuenta obtenerCuentaPorNumero(String nroCuenta);
 	boolean update(Cuenta cuenta);
 	public boolean actualizarTipoCuentaYEstado(Cuenta cuenta);
-
-
+	public List<Cuenta> readAllCliente(int id);
 }

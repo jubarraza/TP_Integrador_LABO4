@@ -2,6 +2,8 @@
 	pageEncoding="UTF-8"%>
 	
 	<%@ include file="fragmentos/VerificarSesion.jspf"%>
+	<%@page import="java.util.List" %>
+	<%@page import="entidad.Cuenta" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,18 +52,17 @@
 
     <div class="form-container">
       <div class="card border-primary shadow-sm p-4">
-        <form>
+        <form action="GetionPrestamoServelet" method="post">
 
           <div class="mb-3">
             <label for="monto" class="form-label">Monto deseado</label>
-            <input type="number" class="form-control" id="monto" placeholder="$">
+            <input type="number" class="form-control" name="txtMonto" placeholder="$">
           </div>
 
           <div class="mb-3">
             <label for="cuotas" class="form-label">Cantidad de cuotas</label>
-            <select class="form-select" id="cuotas">
+            <select class="form-select" name="cantidadCuotas">
               <option selected disabled>Seleccionar</option>
-              <option>3</option>
               <option>6</option>
               <option>12</option>
               <option>24</option>
@@ -72,20 +73,32 @@
 
           <div class="mb-3">
             <label for="cuentaDestino" class="form-label">Cuenta para recibir el préstamo</label>
-            <select class="form-select" id="cuentaDestino">
+            <select class="form-select" name="numCuenta">
               <option selected disabled>Seleccionar</option>
-              <option>Cuenta Corriente - 4321 8765 3210</option>
-              <option>Caja de Ahorro - 1234 5678 9123</option>
+             
+             <%
+            List<Cuenta> cuentas = (List<Cuenta>) request.getAttribute("cuentasTotal");
+            if (cuentas != null && !cuentas.isEmpty()) {
+                for (Cuenta cuenta : cuentas) {
+	        %>
+	                    <option value="<%= cuenta.getNumDeCuenta() %>">
+	                        <%= cuenta.getTipoCuenta().getDescripcion() %> - <%= cuenta.getNumDeCuenta() %>
+	                    </option>
+	        <%
+	                }
+	            } else {
+	        %>
+	                <option disabled>No hay cuentas disponibles</option>
+	        <%
+	            }
+	        %>
+  
+             
             </select>
           </div>
 
-          <div class="mb-4">
-            <label for="motivo" class="form-label">Motivo del préstamo</label>
-            <textarea class="form-control" id="motivo" rows="3" placeholder="Ej: compra de electrodomésticos, viaje familiar, etc"></textarea>
-          </div>
-
           <div class="d-grid mb-3">
-            <button type="button" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary">
               <i class="fas fa-calculator me-1"></i> Simular
             </button>
           </div>
@@ -96,10 +109,10 @@
           <h5 class="mb-4">Resultado de la simulación</h5>
 
           <div class="text-start">
-            <p><strong>Tasa de interés:</strong> 28% anual</p>
-            <p><strong>Monto total a devolver:</strong> $150.000</p>
-            <p><strong>Cuota mensual estimada:</strong> $12.500</p>
-            <p><strong>Primer vencimiento (cuota 1):</strong> 10/07/2025</p>
+            <p><strong>Tasa de interés:</strong> ${tna}%</p>
+            <p><strong>Monto total a devolver:</strong> $${montoTotal}</p>
+            <p><strong>Cuota mensual estimada:</strong> $${cuotaMensual}</p>
+            <p><strong>Primer vencimiento (cuota 1):</strong> ${primerVencimiento}</p>
           </div>
 
           <div class="text-center mt-4">
@@ -114,36 +127,55 @@
 
   <div class="modal fade" id="confirmarPrestamoModal" tabindex="-1" aria-labelledby="confirmarPrestamoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
+       <form action="InsertarPrestamoServlet" method="post">
       <div class="modal-content border-success">
         <div class="modal-header">
           <h5 class="modal-title" id="confirmarPrestamoLabel">
-            <i class="fas fa-check-circle text-success me-2"></i>Confirmar solicitud de prestamo
+            <i class="fas fa-check-circle text-success me-2"></i>Confirmar solicitud de préstamo
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
           <p class="mb-2">Por favor revisá la información antes de confirmar:</p>
           <ul class="list-group list-group-flush small">
-            <li class="list-group-item"><strong>Monto solicitado:</strong> $100.000</li>
-            <li class="list-group-item"><strong>Tasa de interés:</strong> 28% anual</li>
-            <li class="list-group-item"><strong>Monto total a devolver:</strong> $150.000</li>
-            <li class="list-group-item"><strong>Cuota mensual estimada:</strong> $12.500</li>
-            <li class="list-group-item"><strong>Primer vencimiento:</strong> 10/07/2025</li>
+            <li class="list-group-item"><strong>Monto solicitado:</strong> $${monto}</li>
+            <li class="list-group-item"><strong>Tasa de interés:</strong> ${tna}%</li>
+            <li class="list-group-item"><strong>Monto total a devolver:</strong> $${montoTotal}</li>
+            <li class="list-group-item"><strong>Cuota mensual estimada:</strong> $${cuotaMensual}</li>
+            <li class="list-group-item"><strong>Primer vencimiento:</strong> ${primerVencimiento}</li>
           </ul>
+          
+          <!-- Campos para realizar el insert -->
+          <input type="hidden" name="numCuenta" value="${param.numCuenta}" />
+          <input type="hidden" name="monto" value="${monto}" />
+          <input type="hidden" name="cuotas" value="${param.cantidadCuotas}" />
+          <input type="hidden" name="cuotaMensual" value="${cuotaMensual}" />
+          
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-success" onclick="confirmarPrestamo()">Confirmar</button>
+          <button type="submit" class="btn btn-success">Confirmar</button>
         </div>
       </div>
+    </form>
     </div>
   </div>
-
+	
+	<%
+	    String mensajeExito = (String) request.getAttribute("mensajeExito");
+	    String mensajeError = (String) request.getAttribute("mensajeError");
+    	if (mensajeExito != null) {
+	%>
+    	<%= mensajeExito %>
+	<%
+    	} else if (mensajeError != null) {
+	%>
+    	<%= mensajeError %>
+	<%
+    	}
+	%>
+	
   <jsp:include page="Footer.html" />
-  <script>
-    function confirmarPrestamo() {
-      window.location.href = "ListadoDePrestamos.jsp";
-    }
-  </script>
 </body>
 </html>

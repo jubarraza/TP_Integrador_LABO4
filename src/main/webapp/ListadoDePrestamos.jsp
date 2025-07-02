@@ -74,7 +74,7 @@ h2 {
 	<div class="container">
 		<div class="d-flex justify-content-between align-items-center mb-4">
 			<h2>Tus Préstamos</h2>
-			<form action="NuevoPrestamo.jsp" method="get">
+			<form action="GetionPrestamoServelet" method="get">
 				<button type="submit" class="btn btn-primary btn-lg">
 					<i class="fas fa-plus-circle"></i> Solicitar Nuevo Préstamo
 				</button>
