@@ -1,7 +1,9 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.List; 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import daoImpl.UsuarioImpl;
 import entidad.Usuario;
+import entidad.Cuenta;
+import dao.CuentaDao;
+import daoImpl.CuentaImpl;
+
 
 @WebServlet("/LoginUsuario")
 public class LoginUsuario extends HttpServlet {
@@ -44,7 +50,13 @@ public class LoginUsuario extends HttpServlet {
 		            Usuario usuario = usuarioImpl.Autenticar(username, password);
 
 		            if (usuario != null) {
-		                request.getSession().setAttribute("usuarioLogin", usuario);
+		                HttpSession session = request.getSession();
+		                session.setAttribute("usuario", usuario); 
+
+		                CuentaDao cuentaDao = new CuentaImpl();
+		                List<Cuenta> listaCuentas = cuentaDao.readAllByClienteId(usuario.getIdcliente());
+		                session.setAttribute("listaCuentas", listaCuentas);
+
 		                response.sendRedirect("Home.jsp");
 		            } else {
 		                // usuario o clave incorrectos

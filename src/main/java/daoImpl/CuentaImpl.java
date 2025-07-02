@@ -13,10 +13,10 @@ import dao.CuentaDao;
 import entidad.Cliente;
 import entidad.Cuenta;
 import entidad.Localidad;
+import entidad.Movimiento;
 import entidad.Provincia;
 import entidad.TipoDeCuenta;
 import entidad.TipoUser;
-import entidad.Usuario;
 
 public class CuentaImpl implements CuentaDao{
 
@@ -24,7 +24,11 @@ public class CuentaImpl implements CuentaDao{
 	private static final String buscarId = "SELECT id_cliente FROM clientes WHERE dni = ?;";
 	private static final String cantCuentas = "select count(c.id_cliente) as cantidad from cuentas as c inner join clientes as cl on c.id_cliente = cl.id_cliente where cl.dni = ? and c.estado = 1;";
 	private static final String baja = "update cuentas set estado = 0, fecha_baja = (curdate()) where num_de_cuenta = ?;";
-	
+	private static final String listarCuentaID ="select num_de_cuenta, tc.descripcion as descripcion, cbu, saldo\r\n"
+			+ "from cuentas as c\r\n"
+			+ "inner join clientes as cl on c.id_cliente = cl.id_cliente\r\n"
+			+ "inner join tipo_de_cuentas as tc on c.id_tipocuenta = tc.id_tipocuenta\r\n"
+			+ "where cl.id_cliente = ? and c.estado = 1;";
 	private static final String readall = "select * from vista_cuentas";
 	private static final String readAllCliente = "select num_de_cuenta, tc.descripcion as descripcion\r\n"
 			+ "from cuentas as c\r\n"
@@ -72,6 +76,34 @@ public class CuentaImpl implements CuentaDao{
 		}
 		
 		return insertExitoso;
+	}
+	
+	// AGREGAR ESTE MÉTODO COMPLETO DENTRO DE CuentaImpl.java
+
+	@Override
+	public boolean deactivateAccountsByClientId(int idCliente) {
+	    PreparedStatement statement;
+	    Connection conexion = Conexion.getConexion().getSQLConexion();
+	    boolean isSuccess = false;
+
+	    // Esta consulta pone estado=0 y la fecha de baja a las cuentas activas de un cliente.
+	    String sql = "UPDATE cuentas SET estado = 0, fecha_baja = CURDATE() WHERE id_cliente = ? AND estado = 1";
+
+	    try {
+	        statement = conexion.prepareStatement(sql);
+	        statement.setInt(1, idCliente);
+
+	        // executeUpdate() devuelve el número de filas afectadas.
+	        // Si es > 0, significa que se desactivaron una o más cuentas.
+	        if (statement.executeUpdate() >= 0) {
+	            isSuccess = true;
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        isSuccess = false;
+	    }
+	    return isSuccess;
 	}
 	
 	public int buscarId(String dni) {
@@ -178,8 +210,7 @@ public class CuentaImpl implements CuentaDao{
 		return cuentas;
 	}
 	
-	
-	
+
 	@Override
 	public List<Cuenta> readAll(String Condicion) {
 		PreparedStatement statement;
@@ -374,6 +405,70 @@ public class CuentaImpl implements CuentaDao{
 
 	    return false;
 	}
+	
+	@Override
+	public List<Cuenta> readAllByClienteId(int idCliente) {
+	    PreparedStatement statement;
+	    ResultSet resultSet;
+	    ArrayList<Cuenta> cuentas = new ArrayList<>();
+	    Connection conexion = Conexion.getConexion().getSQLConexion(); 
+	    
+	    String query = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
+	    
+	    try {
+	        statement = conexion.prepareStatement(query);
+	        statement.setInt(1, idCliente);
+	        resultSet = statement.executeQuery();
+	        while (resultSet.next()) {
+	            cuentas.add(getCuenta(resultSet)); 
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al leer las cuentas del cliente:");
+	        e.printStackTrace();
+	    }
+	    
+	    return cuentas;
+	}
+
+	@Override
+	public List<Cuenta> getCuentaPorIDCliente(int id) {
+		PreparedStatement statement;
+		
+		ArrayList<Cuenta> listCtas = new ArrayList<Cuenta>();
+		Conexion conexion = Conexion.getConexion();
+		
+		try 
+		{
+			System.out.println("ID recibido: " + id);
+			System.out.println("Conexión abierta: " + !conexion.getSQLConexion().isClosed());
+
+			
+			statement = conexion.getSQLConexion().prepareStatement(listarCuentaID);
+			statement.setInt(1, id); // Asignar el parámetro para filtrar por cliente
+			try (ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                Cuenta cuenta = new Cuenta();
+	                cuenta.setNumDeCuenta(resultSet.getString("num_de_cuenta"));
+	                cuenta.setCbu(resultSet.getString("cbu"));
+	                
+	                TipoDeCuenta tipo = new TipoDeCuenta();
+	                tipo.setDescripcion(resultSet.getString("descripcion"));
+	                cuenta.setTipoCuenta(tipo);
+
+	                cuenta.setSaldo(resultSet.getDouble("saldo"));
+
+	                listCtas.add(cuenta);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al leer la base de datos:");
+	        e.printStackTrace();
+	    }
+
+	    System.out.println("Total cuentas encontradas: " + listCtas.size());
+	    return listCtas;
+	}
+	
 
 	@Override
 	public List<Cuenta> readAllCliente(int id) {

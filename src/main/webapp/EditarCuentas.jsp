@@ -88,7 +88,12 @@
             <label for="saldo" class="form-label">Saldo</label>
             <input type="text" class="form-control readonly" value="$<%= cuenta.getSaldo() %>" readonly>
         </div>
-
+	<% if (cuenta.getSaldo() > 0) { %>
+	  <!-- Cartel de adevertencia -->
+	  <div class="alert alert-info">
+	    <i class="bi bi-info-circle"></i> Para desactivar la cuenta, el saldo debe ser $0.
+	  </div>
+  	<% } else { %>
         <!-- Estado -->
         <div class="form-check form-switch">
           <input class="form-check-input" type="checkbox" id="estadoSwitch" name="estado" <%= cuenta.Estado() ? "checked" : "" %>
@@ -97,18 +102,15 @@
             <%= cuenta.Estado() ? "Activa" : "Inactiva" %>
           </label>
         </div>
-
+	<% } %>
         <!-- Botones de acción -->
         <div class="d-flex justify-content-end gap-3 mt-4">
-            <!-- Ver btn solo si la cuenta se encuentra inactiva -->
-            <% if (!cuenta.Estado()) { %>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminar">
-                    <i class="fas fa-trash-alt me-1"></i> Eliminar
-                </button>
-            <% } %>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalGuardar">
                 <i class="fas fa-save me-1"></i> Guardar
             </button>
+		    <a href="ListarCuentasServlet" class="btn btn-outline-secondary">
+		        <i class="fas fa-arrow-left me-1"></i> Volver
+		    </a>
         </div>
       </form>
     </div>
@@ -119,38 +121,20 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalGuardarLabel">Confirmar guardado</h5>
+        <h5 class="modal-title" id="modalGuardarLabel"><i class="bi bi-check2-square"></i> Confirmar guardado</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
         ¿Deseás guardar los cambios en esta cuenta?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-primary" form="formCuenta">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle"></i> Cancelar</button>
+        <button type="submit" class="btn btn-primary" form="formCuenta"><i class="fas fa-save me-1"></i> Guardar</button>
       </div>
     </div>
   </div>
 </div>
 
-  <!-- Modal Confirmación de Eliminación -->
-  <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalEliminarLabel">Confirmar eliminación</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          ¿Estás seguro que querés eliminar esta cuenta?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger" >Eliminar</button>
-        </div>
-      </div>
-    </div>
-  </div>
 <jsp:include page="Footer.html" />
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script> -->
 </body>

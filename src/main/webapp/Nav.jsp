@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="entidad.Usuario"%>
 <%
-Usuario usuarioLogueado = (Usuario) session.getAttribute("usuarioLogin");
+Usuario usuarioLogueado = (Usuario) session.getAttribute("usuario");
 byte tipoUsuario = 0;
 if (usuarioLogueado != null) {
 	tipoUsuario = usuarioLogueado.getTipoUser().getIdTipoUser();
@@ -73,8 +73,8 @@ if (usuarioLogueado != null) {
 							<ul class="dropdown-menu">
 								<li><a class="dropdown-item d-flex align-items-center fs-5"
 									href="Home.jsp"><i class="bi bi-house-door-fill me-2"></i> Home</a></li>
-								<li><a class="dropdown-item fs-5 text-dark"
-									href="Movimientos.jsp"><i class="bi bi-list-columns-reverse me-2"></i> Movimientos</a></li>
+								<li><a class="dropdown-item fs-5 text-dark" href="MovimientoServlet"><i class="bi bi-list-columns-reverse me-2"></i> Movimientos</a></li>
+								
 								<li><a class="dropdown-item fs-5 text-dark"
 									href="Transferencias.jsp"><i class="bi bi-arrow-left-right me-2"></i> Transferencias</a></li>
 								<li><a class="dropdown-item ps-4 fs-5 d-flex align-items-center"

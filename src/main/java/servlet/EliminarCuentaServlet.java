@@ -37,7 +37,7 @@ public class EliminarCuentaServlet extends HttpServlet {
 		        cuentaDao.darDeBajaCuenta(numCuenta);
 		    }
 
-		    response.sendRedirect("ListarCuentasServlet?filtroEstado=ACTIVA");
+		    response.sendRedirect("ListarCuentasServlet");
 	}
 
 }

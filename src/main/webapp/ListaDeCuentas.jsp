@@ -162,8 +162,6 @@ footer {
 		int inicio = (pagina - 1) * registrosPorPagina;
 		int fin = Math.min(inicio + registrosPorPagina, totalRegistros);
 
-		String filtroEstadoVer = (String) request.getAttribute("filtroEstado");
-		boolean mostrarEliminar = "ACTIVA".equalsIgnoreCase(filtroEstadoVer);
 		%>
 
 		<div class="table-responsive">
@@ -179,12 +177,7 @@ footer {
 						<th>Saldo</th>
 						<th>Estado</th>
 						<th>Editar</th>
-						<%
-						if (!mostrarEliminar) {
-						%><th>Eliminar</th>
-						<%
-						}
-						%>
+						<th>Eliminar</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -202,34 +195,28 @@ footer {
 						<td><%=cuenta.getCbu()%></td>
 						<td>$<%=String.format("%.2f", cuenta.getSaldo())%></td>
 						<td>
-							<%
-							if (cuenta.Estado()) {
-							%> <span class="badge bg-success">ACTIVA</span> <%
- } else {
- %> <span class="badge bg-danger">INACTIVA</span> <%
- }
- %>
+						<%
+						if (cuenta.Estado()) {
+						%> <span class="badge bg-success">ACTIVA</span> <%
+						 } else {
+						 %> <span class="badge bg-danger">INACTIVA</span> <%
+						 }
+						 %>
 						</td>
 						<td><a type="submit" class="btn btn-outline-primary btn-sm btn-action"
 							href="ModificarCuentaServlet?nroCuenta=<%=cuenta.getNumDeCuenta()%>"><i
 								class="bi bi-pen"></i></a></td>
-						<%
-						if (!mostrarEliminar) {
-						%>
 						<td>
 							<form action="EliminarCuentaServlet" method="post"
 								onsubmit="return confirm('¿Estás seguro que deseas dar de baja esta cuenta?');">
 								<input type="hidden" name="numCuenta"
 									value="<%=cuenta.getNumDeCuenta()%>" />
 								<button type="submit"
-									class="btn btn-outline-danger btn-sm btn-action">
+									class="btn btn-outline-danger btn-sm btn-action" <%= (!cuenta.Estado() || cuenta.getSaldo() > 0) ? "disabled" : "" %>> 
 									<i class="bi bi-trash"></i> Eliminar
 								</button>
 							</form>
 						</td>
-						<%
-						}
-						%>
 					</tr>
 					<%
 					}
