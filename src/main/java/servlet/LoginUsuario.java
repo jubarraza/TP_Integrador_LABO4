@@ -36,7 +36,7 @@ public class LoginUsuario extends HttpServlet {
 		    try {
 		        // LOGOUT
 		        if (request.getParameter("btnLogout") != null) {
-		            request.getSession().setAttribute("usuarioLogin", null); // cierra la sesión
+		        	request.getSession().invalidate(); // cierra TODA la sesión
 		            response.sendRedirect("InicioSesion.jsp");
 		            return; // corta la ejecución
 		        }

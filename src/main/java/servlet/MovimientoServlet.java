@@ -35,10 +35,10 @@ public class MovimientoServlet extends HttpServlet {
 		    MovimientoImpl movDao = new MovimientoImpl(conn);
 		    CuentaImpl cuentaDao = new CuentaImpl();
 		    
-		    Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogin");
+		    Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 		    
 		    int idCliente = usuario.getIdcliente(); //
-		    List<Cuenta> listCuentas = cuentaDao.getCuentaPorIDCliente(idCliente);
+		    List<Cuenta> listCuentas = cuentaDao.readAllByClienteId(idCliente);
 
 		    request.setAttribute("cuentas", listCuentas);  
 		    request.getRequestDispatcher("Movimientos.jsp").forward(request, response);
@@ -49,7 +49,7 @@ public class MovimientoServlet extends HttpServlet {
 	    MovimientoImpl movDao = new MovimientoImpl(conn);
 	    CuentaImpl cuentaDao = new CuentaImpl();
 
-	    Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogin");
+	    Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 	    
 	    String operacion = request.getParameter("operacion");
 	    if ("Movimientos".equals(operacion)) {
@@ -59,7 +59,7 @@ public class MovimientoServlet extends HttpServlet {
 	        List<Movimiento> movimientos;
 	        if (numCuenta == null || numCuenta.isEmpty()) {
 	            movimientos = new ArrayList<>();
-	            List<Cuenta> cuentasCliente = cuentaDao.getCuentaPorIDCliente(idCliente);
+	            List<Cuenta> cuentasCliente = cuentaDao.readAllByClienteId(idCliente);
 	            for (Cuenta cuenta : cuentasCliente) {
 	            	List<Movimiento> movs = movDao.getMovimientosPorCuenta(numCuenta);
 	            	if(movs != null) {
@@ -70,7 +70,7 @@ public class MovimientoServlet extends HttpServlet {
 	            movimientos = movDao.getMovimientosPorCuenta(numCuenta);
 	        }
 
-	        List<Cuenta> cuentas = cuentaDao.getCuentaPorIDCliente(idCliente);
+	        List<Cuenta> cuentas = cuentaDao.readAllByClienteId(idCliente);
 	        request.setAttribute("cuentaSeleccionada", numCuenta);
 	        request.setAttribute("cuentas", cuentas);             
 	        request.setAttribute("movimientos", movimientos);      

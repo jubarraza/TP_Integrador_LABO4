@@ -135,7 +135,7 @@ main {
 					<i class="fas fa-university fa-2x mb-2"></i> Cuentas
 				</button>
 				<button class="btn-atajo"
-					onclick="location.href='AutorizacionesPrestamos.jsp'">
+					onclick="location.href='ListadoDePrestamos.jsp'">
 					<i class="fas fa-hand-holding-usd fa-2x mb-2"></i> Préstamos
 				</button>
 				<button class="btn-atajo" onclick="location.href='ReportesServlet'">
@@ -163,7 +163,7 @@ main {
 <!--				Estado de cuentas -->
 				<div class="text-center mb-4">
 					<div class="d-flex justify-content-between align-items-center px-3">
-						<h4 class="mb-0">Estado de cuentas activas</h4>
+						<h4 class="mb-0">CUENTAS: </h4>
 						<button class="btn btn-outline-secondary btn-sm">
 							<i class="fas fa-eye-slash"></i> Ocultar saldo
 						</button>
@@ -178,7 +178,7 @@ main {
             if (listaCuentas != null && !listaCuentas.isEmpty()) {
                 for (Cuenta c : listaCuentas) {
         %>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-4 mb-3">
                         <div class="card card-cuenta">
                             <div class="card-body">
                                 <h5 class="card-title fw-bold text-primary"><%= c.getTipoCuenta().getDescripcion() %></h5>

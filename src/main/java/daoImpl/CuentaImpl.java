@@ -12,29 +12,22 @@ import java.util.List;
 import dao.CuentaDao;
 import entidad.Cliente;
 import entidad.Cuenta;
-import entidad.Localidad;
-import entidad.Movimiento;
-import entidad.Provincia;
 import entidad.TipoDeCuenta;
-import entidad.TipoUser;
 
 public class CuentaImpl implements CuentaDao{
 
 	private static final String insert = "insert into cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuenta, id_cliente, saldo, estado) values (?, ?, ?, ?, ?, ?, ?, ?);";
-	private static final String buscarId = "SELECT id_cliente FROM clientes WHERE dni = ?;";
-	private static final String cantCuentas = "select count(c.id_cliente) as cantidad from cuentas as c inner join clientes as cl on c.id_cliente = cl.id_cliente where cl.dni = ? and c.estado = 1;";
 	private static final String baja = "update cuentas set estado = 0, fecha_baja = (curdate()) where num_de_cuenta = ?;";
-	private static final String listarCuentaID ="select num_de_cuenta, tc.descripcion as descripcion, cbu, saldo\r\n"
-			+ "from cuentas as c\r\n"
-			+ "inner join clientes as cl on c.id_cliente = cl.id_cliente\r\n"
-			+ "inner join tipo_de_cuentas as tc on c.id_tipocuenta = tc.id_tipocuenta\r\n"
-			+ "where cl.id_cliente = ? and c.estado = 1;";
 	private static final String readall = "select * from vista_cuentas";
-	private static final String readAllCliente = "select num_de_cuenta, tc.descripcion as descripcion\r\n"
-			+ "from cuentas as c\r\n"
-			+ "inner join clientes as cl on c.id_cliente = cl.id_cliente\r\n"
-			+ "inner join tipo_de_cuentas as tc on c.id_tipocuenta = tc.id_tipocuenta\r\n"
-			+ "where cl.id_cliente = ? and c.estado = 1;";
+	private static String tipoCuentas = "select * from tipo_de_cuentas"; 
+	
+	private static final String buscarId = "SELECT id_cliente FROM vista_clientes_id WHERE dni = ?;";
+	private static final String buscarNumCuenta = "select num_de_cuenta from cuentas where num_de_cuenta = ?;";
+	private static final String buscarCbu = "select cbu from cuentas where cbu = ?;";
+	
+	private static final String cantCuentas = "SELECT cantidad FROM vista_cantidad_cuentas_activas WHERE dni = ?;";
+	private static final  String readAllxID = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
+
 	
 	@Override
 	public boolean insert(Cuenta cuenta) {
@@ -277,11 +270,10 @@ public class CuentaImpl implements CuentaDao{
 		PreparedStatement statement;
 		ResultSet resultSet; 
 		ArrayList<TipoDeCuenta> tipoDeCuentas = new ArrayList<TipoDeCuenta>();
-		Conexion conexion = Conexion.getConexion();
-		String query = "select * from tipo_de_cuentas";  
+		Conexion conexion = Conexion.getConexion(); 
 		try 
 		{
-			statement = conexion.getSQLConexion().prepareStatement(query);
+			statement = conexion.getSQLConexion().prepareStatement(tipoCuentas);
 			resultSet = statement.executeQuery();
 			while(resultSet.next())
 			{
@@ -413,10 +405,8 @@ public class CuentaImpl implements CuentaDao{
 	    ArrayList<Cuenta> cuentas = new ArrayList<>();
 	    Connection conexion = Conexion.getConexion().getSQLConexion(); 
 	    
-	    String query = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
-	    
 	    try {
-	        statement = conexion.prepareStatement(query);
+	        statement = conexion.prepareStatement(readAllxID);
 	        statement.setInt(1, idCliente);
 	        resultSet = statement.executeQuery();
 	        while (resultSet.next()) {
@@ -431,76 +421,54 @@ public class CuentaImpl implements CuentaDao{
 	}
 
 	@Override
-	public List<Cuenta> getCuentaPorIDCliente(int id) {
+	public boolean buscarNumCuenta(String numCuenta) {
 		PreparedStatement statement;
-		
-		ArrayList<Cuenta> listCtas = new ArrayList<Cuenta>();
-		Conexion conexion = Conexion.getConexion();
-		
-		try 
-		{
-			System.out.println("ID recibido: " + id);
-			System.out.println("Conexión abierta: " + !conexion.getSQLConexion().isClosed());
-
-			
-			statement = conexion.getSQLConexion().prepareStatement(listarCuentaID);
-			statement.setInt(1, id); // Asignar el parámetro para filtrar por cliente
-			try (ResultSet resultSet = statement.executeQuery()) {
-	            while (resultSet.next()) {
-	                Cuenta cuenta = new Cuenta();
-	                cuenta.setNumDeCuenta(resultSet.getString("num_de_cuenta"));
-	                cuenta.setCbu(resultSet.getString("cbu"));
-	                
-	                TipoDeCuenta tipo = new TipoDeCuenta();
-	                tipo.setDescripcion(resultSet.getString("descripcion"));
-	                cuenta.setTipoCuenta(tipo);
-
-	                cuenta.setSaldo(resultSet.getDouble("saldo"));
-
-	                listCtas.add(cuenta);
-	            }
-	        }
-	    } catch (SQLException e) {
-	        System.err.println("Error al leer la base de datos:");
-	        e.printStackTrace();
-	    }
-
-	    System.out.println("Total cuentas encontradas: " + listCtas.size());
-	    return listCtas;
-	}
-	
-
-	@Override
-	public List<Cuenta> readAllCliente(int id) {
-		PreparedStatement statement;
-		ResultSet resultSet; 
-		ArrayList<Cuenta> cuentas = new ArrayList<Cuenta>();
-		Conexion conexion = Conexion.getConexion();
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean existe = false;
 		
 		try {
-			statement = conexion.getSQLConexion().prepareStatement(readAllCliente);
-			statement.setInt(1, id);
-		    resultSet = statement.executeQuery();
-		    
-		    while (resultSet.next()) {
-		    	Cuenta cuenta = new Cuenta();
-		    	cuenta.setNumDeCuenta(resultSet.getString("num_de_cuenta"));
-		    	
-		    	TipoDeCuenta tipo = new TipoDeCuenta();
-		    	tipo.setDescripcion(resultSet.getString("descripcion"));
-	            cuenta.setTipoCuenta(tipo);
-	             
-	            cuentas.add(cuenta);
-	        }
+			statement = conexion.prepareStatement(buscarNumCuenta);
+			statement.setString(1, numCuenta);
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+            	existe = true;
+            }
 			
-		} catch (Exception e) {
-			System.err.println("Error al leer la base de datos:");
+		}catch (SQLException e) {
 			e.printStackTrace();
+			try {
+				conexion.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
 		}
-		
-		return cuentas;
+		return existe;
 	}
-	
 
-
+	@Override
+	public boolean buscarCbu(String cbu) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean existe = false;
+		
+		try {
+			statement = conexion.prepareStatement(buscarCbu);
+			statement.setString(1, cbu);
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+            	existe = true;
+            }
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conexion.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return existe;
+	}
 }

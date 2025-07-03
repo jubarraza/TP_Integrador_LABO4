@@ -84,7 +84,7 @@ if (usuarioLogueado != null) {
 								<li><a class="dropdown-item fs-5 text-dark"
 									href="ListadoDePrestamos.jsp"><i class="bi bi-cash-stack me-2"></i> Préstamos</a></li>
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"
-									href="NuevoPrestamo.jsp"><i class="bi bi-pencil-square me-2"></i> Solicitar</a></li>
+									href="GetionPrestamoServelet"><i class="bi bi-pencil-square me-2"></i> Solicitar</a></li>
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"
 									href="CuotasPendientes.jsp"><i class="bi bi-currency-dollar me-2"></i> Pagar Cuotas</a></li>
 							</ul>
@@ -100,17 +100,17 @@ if (usuarioLogueado != null) {
 								<li><a class="dropdown-item d-flex align-items-center fs-5"
 									href="Home.jsp"><i class="bi bi-house-door-fill me-2"></i> Home</a></li>
 								<li><a class="dropdown-item fs-5 d-flex align-items-center"
-									href="ListaUser.jsp"><i class="bi bi-people-fill me-2"></i> Usuarios</a></li>
+									href="listarClientes"><i class="bi bi-people-fill me-2"></i> Usuarios</a></li>
 								<li><a class="dropdown-item ps-5 fs-5 d-flex align-items-center"
-									href="ABMUsuarios.jsp"><i class="bi bi-person-plus-fill me-2"></i> Nuevo</a></li>
+									href="InsertarUserClienteServlet"><i class="bi bi-person-plus-fill me-2"></i> Nuevo</a></li>
 								<li><a class="dropdown-item fs-5 d-flex align-items-center"
 									href="ListarCuentasServlet"><i class="bi bi-wallet2 me-2"></i> Cuentas</a></li>
 								<li><a class="dropdown-item ps-5 fs-5 d-flex align-items-center"
-									href="ABMCuentas.jsp"><i class="bi bi-plus-square me-2"></i> Nueva</a></li>
+									href="InsertCuentasServlet"><i class="bi bi-plus-square me-2"></i> Nueva</a></li>
 								<li><a class="dropdown-item fs-5 d-flex align-items-center"
 									href="AutorizacionesPrestamos.jsp"><i class="bi bi-check2-square me-2"></i> Aprobación</a></li>
 								<li><a class="dropdown-item fs-5 d-flex align-items-center"
-									href="Reportes.jsp"><i class="bi bi-clipboard-data me-2"></i> Informes</a></li>
+									href="ReportesServlet"><i class="bi bi-clipboard-data me-2"></i> Informes</a></li>
 							</ul>
 						</li>
 						<% } } %>

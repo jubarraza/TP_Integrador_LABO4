@@ -1,7 +1,5 @@
 package dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import entidad.Cliente;
@@ -13,8 +11,8 @@ public interface ClienteDao {
 	public int Insert(Cliente cliente);
 	public boolean update(Cliente cliente);
 	public boolean Delete(String dni);
-	Cliente getCliente(ResultSet rs) throws SQLException;
-	Cliente getClientePorID(int id);
+	public Cliente getClientePorID(int id);
 	public Cliente ReadOne(int idCliente);
-	Cliente getPorIdUsuario(int idUsuario);
+	public Cliente getPorIdUsuario(int idUsuario);
+	public boolean buscarDni(String dni);
 }

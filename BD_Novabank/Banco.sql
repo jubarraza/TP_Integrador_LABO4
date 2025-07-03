@@ -150,6 +150,7 @@ numCuentaDestino varchar(13),
 numCuentaOrigen varchar(13),
 importe decimal(15,2),
 primary key (id_transferencia),
-foreign key (numCuentaDestino, numCuentaOrigen) references cuentas(num_de_cuenta)
+foreign key (numCuentaDestino) references cuentas(num_de_cuenta),
+foreign key (numCuentaOrigen) references cuentas(num_de_cuenta)
 )
 

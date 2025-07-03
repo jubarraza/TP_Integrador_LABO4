@@ -3,8 +3,12 @@ package daoImpl;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PropertyResourceBundle;
 
 import dao.PrestamoDao;
 import entidad.Prestamo;
@@ -12,6 +16,7 @@ import entidad.Prestamo;
 public class PrestamoImpl implements PrestamoDao {
 	
 	private static final String insertPrestamo = "INSERT INTO prestamos (num_de_cuenta, fecha, importe_pedido, cuotas, importe_mensual, estado, aprobado, finalizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String readall = "select * from vista_prestamos";
 	
 	@Override
 	public boolean insert(Prestamo prestamo) {
@@ -47,6 +52,43 @@ public class PrestamoImpl implements PrestamoDao {
 			}
 		}
 		return insertExitoso;
+	}
+
+	@Override
+	public List<Prestamo> readall() {
+		PreparedStatement statement;
+		ResultSet resultSet;
+		ArrayList<Prestamo> prestamos = new ArrayList<Prestamo>();
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try {
+			statement = conexion.prepareStatement(readall);
+			resultSet = statement.executeQuery();
+			
+			while(resultSet.next()) {
+				prestamos.add(getPrestamo(resultSet));
+			}
+			
+		} catch (SQLException e) {
+			System.err.println("Error al leer la base de datos");
+			e.printStackTrace();;
+		}
+		return prestamos;
+	}
+	
+	private Prestamo getPrestamo(ResultSet resultSet) throws SQLException {
+		int id = resultSet.getInt("id");
+		String numCuenta = resultSet.getString("NumCuenta");
+		LocalDate fecha = resultSet.getDate("fecha").toLocalDate();
+		double importePedido = resultSet.getDouble("importePedido");
+		short cuotas = resultSet.getShort("cuotas");
+		double importeMensual = resultSet.getDouble("importeMensual");
+		boolean estado = resultSet.getBoolean("estado");
+		boolean aprobado = resultSet.getBoolean("aprobado");
+		boolean finalizado = resultSet.getBoolean("finalizado");
+		
+		return new Prestamo(id, numCuenta, fecha, importePedido, cuotas, importeMensual, estado, aprobado, finalizado);
+		
 	}
 
 }

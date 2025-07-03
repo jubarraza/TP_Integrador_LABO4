@@ -35,11 +35,11 @@ public class GetionPrestamoServelet extends HttpServlet {
 		 CuentaImpl cimpl = new CuentaImpl();
 		 
 		    if (session != null) {
-		    	Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogin");
+		    	Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 
 		        if (usuario != null) {
 		            int idCliente = usuario.getIdcliente();
-		            List<Cuenta> listCuentas = cimpl.readAllCliente(idCliente);
+		            List<Cuenta> listCuentas = cimpl.readAllByClienteId(idCliente);
 		            
 		            request.setAttribute("cuentasTotal", listCuentas);
 		        }
@@ -80,10 +80,10 @@ public class GetionPrestamoServelet extends HttpServlet {
 		request.setAttribute("cuotaMensual", cuotaMensual);
 		request.setAttribute("primerVencimiento", fechaPrimerVencimiento.format(formatter));
 		
-		 Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogin");
+		 Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 		    if (usuario != null) {
 		        CuentaImpl cimpl = new CuentaImpl();
-		        List<Cuenta> cuentas = cimpl.readAllCliente(usuario.getIdcliente());
+		        List<Cuenta> cuentas = cimpl.readAllByClienteId(usuario.getIdcliente());
 		        request.setAttribute("cuentasTotal", cuentas);
 		    }
 		

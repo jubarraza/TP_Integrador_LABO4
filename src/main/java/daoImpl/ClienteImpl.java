@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +29,8 @@ public class ClienteImpl implements ClienteDao{
 	private static final String delete = "UPDATE clientes set estado = 0 WHERE dni LIKE ?";
 	private static final String readall =  "select * from vista_clientes WHERE estadoUsuario = 1";
 	private static final String READ_ONE_BY_ID = "SELECT * FROM vista_clientes WHERE id_cliente = ?";
+	
+	private static final String buscarDni = "select dni from clientes where dni = ?;";
 	
 	
 	public ClienteImpl(Connection conexion) {
@@ -217,7 +218,6 @@ public class ClienteImpl implements ClienteDao{
 		
 	}
 	
-	@Override 
 	public Cliente getCliente(ResultSet resultSet) throws SQLException {
 		
 		// Provincia
@@ -253,7 +253,7 @@ public class ClienteImpl implements ClienteDao{
 	    String correo = resultSet.getString("correo");
 	    String telefono = resultSet.getString("telefono");
 	    LocalDate fechaAlta = resultSet.getDate("altaCliente").toLocalDate();
-	    boolean estado = resultSet.getBoolean("estadoUsuario");
+	    boolean estado = resultSet.getBoolean("estadoCliente");
 
 	    // Construcción final del objeto Cliente
 	    Cliente cliente = new Cliente(
@@ -309,4 +309,29 @@ public class ClienteImpl implements ClienteDao{
 	    return cliente;
 	}
 
+	@Override
+	public boolean buscarDni(String dni) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean existe = false;
+		
+		try {
+			statement = conexion.prepareStatement(buscarDni);
+			statement.setString(1, dni);
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+            	existe = true;
+            }
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conexion.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return existe;
+	}
 }

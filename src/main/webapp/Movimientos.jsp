@@ -47,7 +47,7 @@
     </style>
 </head>
 <body>
-
+  <jsp:include page="Nav.jsp" />
 <div class="container">
 
     <h2 class="text-center text-primary">
@@ -110,7 +110,6 @@
         </select>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
-    <p>Cuenta seleccionada (debug): <strong><%= request.getAttribute("cuentaSeleccionada") %></strong></p>
     
 
     <h2 class="text-center text-success mt-5">
@@ -184,4 +183,5 @@
 
 
 </body>
+  <jsp:include page="Footer.html" />
 </html>

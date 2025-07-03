@@ -15,11 +15,11 @@ import entidad.Usuario;
 import dao.CuentaDao;
 
 public class UsuarioImpl implements UsuarioDao {
+	
+	private Connection conexion;
 	private static final String insert = "Insert into usuarios\r\n"
 			+ "(id_cliente, nombreusuario, contrasenia, id_tipouser) \r\n" + "values(?, ?, ?, ?)";
 	private static final String readall = "select * from vista_usuarios";
-
-	private Connection conexion;
 
 	public UsuarioImpl(Connection conexion) {
 		this.conexion = conexion;

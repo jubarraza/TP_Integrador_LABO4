@@ -6,7 +6,7 @@ import java.util.List;
 
 import entidad.Movimiento;
 import entidad.TipoDeMovimiento;
-import entidad.Usuario;
+
 
 public interface MovimientoDao {
 	public List<Movimiento> ReadAll();

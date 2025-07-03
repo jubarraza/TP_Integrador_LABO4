@@ -203,20 +203,29 @@ footer {
 						 }
 						 %>
 						</td>
-						<td><a type="submit" class="btn btn-outline-primary btn-sm btn-action"
-							href="ModificarCuentaServlet?nroCuenta=<%=cuenta.getNumDeCuenta()%>"><i
-								class="bi bi-pen"></i></a></td>
-						<td>
-							<form action="EliminarCuentaServlet" method="post"
-								onsubmit="return confirm('¿Estás seguro que deseas dar de baja esta cuenta?');">
-								<input type="hidden" name="numCuenta"
-									value="<%=cuenta.getNumDeCuenta()%>" />
-								<button type="submit"
-									class="btn btn-outline-danger btn-sm btn-action" <%= (!cuenta.Estado() || cuenta.getSaldo() > 0) ? "disabled" : "" %>> 
-									<i class="bi bi-trash"></i> Eliminar
-								</button>
-							</form>
-						</td>
+						
+						<% if (cuenta.Estado()) { %>
+						    <td>
+						        <a class="btn btn-outline-primary btn-sm btn-action"
+						           href="ModificarCuentaServlet?nroCuenta=<%=cuenta.getNumDeCuenta()%>">
+						            <i class="bi bi-pen"></i>
+						        </a>
+						    </td>
+						    <td>
+						        <form action="EliminarCuentaServlet" method="post"
+						              onsubmit="return confirm('¿Estás seguro que deseas dar de baja esta cuenta?');">
+						            <input type="hidden" name="numCuenta"
+						                   value="<%=cuenta.getNumDeCuenta()%>" />
+						            <button type="submit"
+						                    class="btn btn-outline-danger btn-sm btn-action" <%= (cuenta.getSaldo() > 0) ? "disabled" : "" %>>
+						                <i class="bi bi-trash"></i> Eliminar
+						            </button>
+						        </form>
+						    </td>
+						<% } else { %>
+						    <td colspan="2" class="text-center text-muted">Cuenta dada de baja</td>
+						<% } %>
+						
 					</tr>
 					<%
 					}

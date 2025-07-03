@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-    <%@ include file="fragmentos/VerificarSesion.jspf"%>
+<%@ include file="fragmentos/VerificarSesion.jspf"%>
+
 <html>
 <head>
 <meta charset="UTF-8">
@@ -101,17 +102,17 @@
                 <article class="w-full">
                     <div class="bg-white p-6 rounded-lg shadow-md">
                         <div class="flex flex-wrap -mx-2 items-end"> 
-                                <div class="w-full md:w-5/12 px-2 mb-4 md:mb-0 flex flex-col justify-end">
+                                <div class="w-full md:w-4/12 px-2 mb-4 md:mb-0">
         							<label for="IdfechaInicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha desde:</label>
         							<input type="date" class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               								 id="IdfechaInicio" name="fechaInicio" value="<%= fechaInicio != null ? fechaInicio : "" %>">
    								</div>
-    							<div class="w-full md:w-5/12 px-2 mb-4 md:mb-0 flex flex-col justify-end">
+    							<div class="w-full md:w-4/12 px-2 mb-4 md:mb-0">
         							<label for="IdfechaHasta" class="block text-gray-700 text-sm font-bold mb-2">Fecha Hasta:</label>
         							<input type="date" class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                								id="IdfechaHasta" name="fechaHasta" value="<%= fechaHasta != null ? fechaHasta : "" %>">
     							</div>
-                                <div class="w-full md:w-2/12 px-2 flex flex-col justify-end">
+                                <div class="w-full md:w-4/12 px-2 mb-4 md:mb-0 flex flex-col">
                                     <div class="block text-gray-700 text-sm font-bold mb-2 invisible">Placeholder</div>
                                     <div class="flex space-x-2">
                                         <button type="submit" name="btnfiltrar" id="Bfiltro" class="report-btn-primary flex-grow">Filtrar</button>
@@ -198,6 +199,8 @@
 	        </div>
 	    </div>
 	</div>
+	
+	<jsp:include page="Footer.html" />
 
 <%int[] meses = (int[]) request.getAttribute("meses"); %>
 

@@ -65,9 +65,6 @@ CREATE PROCEDURE RealizarTransferencia(
 )
 BEGIN
 
-    SELECT saldo FROM cuentas WHERE num_de_cuenta = p_numCuentaOrigen FOR UPDATE;
-    SELECT saldo FROM cuentas WHERE num_de_cuenta = p_numCuentaDestino FOR UPDATE;
-
     UPDATE cuentas
     SET saldo = saldo - p_importe
     WHERE num_de_cuenta = p_numCuentaOrigen;

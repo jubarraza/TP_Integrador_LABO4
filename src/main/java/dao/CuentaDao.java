@@ -14,12 +14,12 @@ public interface CuentaDao {
 	public List<Cuenta> readAll(String Condicion);
 	public List<TipoDeCuenta> readAllTipoDeCuenta();
 	public Cuenta obtenerCuentaPorNumero(String nroCuenta);
-	boolean update(Cuenta cuenta);
+	public boolean update(Cuenta cuenta);
 	public boolean actualizarTipoCuentaYEstado(Cuenta cuenta);
+	public boolean buscarNumCuenta(String numCuenta);
+	public boolean buscarCbu(String cbu);
 
-	public List<Cuenta> readAllCliente(int id);
 
-	public List<Cuenta> getCuentaPorIDCliente(int id);
 	boolean deactivateAccountsByClientId(int idCliente);
 	List<Cuenta> readAllByClienteId(int idCliente);
 	

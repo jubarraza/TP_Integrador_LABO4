@@ -1,22 +1,28 @@
 Use banco;
 
+
+// Esta vista_clientes deben cambiar e
 drop view if exists vista_clientes;
 
 CREATE VIEW vista_clientes AS
 SELECT 
-    c.id_cliente, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, c.nacionalidad, c.fechanacimiento,  c.direccion, l.id_localidad ,l.descripcion AS localidad, 
-	u.id_usuario, u.nombreusuario,u.contrasenia, u.id_tipouser, tu.descripcion as descUsuario, u.estado as estadoUsuario, p.id_provincia, p.descripcion AS provincia, c.correo, 
-    c.telefono, c.fecha_alta as altaCliente, c.estado as estadoCliente
-FROM
-    clientes AS c
-INNER JOIN
-    localidades AS l ON c.id_localidad = l.id_localidad
-INNER JOIN
-    provincias AS p ON l.id_provincia = p.id_provincia
- INNER JOIN
-    usuarios AS u ON u.id_cliente = c.id_cliente
-  INNER JOIN
-    tipo_de_usuarios AS tu ON u.id_tipouser = tu.id_tipouser;     
+    c.id_cliente, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, 
+    c.nacionalidad, c.fechanacimiento,  c.direccion, 
+    l.id_localidad,
+    l.descripcion AS localidad, 
+    u.id_usuario, u.nombreusuario, u.contrasenia, 
+    u.id_tipouser, tu.descripcion AS descUsuario, 
+    u.estado AS estadoUsuario, 
+    p.id_provincia AS idProvincia, 
+    p.descripcion AS provincia, 
+    c.correo, c.telefono, 
+    c.fecha_alta AS altaCliente, 
+    c.estado AS estadoCliente
+FROM clientes AS c
+INNER JOIN localidades AS l ON c.id_localidad = l.id_localidad
+INNER JOIN provincias AS p ON l.id_provincia = p.id_provincia
+INNER JOIN usuarios AS u ON u.id_cliente = c.id_cliente
+INNER JOIN tipo_de_usuarios AS tu ON u.id_tipouser = tu.id_tipouser;   
     
     
 drop view if exists vista_cuentas;
@@ -54,3 +60,33 @@ JOIN
     tipo_de_usuarios AS tu
 ON
     u.id_tipouser = tu.id_tipouser;
+
+//Estas vista_cliente_id y vista_cantidad_cuentas_activas deben agregar
+
+drop view if exists vista_clientes_id;
+    
+CREATE VIEW vista_clientes_id AS
+SELECT id_cliente, dni
+FROM clientes;
+
+drop view if exists vista_cantidad_cuentas_activas;
+
+CREATE VIEW vista_cantidad_cuentas_activas AS
+SELECT 
+    cl.dni,
+    COUNT(c.id_cliente) AS cantidad
+FROM cuentas AS c
+INNER JOIN clientes AS cl ON c.id_cliente = cl.id_cliente
+WHERE c.estado = 1
+GROUP BY cl.dni;
+
+drop view if exists vista_prestamos;
+
+create view vista_prestamos as 
+	select id_prestamo as 'id', 
+	num_de_cuenta as 'NumCuenta', fecha, 
+	importe_pedido as 'importePedido', 
+	cuotas, importe_mensual as 'importeMensual', 
+	estado, aprobado, finalizado 
+	from prestamos;
+
