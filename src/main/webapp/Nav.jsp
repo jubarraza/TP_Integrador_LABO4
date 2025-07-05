@@ -78,9 +78,9 @@ if (usuarioLogueado != null) {
 								<li><a class="dropdown-item fs-5 text-dark"
 									href="Transferencias.jsp"><i class="bi bi-arrow-left-right me-2"></i> Transferencias</a></li>
 								<li><a class="dropdown-item ps-4 fs-5 d-flex align-items-center"
-									href="TransferenciaNueva.jsp"><i class="bi bi-arrow-up-right-square me-2"></i> Nueva a CBU</a></li>
+									href="TransferenciaCbuServlet"><i class="bi bi-arrow-up-right-square me-2"></i> Nueva a CBU</a></li>
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"
-									href="TransferenciaCuenta.jsp"><i class="bi bi-repeat me-2"></i> Entre Cuentas Propias</a></li>
+									href="TransferenciaPropiaServlet"><i class="bi bi-repeat me-2"></i> Entre Cuentas Propias</a></li>
 								<li><a class="dropdown-item fs-5 text-dark"
 									href="ListadoDePrestamos.jsp"><i class="bi bi-cash-stack me-2"></i> Préstamos</a></li>
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"

@@ -189,7 +189,7 @@ main {
                                     <button class="btn btn-light btn-sm" title="Copiar CBU">
                                         <i class="fas fa-copy me-1"></i> Copiar CBU
                                     </button>
-                                    <a href="MovimientosServlet?cbu=<%= c.getCbu() %>" class="btn btn-outline-primary btn-sm" title="Ver movimientos">
+                                    <a href="MovimientoServlet?cbu=<%= c.getCbu() %>" class="btn btn-outline-primary btn-sm" title="Ver movimientos">
                                         <i class="fas fa-search me-1"></i> Ver movimientos
                                     </a>
                                 </div>
