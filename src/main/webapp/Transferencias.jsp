@@ -25,7 +25,23 @@
 	 
 	<div class="container mb-4 mt-4">
 		<section class="row justify-content-center">
+		<%
+		   String mensaje = request.getParameter("mensaje");
 		
+		   if ("ok".equals(mensaje)) {
+		%>
+		    <div class="alert alert-success alert-dismissible fade show" role="alert"><i class="bi bi-check2-circle"></i> Transferencia realizada con éxito.
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+		<%
+		    } if ("error".equals(mensaje)) {
+		%>
+		    <div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-circle"></i> No se pudo realizar la transferencia. Verifique los datos e intente nuevamente.
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+		<%
+		    }
+		%>
 			<article class="col-12 text-center mb-4">
 				<h1 class="fw text-primary">
 					Transferencias
@@ -39,7 +55,7 @@
 			</article>
 			
 			<article class="d-flex justify-content-center gap-3 col-12 mx-auto m-2">
-			    <a href="TransferenciaNueva.jsp" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">
+			    <a href="TransferenciaCbuServlet" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">
 			        A un CBU
 			    </a>
 			    <a href="TransferenciaPropiaServlet" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">

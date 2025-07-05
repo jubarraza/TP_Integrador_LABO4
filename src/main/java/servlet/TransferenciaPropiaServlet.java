@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import daoImpl.CuentaImpl;
+import daoImpl.TransferenciaImpl;
 import entidad.Cuenta;
+import entidad.Transferencia;
 import entidad.Usuario;
 
 
@@ -27,7 +29,7 @@ public class TransferenciaPropiaServlet extends HttpServlet {
 
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 HttpSession session = request.getSession();
+		 	HttpSession session = request.getSession();
 		    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuario");
 
 		    if (usuarioLogueado == null) {
@@ -41,13 +43,58 @@ public class TransferenciaPropiaServlet extends HttpServlet {
 		    List<Cuenta> cuentasCliente = cuentaDao.readAllByClienteId(idCliente);
 
 		    request.setAttribute("cuentasCliente", cuentasCliente);
-		    request.getRequestDispatcher("TransferenciaCuenta.jsp").forward(request, response);
+		    request.getRequestDispatcher("TransferenciaPropia.jsp").forward(request, response);
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+		HttpSession session = request.getSession();
+	    Usuario usuarioLogueado = (Usuario) session.getAttribute("usuario");
 
+	    if (usuarioLogueado == null) {
+	        response.sendRedirect("InicioSesion.jsp");
+	        return;
+	    }
+
+	    try {
+	        String cuentaOrigen = request.getParameter("cuentaOrigen");
+	        String cuentaDestino = request.getParameter("cuentaDestino");
+	        String detalle = request.getParameter("detalle");
+	        String montoStr = request.getParameter("monto");
+
+	        if (cuentaOrigen == null || cuentaDestino == null || montoStr == null ||
+	            cuentaOrigen.trim().isEmpty() || cuentaDestino.trim().isEmpty() || montoStr.trim().isEmpty()) {
+	            response.sendRedirect("Transferencias.jsp?mensaje=error");
+	            return;
+	        }
+
+	        if (cuentaOrigen.equals(cuentaDestino)) {
+	            response.sendRedirect("Transferencias.jsp?mensaje=mismaCuenta");
+	            return;
+	        }
+
+	        double monto = Double.parseDouble(montoStr);
+	        if (monto <= 0) {
+	            response.sendRedirect("Transferencias.jsp?mensaje=montoInvalido");
+	            return;
+	        }
+
+	        Transferencia transferencia = new Transferencia(cuentaOrigen, cuentaDestino, monto);
+	        TransferenciaImpl dao = new TransferenciaImpl();
+
+	        boolean exito = dao.Insert(transferencia, detalle);
+
+	        if (exito) {
+	            response.sendRedirect("Transferencias.jsp?mensaje=ok");
+	        } else {
+	            response.sendRedirect("Transferencias.jsp?mensaje=error");
+	        }
+
+	    } catch (NumberFormatException e) {
+	        response.sendRedirect("Transferencias.jsp?mensaje=montoInvalido");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.sendRedirect("Transferencias.jsp?mensaje=error");
+	    }
+	}
 }

@@ -12,7 +12,7 @@ import entidad.Transferencia;
 
 public class TransferenciaImpl implements TransferenciaDao{
 	
-	private final String insert =  "call RealizarTransferencias(?, ?, ?, ?, ?);";
+	private final String insert =  "call RealizarTransferencia(?, ?, ?, ?, ?);";
 
 	@Override
 	public boolean Insert(Transferencia transferencia, String detalle) {
@@ -34,10 +34,9 @@ public class TransferenciaImpl implements TransferenciaDao{
 			statement.setString(5, detalle);
 			
 			
-			if (statement.executeUpdate() > 0) {
-				conexion.commit();
-				insertExitoso = true;
-			}
+			statement.execute();
+			conexion.commit();
+			insertExitoso = true;
 			
 			
 		} catch (SQLException e) {

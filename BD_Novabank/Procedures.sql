@@ -65,6 +65,21 @@ CREATE PROCEDURE RealizarTransferencia(
 )
 BEGIN
 
+DECLARE saldo_origen DECIMAL(15, 2);
+
+    START TRANSACTION;
+
+    -- Verificamos el saldo actual
+    SELECT saldo INTO saldo_origen
+    FROM cuentas
+    WHERE num_de_cuenta = p_numCuentaOrigen
+    FOR UPDATE;
+
+    -- Si no hay saldo suficiente, se cancela la transacción
+    IF saldo_origen IS NULL OR saldo_origen < p_importe THEN
+        ROLLBACK;
+    ELSE
+
     UPDATE cuentas
     SET saldo = saldo - p_importe
     WHERE num_de_cuenta = p_numCuentaOrigen;
@@ -82,6 +97,9 @@ BEGIN
 
     INSERT INTO movimientos (fecha, detalle, importe, id_tipomovimiento, num_de_cuenta)
     VALUES (p_fecha, p_detalle, p_importe, 3, p_numCuentaDestino);
+    
+    COMMIT;
+    END IF;
 
 END //
 
