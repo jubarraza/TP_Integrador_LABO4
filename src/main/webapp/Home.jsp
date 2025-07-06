@@ -136,7 +136,7 @@ main {
 					<i class="fas fa-university fa-2x mb-2"></i> Cuentas
 				</button>
 				<button class="btn-atajo"
-					onclick="location.href='ListadoDePrestamos.jsp'">
+					onclick="location.href='AutorizacionesPrestamos.jsp'">
 					<i class="fas fa-hand-holding-usd fa-2x mb-2"></i> Préstamos
 				</button>
 				<button class="btn-atajo" onclick="location.href='ReportesServlet'">
