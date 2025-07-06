@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="entidad.Usuario, entidad.Movimiento"%>
-<%@ page import="java.util.List, entidad.Cuenta, java.text.NumberFormat, java.util.Locale" %>	
+<%@ page
+	import="java.util.List, entidad.Cuenta, java.text.NumberFormat, java.util.Locale"%>
 <%@ include file="fragmentos/VerificarSesion.jspf"%>
 
 <!DOCTYPE html>
@@ -101,17 +102,17 @@ main {
 	<jsp:include page="Nav.jsp" />
 
 	<main class="container mt-4">
-	
-	<%
-    String mensajeExito = (String) request.getAttribute("mensajeExito");
-    if (mensajeExito != null) {
-%>
-    <div class="alert alert-success text-center" role="alert">
-        <%= mensajeExito %>
-    </div>
-<%
-    }
-%>	
+
+		<%
+		String mensajeExito = (String) request.getAttribute("mensajeExito");
+		if (mensajeExito != null) {
+		%>
+		<div class="alert alert-success text-center" role="alert">
+			<%=mensajeExito%>
+		</div>
+		<%
+		}
+		%>
 		<%
 		if (tipoUsuario == 1) {
 		%>
@@ -160,59 +161,67 @@ main {
 					Hola, <strong><%=usuarioLogueado.getNombreUsuario()%></strong> 👋
 				</h2>
 
-<!--				Estado de cuentas -->
+				<!--				Estado de cuentas -->
 				<div class="text-center mb-4">
 					<div class="d-flex justify-content-between align-items-center px-3">
-						<h4 class="mb-0">CUENTAS: </h4>
-						<button class="btn btn-outline-secondary btn-sm">
-							<i class="fas fa-eye-slash"></i> Ocultar saldo
+						<h4 class="mb-0">CUENTAS:</h4>
+						<button id="btnToggleSaldo"
+							class="btn btn-outline-secondary btn-sm">
+							<i id="iconoSaldo" class="fas fa-eye-slash"></i> Ocultar saldo
 						</button>
 					</div>
 
 					<div class="row justify-content-center mt-4">
-        <%
-            List<Cuenta> listaCuentas = (List<Cuenta>) session.getAttribute("listaCuentas");
-            
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
+						<%
+						List<Cuenta> listaCuentas = (List<Cuenta>) session.getAttribute("listaCuentas");
 
-            if (listaCuentas != null && !listaCuentas.isEmpty()) {
-                for (Cuenta c : listaCuentas) {
-        %>
-                    <div class="col-md-4 mb-3">
-                        <div class="card card-cuenta">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold text-primary"><%= c.getTipoCuenta().getDescripcion() %></h5>
-                                <p class="card-text">Nro: <%= c.getNumDeCuenta() %></p>
-                                <p class="card-text text-muted small">CBU: <%= c.getCbu() %></p>
-                                <h5 class="card-text fw-bold"><%= formatter.format(c.getSaldo()) %></h5>
-                                <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
-                                    <button class="btn btn-light btn-sm" title="Copiar CBU">
-                                        <i class="fas fa-copy me-1"></i> Copiar CBU
-                                    </button>
-                                    <a href="MovimientoServlet?cbu=<%= c.getCbu() %>" class="btn btn-outline-primary btn-sm" title="Ver movimientos">
-                                        <i class="fas fa-search me-1"></i> Ver movimientos
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-        <%
-                }
-            } else {
-        %>
-                <div class="col">
-                    <div class="alert alert-info">
-                        No tienes cuentas activas para mostrar en este momento.
-                    </div>
-                </div>
-        <%
-            }
-        %>
-    </div>
+						NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
+
+						if (listaCuentas != null && !listaCuentas.isEmpty()) {
+							for (Cuenta c : listaCuentas) {
+						%>
+						<div class="col-md-4 mb-3">
+							<div class="card card-cuenta">
+								<div class="card-body">
+									<h5 class="card-title fw-bold text-primary"><%=c.getTipoCuenta().getDescripcion()%></h5>
+									<p class="card-text">
+										Nro:
+										<%=c.getNumDeCuenta()%></p>
+									<p class="card-text text-muted small">
+										CBU:
+										<%=c.getCbu()%></p>
+									<h5 class="card-text fw-bold saldo-cuenta"
+										data-saldo="<%=formatter.format(c.getSaldo())%>"><%=formatter.format(c.getSaldo())%></h5>
+									<div
+										class="d-flex justify-content-center align-items-center gap-2 mt-3">
+										<button class="btn btn-light btn-sm" title="Copiar CBU">
+											<i class="fas fa-copy me-1"></i> Copiar CBU
+										</button>
+										<a href="MovimientoServlet?cbu=<%=c.getCbu()%>"
+											class="btn btn-outline-primary btn-sm"
+											title="Ver movimientos"> <i class="fas fa-search me-1"></i>
+											Ver movimientos
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<%
+						}
+						} else {
+						%>
+						<div class="col">
+							<div class="alert alert-info">No tienes cuentas activas
+								para mostrar en este momento.</div>
+						</div>
+						<%
+						}
+						%>
+					</div>
 				</div>
-				
 
-		<!-- Atajos Cliente -->
+
+				<!-- Atajos Cliente -->
 				<div class="text-center">
 					<h4 class="mt-5 mb-3 ms-5">Accesos Rápidos</h4>
 					<div class="accesos-rapidos d-flex justify-content-center"
@@ -242,6 +251,28 @@ main {
 	</main>
 
 	<jsp:include page="Footer.html" />
-	
+<script>
+  const btnToggleSaldo = document.getElementById("btnToggleSaldo");
+  const icono = document.getElementById("iconoSaldo");
+  let saldosVisibles = true;
+
+  btnToggleSaldo.addEventListener("click", () => {
+    const saldos = document.querySelectorAll(".saldo-cuenta");
+
+    saldos.forEach((saldo) => {
+      if (saldosVisibles) {
+        saldo.textContent = "****";
+      } else {
+        saldo.textContent = saldo.getAttribute("data-saldo");
+      }
+    });
+
+    icono.className = saldosVisibles ? "fas fa-eye" : "fas fa-eye-slash";
+    btnToggleSaldo.innerHTML = `<i id="iconoSaldo" class="${icono.className}"></i> ${saldosVisibles ? "Mostrar saldo" : "Ocultar saldo"}`;
+
+    saldosVisibles = !saldosVisibles;
+  });
+</script>
+
 </body>
 </html>
