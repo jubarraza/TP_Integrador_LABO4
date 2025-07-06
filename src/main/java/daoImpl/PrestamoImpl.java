@@ -77,18 +77,18 @@ public class PrestamoImpl implements PrestamoDao {
 	}
 	
 	private Prestamo getPrestamo(ResultSet resultSet) throws SQLException {
-		int id = resultSet.getInt("id");
-		String numCuenta = resultSet.getString("NumCuenta");
-		LocalDate fecha = resultSet.getDate("fecha").toLocalDate();
-		double importePedido = resultSet.getDouble("importePedido");
-		short cuotas = resultSet.getShort("cuotas");
-		double importeMensual = resultSet.getDouble("importeMensual");
-		boolean estado = resultSet.getBoolean("estado");
-		boolean aprobado = resultSet.getBoolean("aprobado");
-		boolean finalizado = resultSet.getBoolean("finalizado");
-		
-		return new Prestamo(id, numCuenta, fecha, importePedido, cuotas, importeMensual, estado, aprobado, finalizado);
-		
+	    int id = resultSet.getInt("id");
+	    String numCuenta = resultSet.getString("NumCuenta");
+	    LocalDate fecha = resultSet.getDate("fecha").toLocalDate();
+	    double importePedido = resultSet.getDouble("importePedido");
+	    short cuotas = resultSet.getShort("cuotas");
+	    double importeMensual = resultSet.getDouble("importeMensual");
+	    boolean estado = resultSet.getBoolean("estado");
+	    boolean aprobado = resultSet.getBoolean("aprobado");
+	    boolean finalizado = resultSet.getBoolean("finalizado");
+	    String nombreUsuario = resultSet.getString("nombreusuario"); 
+
+	    return new Prestamo(id, numCuenta, nombreUsuario, fecha, importePedido, cuotas, importeMensual,estado, aprobado, finalizado);
 	}
 
 }

@@ -1,7 +1,7 @@
 Use banco;
 
 
-// Esta vista_clientes deben cambiar e
+--// Esta vista_clientes deben cambiar 
 drop view if exists vista_clientes;
 
 CREATE VIEW vista_clientes AS
@@ -61,7 +61,7 @@ JOIN
 ON
     u.id_tipouser = tu.id_tipouser;
 
-//Estas vista_cliente_id y vista_cantidad_cuentas_activas deben agregar
+--//Estas vista_cliente_id y vista_cantidad_cuentas_activas deben agregar
 
 drop view if exists vista_clientes_id;
     
@@ -80,13 +80,24 @@ INNER JOIN clientes AS cl ON c.id_cliente = cl.id_cliente
 WHERE c.estado = 1
 GROUP BY cl.dni;
 
-drop view if exists vista_prestamos;
 
-create view vista_prestamos as 
-	select id_prestamo as 'id', 
-	num_de_cuenta as 'NumCuenta', fecha, 
-	importe_pedido as 'importePedido', 
-	cuotas, importe_mensual as 'importeMensual', 
-	estado, aprobado, finalizado 
-	from prestamos;
+--Prestamos vista modificada
+DROP VIEW IF EXISTS vista_prestamos;
+
+CREATE VIEW vista_prestamos AS
+SELECT 
+    p.id_prestamo AS id,
+    p.num_de_cuenta AS NumCuenta,
+    p.fecha,
+    p.importe_pedido AS importePedido,
+    p.cuotas,
+    p.importe_mensual AS importeMensual,
+    p.estado,
+    p.aprobado,
+    p.finalizado,
+    u.nombreusuario
+FROM prestamos p
+INNER JOIN cuentas c ON p.num_de_cuenta = c.num_de_cuenta
+INNER JOIN clientes cli ON c.id_cliente = cli.id_cliente
+INNER JOIN usuarios u ON cli.id_cliente = u.id_cliente;
 

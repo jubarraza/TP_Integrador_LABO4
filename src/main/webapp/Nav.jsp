@@ -108,7 +108,7 @@ if (usuarioLogueado != null) {
 								<li><a class="dropdown-item ps-5 fs-5 d-flex align-items-center"
 									href="InsertCuentasServlet"><i class="bi bi-plus-square me-2"></i> Nueva</a></li>
 								<li><a class="dropdown-item fs-5 d-flex align-items-center"
-									href="AutorizacionesPrestamos.jsp"><i class="bi bi-check2-square me-2"></i> Aprobación</a></li>
+									href="ListarPrestamoServlet"><i class="bi bi-check2-square me-2"></i> Aprobación Prestamos</a></li>
 								<li><a class="dropdown-item fs-5 d-flex align-items-center"
 									href="ReportesServlet"><i class="bi bi-clipboard-data me-2"></i> Informes</a></li>
 							</ul>
