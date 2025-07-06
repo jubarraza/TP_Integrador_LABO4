@@ -8,6 +8,34 @@
 <title>Nueva Transferencia - Novabank</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
  <link rel="stylesheet" href="Style.css"/>
+ 
+     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('assets/bg1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        table th, table td {
+            vertical-align: middle !important;
+        }
+    </style>
 </head>
 <body>
 

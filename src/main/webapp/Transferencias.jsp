@@ -3,21 +3,36 @@
     <%@ include file="fragmentos/VerificarSesion.jspf"%>
 <!DOCTYPE html>
 <html>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('assets/bg1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        table th, table td {
+            vertical-align: middle !important;
+        }
+    </style>
 <head>
 <meta charset="UTF-8">
 <title>Transferencias</title>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" />
-  
-<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#table_id').DataTable();
-	});
-</script>
 
 </head>
 <body>
@@ -25,25 +40,9 @@
 	 
 	<div class="container mb-4 mt-4">
 		<section class="row justify-content-center">
-		<%
-		   String mensaje = request.getParameter("mensaje");
-		
-		   if ("ok".equals(mensaje)) {
-		%>
-		    <div class="alert alert-success alert-dismissible fade show" role="alert"><i class="bi bi-check2-circle"></i> Transferencia realizada con éxito.
-		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		    </div>
-		<%
-		    } if ("error".equals(mensaje)) {
-		%>
-		    <div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-circle"></i> No se pudo realizar la transferencia. Verifique los datos e intente nuevamente.
-		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-		    </div>
-		<%
-		    }
-		%>
+
 			<article class="col-12 text-center mb-4">
-				<h1 class="fw text-primary">
+				<h1 class="fw text-primary"><i class="bi bi-arrow-left-right"></i>
 					Transferencias
 				</h1>
 			</article>
@@ -64,19 +63,34 @@
 			</article>
 			
 			
-			<article class="col-12">
-				<table border="1" id="table_id">
-	
-				<thead>	<tr>
-						<td><b>FECHA</b></td>
-						<td><b>DESTINATARIO</b></td>
-						<td><b>MONTO</b></td>
-						<td><b>ESTADO</b></td>
-					</tr>
-				</thead>
-				
-				</table>
-			</article>
+		<%
+		   String mensaje = request.getParameter("mensaje");
+		
+		   if ("ok".equals(mensaje)) {
+		%>
+		<div class="row justify-content-center mt-4">
+    	<div class="col-12 col-md-10 col-lg-8">
+		    <div class="alert alert-success alert-dismissible fade show" role="alert"><i class="bi bi-check2-circle"></i> Transferencia realizada con éxito.
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+	    </div>
+  		</div>
+		<%
+		    } if ("error".equals(mensaje)) {
+		%>
+		<div class="row justify-content-center mt-4">
+    	<div class="col-12 col-md-10 col-lg-8">
+		    <div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-circle"></i> No se pudo realizar la transferencia. Verifique los datos e intente nuevamente.
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+		</div>
+  		</div>
+		<%
+		    }
+		%>
+		<div class="d-grid gap-2 col-6 mx-auto">
+		  <a class="btn btn-success btn-lg" type="button" href="MovimientoServlet"><i class="bi bi-arrow-repeat"></i> Ver Movimientos</a>
+		</div>
 			
 		</section>	
 	</div>

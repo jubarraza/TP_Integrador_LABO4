@@ -8,6 +8,33 @@
 <title>Nueva Transferencia - Novabank</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
  <link rel="stylesheet" href="Style.css"/>
+     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('assets/bg1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        table th, table td {
+            vertical-align: middle !important;
+        }
+    </style>
 </head>
 <body>
 <jsp:include page="Nav.jsp"/> 
@@ -60,7 +87,16 @@
             <!-- Detalle -->
 			  <div class="mb-3">
 			    <label for="detalle" class="form-label text-primary"><i class="bi bi-pencil-square me-1"></i>Detalle</label>
-			    <textarea class="form-control" id="detalle" name="detalle" rows="2" placeholder="Motivo de la transferencia"></textarea>
+			    <select class="form-select" id="detalle" name="detalle" required>
+				    <option value="" selected disabled>Seleccione un motivo…</option>
+				    <option value="Cuota">Cuota</option>
+				    <option value="Expensa">Expensa</option>
+				    <option value="Servicios">Pago de servicios</option>
+				    <option value="Impuestos">Impuestos</option>
+				    <option value="Honorarios">Honorarios</option>
+				    <option value="Préstamo">Préstamo</option>
+				    <option value="Otro">Otro</option>
+				  </select>
 			  </div>
 			  
 			<!-- Mostrar mensajes -->
@@ -103,6 +139,7 @@
 		    const cuentaOrigen = cuentaOrigenSelect.value;
 		    const monto = parseFloat(document.getElementById("monto").value);
 		    const saldoDisponible = parseFloat(cuentaOrigenSelect.selectedOptions[0].dataset.saldo);
+		    const detalle = document.getElementById("detalle").value;
 
 		    if (!cuentaOrigen || !cuentaDestino) {
 		      alert("Debe seleccionar cuentas válidas.");
@@ -120,6 +157,10 @@
 		    }
 		    if (monto > saldoDisponible) {
 		        alert("El monto ingresado supera el saldo disponible de la cuenta origen.");
+		        return;
+		      }
+		    if (!detalle) { 
+		        alert("Debe seleccionar un motivo de transferencia.");
 		        return;
 		      }
 		
