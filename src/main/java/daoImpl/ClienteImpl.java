@@ -27,7 +27,7 @@ public class ClienteImpl implements ClienteDao{
 			+ "(dni, cuil, nombre, apellido, sexo, nacionalidad, fechanacimiento, direccion, id_localidad, correo, telefono, fecha_alta) \r\n"
 			+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "UPDATE clientes set estado = 0 WHERE dni LIKE ?";
-	private static final String readall =  "select * from vista_clientes WHERE estadoUsuario = 1";
+	private static final String readall =  "select * from vista_clientes";
 	private static final String READ_ONE_BY_ID = "SELECT * FROM vista_clientes WHERE id_cliente = ?";
 	
 	private static final String buscarDni = "select dni from clientes where dni = ?;";
@@ -253,7 +253,7 @@ public class ClienteImpl implements ClienteDao{
 	    String correo = resultSet.getString("correo");
 	    String telefono = resultSet.getString("telefono");
 	    LocalDate fechaAlta = resultSet.getDate("altaCliente").toLocalDate();
-	    boolean estado = resultSet.getBoolean("estadoCliente");
+	    boolean estado = resultSet.getBoolean("estadoUsuario");
 
 	    // Construcción final del objeto Cliente
 	    Cliente cliente = new Cliente(
