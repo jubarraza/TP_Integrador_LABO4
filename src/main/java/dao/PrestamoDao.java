@@ -6,5 +6,5 @@ import entidad.Prestamo;
 
 public interface PrestamoDao {
 	public boolean insert(Prestamo prestamo);
-	public List<Prestamo> readall();
+	public List<Prestamo> readAll();
 }

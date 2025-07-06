@@ -16,7 +16,7 @@ import entidad.Prestamo;
 public class PrestamoImpl implements PrestamoDao {
 	
 	private static final String insertPrestamo = "INSERT INTO prestamos (num_de_cuenta, fecha, importe_pedido, cuotas, importe_mensual, estado, aprobado, finalizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-	private static final String readall = "select * from vista_prestamos";
+	private static final String readAll = "select * from vista_prestamos";
 	
 	@Override
 	public boolean insert(Prestamo prestamo) {
@@ -55,14 +55,14 @@ public class PrestamoImpl implements PrestamoDao {
 	}
 
 	@Override
-	public List<Prestamo> readall() {
+	public List<Prestamo> readAll() {
 		PreparedStatement statement;
 		ResultSet resultSet;
 		ArrayList<Prestamo> prestamos = new ArrayList<Prestamo>();
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
 		try {
-			statement = conexion.prepareStatement(readall);
+			statement = conexion.prepareStatement(readAll);
 			resultSet = statement.executeQuery();
 			
 			while(resultSet.next()) {
