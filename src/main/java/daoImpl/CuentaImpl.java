@@ -24,6 +24,7 @@ public class CuentaImpl implements CuentaDao{
 	private static final String buscarId = "SELECT id_cliente FROM vista_clientes_id WHERE dni = ?;";
 	private static final String buscarNumCuenta = "select num_de_cuenta from cuentas where num_de_cuenta = ?;";
 	private static final String buscarCbu = "select cbu from cuentas where cbu = ?;";
+	private static final String obtenerCuentaPorCbu = "SELECT num_de_cuenta, saldo FROM cuentas WHERE cbu = ?";
 	
 	private static final String cantCuentas = "SELECT cantidad FROM vista_cantidad_cuentas_activas WHERE dni = ?;";
 	private static final  String readAllxID = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
@@ -470,5 +471,30 @@ public class CuentaImpl implements CuentaDao{
 			}
 		}
 		return existe;
+	}
+	
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+	    Cuenta cuenta = null;
+	    Connection conexion = Conexion.getConexion().getSQLConexion();	    
+
+	    try {
+	        PreparedStatement statement = conexion.prepareStatement(obtenerCuentaPorCbu);
+	        statement.setString(1, cbu);
+	        ResultSet resultSet = statement.executeQuery();
+
+	        if (resultSet.next()) {
+	            cuenta = new Cuenta();
+	            cuenta.setNumDeCuenta(resultSet.getString("num_de_cuenta"));
+	            cuenta.setSaldo(resultSet.getDouble("saldo"));
+	        }
+
+	        resultSet.close();
+	        statement.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cuenta;
 	}
 }

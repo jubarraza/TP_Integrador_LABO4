@@ -6,6 +6,7 @@ public class Prestamo {
 	
 	private int idPrestamo;
     private String numDeCuenta;
+    private String nombreUsuario;
     private LocalDate fecha;
     private Double importePedido;
     private short cuotas;
@@ -17,10 +18,10 @@ public class Prestamo {
     public Prestamo() {
     }
 
-    public Prestamo(int idPrestamo, String numDeCuenta, LocalDate fecha, Double importePedido,
-                    short cuotas, Double importeMensual, boolean estado, boolean aprobado, boolean finalizado) {
+    public Prestamo(int idPrestamo, String numDeCuenta, String nombreUsuario, LocalDate fecha, Double importePedido, short cuotas, Double importeMensual, boolean estado, boolean aprobado, boolean finalizado) {
         this.idPrestamo = idPrestamo;
         this.numDeCuenta = numDeCuenta;
+        this.nombreUsuario = nombreUsuario;
         this.fecha = fecha;
         this.importePedido = importePedido;
         this.cuotas = cuotas;
@@ -117,7 +118,8 @@ public class Prestamo {
     public String toString() {
         return "Prestamo{" +
                "idPrestamo=" + idPrestamo +
-               " Cunta " + numDeCuenta + '\'' +
+               ", numDeCuenta='" + numDeCuenta + '\'' +
+               ", nombreUsuario='" + nombreUsuario + '\'' +  // <-- agregado
                ", fecha=" + fecha +
                ", importePedido=" + importePedido +
                ", cuotas=" + cuotas +
@@ -127,5 +129,13 @@ public class Prestamo {
                ", finalizado=" + finalizado +
                '}';
     }
+
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+
+	public void setNombreUsuario(String nombreUsuario) {
+		this.nombreUsuario = nombreUsuario;
+	}
 	
 }

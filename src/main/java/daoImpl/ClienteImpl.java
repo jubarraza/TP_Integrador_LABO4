@@ -334,4 +334,39 @@ public class ClienteImpl implements ClienteDao{
 		}
 		return existe;
 	}
+	
+	public String getUsuarioPorCuenta(String numCuenta) {
+	    String nombreUsuario = "";
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    String query = "SELECT u.nombreusuario FROM cuentas c " +
+	                   "JOIN usuarios u ON c.id_usuario = u.id_usuario " +
+	                   "WHERE c.num_de_cuenta = ?";
+
+	    try {
+	        Connection conn = Conexion.getConexion().getSQLConexion();
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, numCuenta);
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            nombreUsuario = rs.getString("nombreusuario");
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error al obtener nombre de usuario por cuenta: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (stmt != null) stmt.close();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+
+	    return nombreUsuario;
+	}
+	
 }

@@ -60,16 +60,15 @@
 			    <a href="TransferenciaPropiaServlet" type="button" class="btn btn-primary btn-lg" style="width: 250px; height: 50px;">
 			        A una Cuenta Propia
 			    </a>
-			</article>
-			
-			
+			</article>	
+				
 		<%
 		   String mensaje = request.getParameter("mensaje");
 		
 		   if ("ok".equals(mensaje)) {
 		%>
 		<div class="row justify-content-center mt-4">
-    	<div class="col-12 col-md-10 col-lg-8">
+    	<div class="col-12 col-md-10 col-lg-6">
 		    <div class="alert alert-success alert-dismissible fade show" role="alert"><i class="bi bi-check2-circle"></i> Transferencia realizada con éxito.
 		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		    </div>
@@ -88,6 +87,24 @@
 		<%
 		    }
 		%>
+		<% if ("cbuInvalido".equals(mensaje)) { %>
+		<div class="row justify-content-center mt-4">
+    	<div class="col-12 col-md-10 col-lg-10">
+		    <div class="alert alert-warning alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-circle"></i> El CBU ingresado no se encuentra registrado en el sistema. Verifique los datos e intente nuevamente.
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+		</div>
+  		</div>
+		<% } %>
+		<% if ("cbuPropio".equals(mensaje)) { %>
+		<div class="row justify-content-center mt-4">
+    	<div class="col-12 col-md-10 col-lg-8">
+		    <div class="alert alert-warning alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-circle"></i> El CBU ingresado pertenece a una de sus propias cuentas. <br> Para transferencias entre cuentas propias, utilice la opción correspondiente.
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		    </div>
+		</div>
+  		</div>
+		<% } %>
 		<div class="d-grid gap-2 col-6 mx-auto">
 		  <a class="btn btn-success btn-lg" type="button" href="MovimientoServlet"><i class="bi bi-arrow-repeat"></i> Ver Movimientos</a>
 		</div>
