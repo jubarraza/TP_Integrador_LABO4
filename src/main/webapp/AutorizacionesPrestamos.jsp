@@ -165,8 +165,65 @@
                         </td>
                         <td>
                             <% if (!p.isEstado()) { %>
-                                <a href="#" class="btn btn-sm btn-success me-1">Aprobar</a>
-                                <a href="#" class="btn btn-sm btn-danger">Rechazar</a>
+                                <!-- Botón Aprobar -->
+                                <button type="button" class="btn btn-sm btn-success me-1" data-bs-toggle="modal" 
+                                data-bs-target="#modalAprobar<%=p.getIdPrestamo()%>">Aprobar</button>
+
+                                <!-- Modal Aprobar -->
+                                <div class="modal fade" id="modalAprobar<%=p.getIdPrestamo()%>" tabindex="-1" 
+                                aria-labelledby="aprobarLabel<%=p.getIdPrestamo()%>" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <form action="AutorizacionPrestamoServlet" method="post">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="aprobarLabel<%=p.getIdPrestamo()%>">
+                                                    Confirmar Aprobación</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" 
+                                                    aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Estás seguro que deseas aprobar el préstamo <strong>#<%=p.getIdPrestamo()%></strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <input type="hidden" name="idPrestamo" value="<%=p.getIdPrestamo()%>">
+                                                    <input type="hidden" name="accion" value="aprobar">
+                                                    <button type="submit" class="btn btn-success">Sí, aprobar</button>
+                                                    <button type="button" class="btn btn-secondary" 
+                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Botón Rechazar -->
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalRechazar<%=p.getIdPrestamo()%>">Rechazar</button>
+
+                                <!-- Modal Rechazar -->
+                                <div class="modal fade" id="modalRechazar<%=p.getIdPrestamo()%>" tabindex="-1" aria-labelledby="rechazarLabel<%=p.getIdPrestamo()%>" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <form action="AutorizacionPrestamoServlet" method="post">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="rechazarLabel<%=p.getIdPrestamo()%>">
+                                                    Confirmar Rechazo</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" 
+                                                    aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    ¿Estás seguro que deseas rechazar el préstamo <strong>#<%=p.getIdPrestamo()%></strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <input type="hidden" name="idPrestamo" value="<%=p.getIdPrestamo()%>">
+                                                    <input type="hidden" name="accion" value="rechazar">
+                                                    <button type="submit" class="btn btn-danger">Sí, rechazar</button>
+                                                    <button type="button" class="btn btn-secondary" 
+                                                    data-bs-dismiss="modal">Cancelar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             <% } else { %>
                                 <span class="text-muted">—</span>
                             <% } %>
@@ -199,5 +256,7 @@
             });
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
 </body>
 </html>

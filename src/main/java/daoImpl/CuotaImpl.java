@@ -1,0 +1,65 @@
+package daoImpl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import dao.CuotaDao;
+import entidad.Prestamo;
+
+public class CuotaImpl implements CuotaDao {
+
+    private Connection conexion;
+
+    private static final String INSERT_CUOTA =
+        "INSERT INTO cuotas (id_prestamo, num_cuota, monto, estado, fecha_pago) " +
+        "VALUES (?, ?, ?, 1, ?);";
+
+
+    public CuotaImpl(Connection conexion) {
+        this.conexion = conexion;
+    }
+
+    @Override
+    public boolean generarCuotas(Prestamo prestamo) {
+        boolean exito = false;
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = conexion.prepareStatement(INSERT_CUOTA);
+
+
+            for (int i = 1; i <= prestamo.getCuotas(); i++) {
+                stmt.setInt(1, prestamo.getIdPrestamo());
+                stmt.setInt(2, i);
+                stmt.setDouble(3, prestamo.getImporteMensual());
+
+                stmt.setNull(4, java.sql.Types.TIMESTAMP);
+
+                stmt.addBatch();
+            }
+
+            int[] resultados = stmt.executeBatch();
+            conexion.commit();
+            exito = resultados.length == prestamo.getCuotas();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try {
+                if (conexion != null) conexion.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        return exito;
+    }
+
+
+}
