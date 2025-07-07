@@ -254,6 +254,8 @@ public class ClienteImpl implements ClienteDao{
 	    String telefono = resultSet.getString("telefono");
 	    LocalDate fechaAlta = resultSet.getDate("altaCliente").toLocalDate();
 	    boolean estado = resultSet.getBoolean("estadoUsuario");
+	    boolean tienePrestamo = resultSet.getBoolean("tienePrestamoActivo");
+
 
 	    // Construcción final del objeto Cliente
 	    Cliente cliente = new Cliente(
@@ -273,6 +275,7 @@ public class ClienteImpl implements ClienteDao{
 	        fechaAlta,
 	        estado
 	    );
+	    cliente.setTienePrestamoActivo(tienePrestamo);
 
 	    return cliente;
 	}

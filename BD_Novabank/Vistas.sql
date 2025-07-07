@@ -1,7 +1,5 @@
 Use banco;
 
-
---// Esta vista_clientes deben cambiar 
 drop view if exists vista_clientes;
 
 CREATE VIEW vista_clientes AS
@@ -17,7 +15,8 @@ SELECT
     p.descripcion AS provincia, 
     c.correo, c.telefono, 
     c.fecha_alta AS altaCliente, 
-    c.estado AS estadoCliente
+    c.estado AS estadoCliente,
+	(SELECT COUNT(*) FROM prestamos p INNER JOIN cuentas cu ON p.num_de_cuenta = cu.num_de_cuenta WHERE cu.id_cliente = c.id_cliente AND (p.finalizado IS NULL OR p.finalizado = 0)) > 0 AS tienePrestamoActivo
 FROM clientes AS c
 INNER JOIN localidades AS l ON c.id_localidad = l.id_localidad
 INNER JOIN provincias AS p ON l.id_provincia = p.id_provincia
@@ -61,7 +60,7 @@ JOIN
 ON
     u.id_tipouser = tu.id_tipouser;
 
---//Estas vista_cliente_id y vista_cantidad_cuentas_activas deben agregar
+
 
 drop view if exists vista_clientes_id;
     
@@ -81,7 +80,6 @@ WHERE c.estado = 1
 GROUP BY cl.dni;
 
 
---Prestamos vista modificada
 DROP VIEW IF EXISTS vista_prestamos;
 
 CREATE VIEW vista_prestamos AS
