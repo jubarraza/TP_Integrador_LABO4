@@ -30,8 +30,6 @@ public class ClienteImpl implements ClienteDao{
 	private static final String readall =  "select * from vista_clientes";
 	private static final String READ_ONE_BY_ID = "SELECT * FROM vista_clientes WHERE id_cliente = ?";
 	
-	private static final String buscarDni = "select dni from clientes where dni = ?;";
-	
 	
 	public ClienteImpl(Connection conexion) {
         this.conexion = conexion;
@@ -315,32 +313,6 @@ public class ClienteImpl implements ClienteDao{
 	    }
 
 	    return cliente;
-	}
-
-	@Override
-	public boolean buscarDni(String dni) {
-		PreparedStatement statement;
-		Connection conexion = Conexion.getConexion().getSQLConexion();
-		boolean existe = false;
-		
-		try {
-			statement = conexion.prepareStatement(buscarDni);
-			statement.setString(1, dni);
-            ResultSet rs = statement.executeQuery();
-            
-            if (rs.next()) {
-            	existe = true;
-            }
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				conexion.rollback();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-		}
-		return existe;
 	}
 	
 	public String getUsuarioPorCuenta(String numCuenta) {

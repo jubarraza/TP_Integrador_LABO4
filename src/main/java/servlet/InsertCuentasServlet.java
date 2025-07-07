@@ -91,7 +91,6 @@ public class InsertCuentasServlet extends HttpServlet {
 	        doGet(request, response);
 	        return;
 		}
-	    
 
 	    // Construir TipoDeCuenta y Cliente
 	    TipoDeCuenta tipo = new TipoDeCuenta();
