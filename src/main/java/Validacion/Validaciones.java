@@ -15,6 +15,9 @@ public class Validaciones {
 	private static final String select = "select * from cuentas where num_de_cuenta like ?;";
 	private static final String selectEmail = "Select 1 from clientes where email like ?;";
 	private static final String selectDNI ="Select 1 from clientes where dni like ?;";
+	private static final String buscarDni = "select dni from clientes where dni = ?;";
+	private static final String buscarNumCuenta = "select num_de_cuenta from cuentas where num_de_cuenta = ?;";
+	private static final String buscarCbu = "select cbu from cuentas where cbu = ?;";
     
     public static boolean Verificarfecha(String fecha) {    
         
@@ -177,8 +180,81 @@ public static boolean existeDNI(String DNI) {
     return existeDNI;
 }
 
+    public boolean buscarDni(String dni) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean existe = false;
+		
+		try {
+			statement = conexion.prepareStatement(buscarDni);
+			statement.setString(1, dni);
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+            	existe = true;
+            }
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conexion.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return existe;
+	}
     
+    public boolean buscarNumCuenta(String numCuenta) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean existe = false;
+		
+		try {
+			statement = conexion.prepareStatement(buscarNumCuenta);
+			statement.setString(1, numCuenta);
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+            	existe = true;
+            }
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conexion.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return existe;
+	}
     
+    public boolean buscarCbu(String cbu) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean existe = false;
+		
+		try {
+			statement = conexion.prepareStatement(buscarCbu);
+			statement.setString(1, cbu);
+            ResultSet rs = statement.executeQuery();
+            
+            if (rs.next()) {
+            	existe = true;
+            }
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conexion.rollback();
+			} catch (SQLException e2) {
+				e2.printStackTrace();
+			}
+		}
+		return existe;
+	}
+
     
     
     

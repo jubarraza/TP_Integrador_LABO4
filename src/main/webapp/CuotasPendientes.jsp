@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	
+<%@ page
+	import="java.util.List, entidad.Cuota, java.text.NumberFormat, java.util.Locale"%>
 <%@ include file="fragmentos/VerificarSesion.jspf"%>
 
 <!DOCTYPE html>
@@ -149,30 +150,38 @@ body {
 						</tr>
 					</thead>
 					<tbody>
+						<%
+        List<Cuota> listaCuotas = (List<Cuota>) request.getAttribute("listaCuotas");
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
+
+        if (listaCuotas != null && !listaCuotas.isEmpty()) {
+            for (Cuota cuota : listaCuotas) {
+    %>
 						<tr>
-							<td>1</td>
-							<td>$250.00</td>
-							<td>12345</td>
-							<td><span class="status-paid">PAGADO</span></td>
-							<td>15/06/2025</td>
-							<td></td>
+							<td><%= cuota.getNumCuota() %></td>
+							<td><%= formatter.format(cuota.getMonto()) %></td>
+							<td><%= cuota.getIdPrestamo() %></td>
+							<td>
+								<% if (cuota.isEstado()) { %> <span class="status-pending">PENDIENTE</span>
+								<% } else { %> <span class="status-paid">PAGADO</span> <% } %>
+							</td>
+							<td><%= (cuota.getFechaPago() != null) ? cuota.getFechaPago() : "---" %></td>
+							<td>
+								<% if (cuota.isEstado()) { %>
+								<a href="PrepararPagoCuotaServlet?idCuota=<%= cuota.getIdPagoDeCuota() %>" class="btn btn-sm btn-pay">Pagar</a> <% } %>
+							</td>
 						</tr>
+						<%
+            }
+        } else {
+    %>
 						<tr>
-							<td>2</td>
-							<td>$160.00</td>
-							<td>87395</td>
-							<td><span class="status-pending">PENDIENTE</span></td>
-							<td></td>
-							<td><a href="PagoDeCuota.jsp" class="btn btn-sm btn-pay">Pagar</a></td>
+							<td colspan="6" class="text-center">No se encontraron cuotas
+								para este préstamo.</td>
 						</tr>
-						<tr>
-							<td>3</td>
-							<td>$170.00</td>
-							<td>67890</td>
-							<td><span class="status-paid">PAGADO</span></td>
-							<td>10/07/2025</td>
-							<td></td>
-						</tr>
+						<%
+        }
+    %>
 					</tbody>
 				</table>
 			</div>

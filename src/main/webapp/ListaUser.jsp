@@ -143,10 +143,21 @@ table{
  }
  %>
 						</td>
+
 						<td>
 							<%
-							if (c.getUser() != null) {
+							if (c.isTienePrestamoActivo()) {
 							%>
+
+							<button type="button"
+								class="btn btn-outline-danger btn-sm btn-action" disabled
+								data-bs-toggle="tooltip" data-bs-placement="top"
+								title="No se puede eliminar, tiene préstamos activos">
+								<i class="bi bi-trash"></i> Eliminar
+							</button> <%-- Si NO tiene préstamos activos --%> <%
+ } else {
+ %>
+
 							<form action="<%=request.getContextPath()%>/admin/usuarios"
 								method="post"
 								onsubmit="return confirm('¿Estás seguro que deseas eliminar este usuario?');">

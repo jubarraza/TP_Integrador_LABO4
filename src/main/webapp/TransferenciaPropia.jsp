@@ -54,7 +54,7 @@
 			  <div class="mb-3">
 			    <label for="cuentaOrigen" class="form-label text-primary"><i class="bi bi-wallet2 me-1"></i>Cuenta Origen</label>
 			    <select class="form-select" id="cuentaOrigen" name="cuentaOrigen" required>
-			      <option disabled selected>Seleccionar cuenta</option>
+			      <option  value="" disabled selected>Seleccionar cuenta</option>
 			      <% if (cuentasCliente != null) {
 			        for (Cuenta cuenta : cuentasCliente) { %>
 			          <option value="<%= cuenta.getNumDeCuenta() %>" data-saldo="<%= cuenta.getSaldo() %>">
@@ -68,7 +68,7 @@
 			  <div class="mb-3">
 			    <label for="cuentaDestino" class="form-label text-primary"><i class="bi bi-wallet2 me-1"></i>Cuenta Destino</label>
 			    <select class="form-select" id="cuentaDestino" name="cuentaDestino" required>
-			      <option disabled selected>Seleccionar cuenta</option>
+			      <option  value="" disabled selected>Seleccionar cuenta</option>
 			      <% if (cuentasCliente != null) {
 			        for (Cuenta cuenta : cuentasCliente) { %>
 			          <option value="<%= cuenta.getNumDeCuenta() %>">
@@ -81,7 +81,7 @@
 			 <!-- Monto -->
 			  <div class="mb-3">
 			    <label for="monto" class="form-label text-primary"><i class="bi bi-cash-coin me-1"></i>Monto a transferir ($)</label>
-			    <input type="number" class="form-control" id="monto" name="monto" placeholder="0.00" step="0.01" min="0.01" required>
+			    <input type="number" class="form-control" id="monto" name="monto" placeholder="0.00" step="0.01" min="0.01" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
 			  </div>
 
             <!-- Detalle -->
@@ -130,51 +130,52 @@
 			      
 			    </div>
 			  </div>
-			</div>
-			
-		<script>
-		  function validarTransferencia() {
-		  	const cuentaOrigenSelect = document.getElementById("cuentaOrigen");
-		    const cuentaDestino = document.getElementById("cuentaDestino").value;
-		    const cuentaOrigen = cuentaOrigenSelect.value;
-		    const monto = parseFloat(document.getElementById("monto").value);
-		    const saldoDisponible = parseFloat(cuentaOrigenSelect.selectedOptions[0].dataset.saldo);
-		    const detalle = document.getElementById("detalle").value;
-
-		    if (!cuentaOrigen || !cuentaDestino) {
-		      alert("Debe seleccionar cuentas válidas.");
-		      return;
-		    }
-		
-		    if (cuentaOrigen === cuentaDestino) {
-		      alert("No se puede transferir a la misma cuenta.");
-		      return;
-		    }
-		
-		    if (isNaN(monto) || monto <= 0) {
-		      alert("El monto ingresado no es válido.");
-		      return;
-		    }
-		    if (monto > saldoDisponible) {
-		        alert("El monto ingresado supera el saldo disponible de la cuenta origen.");
-		        return;
-		      }
-		    if (!detalle) { 
-		        alert("Debe seleccionar un motivo de transferencia.");
-		        return;
-		      }
-		
-		    const modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
-		    modal.show();
-		  }
-		</script>
-                       
-          </form>       
+			</div>	                       
+          </form>      
 
         </div>
       </div>
     </div>
   </main>
 <jsp:include page="Footer.html" />
+
+	<script>
+	  function validarTransferencia() {
+	  	const cuentaOrigenSelect = document.getElementById("cuentaOrigen");
+	    const cuentaDestino = document.getElementById("cuentaDestino").value;
+	    const cuentaOrigen = cuentaOrigenSelect.value;
+	    const monto = parseFloat(document.getElementById("monto").value);
+	    const saldoDisponible = parseFloat(cuentaOrigenSelect.selectedOptions[0].dataset.saldo);
+	    const detalle = document.getElementById("detalle").value;
+
+	    
+	    if (!cuentaOrigen || !cuentaDestino) {
+	      alert("Debe seleccionar cuentas válidas.");
+	      return;
+	    }
+	
+	    if (cuentaOrigen === cuentaDestino) {
+	      alert("No se puede transferir a la misma cuenta.");
+	      return;
+	    }
+	
+	    if (isNaN(monto) || monto <= 0) {
+	      alert("El monto ingresado no es válido.");
+	      return;
+	    }
+	    if (monto > saldoDisponible) {
+	        alert("El monto ingresado supera el saldo disponible de la cuenta origen.");
+	        return;
+	      }
+	    if (!detalle) { 
+	        alert("Debe seleccionar un motivo de transferencia.");
+	        return;
+	      }
+	
+	    const modal = new bootstrap.Modal(document.getElementById('modalConfirmacion'));
+	    modal.show();
+	  }
+	</script>
+
 </body>
 </html>

@@ -20,7 +20,8 @@ public class Cliente {
     private String telefono;
     private Usuario user; 
     private LocalDate fechaAlta; 
-    private boolean estado; 
+    private boolean estado;
+    private boolean tienePrestamoActivo;
 
     
     public Cliente() {
@@ -64,6 +65,14 @@ public class Cliente {
     	this.user = user;
     }
 
+    public boolean isTienePrestamoActivo() {
+        return tienePrestamoActivo;
+    }
+
+    public void setTienePrestamoActivo(boolean tienePrestamoActivo) {
+        this.tienePrestamoActivo = tienePrestamoActivo;
+    }
+    
     public int getIdCliente() {
         return idCliente;
     }

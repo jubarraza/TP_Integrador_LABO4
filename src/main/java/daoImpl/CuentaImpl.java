@@ -22,8 +22,7 @@ public class CuentaImpl implements CuentaDao{
 	private static String tipoCuentas = "select * from tipo_de_cuentas"; 
 	
 	private static final String buscarId = "SELECT id_cliente FROM vista_clientes_id WHERE dni = ?;";
-	private static final String buscarNumCuenta = "select num_de_cuenta from cuentas where num_de_cuenta = ?;";
-	private static final String buscarCbu = "select cbu from cuentas where cbu = ?;";
+	private static final String obtenerCuentaPorCbu = "SELECT num_de_cuenta, saldo FROM cuentas WHERE cbu = ?";
 	
 	private static final String cantCuentas = "SELECT cantidad FROM vista_cantidad_cuentas_activas WHERE dni = ?;";
 	private static final  String readAllxID = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
@@ -420,55 +419,29 @@ public class CuentaImpl implements CuentaDao{
 	    return cuentas;
 	}
 
-	@Override
-	public boolean buscarNumCuenta(String numCuenta) {
-		PreparedStatement statement;
-		Connection conexion = Conexion.getConexion().getSQLConexion();
-		boolean existe = false;
-		
-		try {
-			statement = conexion.prepareStatement(buscarNumCuenta);
-			statement.setString(1, numCuenta);
-            ResultSet rs = statement.executeQuery();
-            
-            if (rs.next()) {
-            	existe = true;
-            }
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				conexion.rollback();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-		}
-		return existe;
-	}
+	
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+	    Cuenta cuenta = null;
+	    Connection conexion = Conexion.getConexion().getSQLConexion();	    
 
-	@Override
-	public boolean buscarCbu(String cbu) {
-		PreparedStatement statement;
-		Connection conexion = Conexion.getConexion().getSQLConexion();
-		boolean existe = false;
-		
-		try {
-			statement = conexion.prepareStatement(buscarCbu);
-			statement.setString(1, cbu);
-            ResultSet rs = statement.executeQuery();
-            
-            if (rs.next()) {
-            	existe = true;
-            }
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				conexion.rollback();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-		}
-		return existe;
+	    try {
+	        PreparedStatement statement = conexion.prepareStatement(obtenerCuentaPorCbu);
+	        statement.setString(1, cbu);
+	        ResultSet resultSet = statement.executeQuery();
+
+	        if (resultSet.next()) {
+	            cuenta = new Cuenta();
+	            cuenta.setNumDeCuenta(resultSet.getString("num_de_cuenta"));
+	            cuenta.setSaldo(resultSet.getDouble("saldo"));
+	        }
+
+	        resultSet.close();
+	        statement.close();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cuenta;
 	}
 }

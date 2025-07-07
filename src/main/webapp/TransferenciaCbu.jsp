@@ -51,36 +51,46 @@
         <div class="card p-4">
           <h3 class="fw mb-4 text-center text-primary"><i class="bi bi-arrow-left-right"></i> Nueva Transferencia </h3>
 
-          <form>
+          <form method="post" action="TransferenciaCbuServlet">
           	<!-- Cuenta de Origen -->
 			<div class="mb-3">
 			  <label for="cuentaOrigen" class="form-label text-primary"><i class="bi bi-wallet2 me-1"></i>Cuenta Origen</label>
 			  <select class="form-select" id="cuentaOrigen" name="cuentaOrigen" required>
-			    <option selected disabled>Seleccionar cuenta</option>
+			    <option value="" selected disabled>Seleccionar cuenta</option>
 			    <% if (cuentasCliente != null) {
 			        for (Cuenta cuenta : cuentasCliente) { %>
 			          <option value="<%= cuenta.getNumDeCuenta() %>">
 			            <%= cuenta.getTipoCuenta().getDescripcion() %> - $<%= String.format("%.2f", cuenta.getSaldo()) %>
 			          </option>
 			    <%  }
-			       } %>	
+			       } %>
 			  </select>
 			</div>
 
             <div class="mb-3">
               <label for="cbu" class="form-label text-primary"><i class="bi bi-upc-scan me-1"></i>CBU/CVU de destino</label>
-              <input type="text" class="form-control" id="cbu" placeholder="Ingrese CBU o CVU" required>
+              <input type="text" class="form-control" id="cbu" name="cbu"  maxlength="23" pattern="\d{23}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Ingrese CBU/CVU" required>
             </div>
 
             <div class="mb-3">
               <label for="monto" class="form-label text-primary"><i class="bi bi-cash-coin me-1"></i>Monto a transferir ($)</label>
-              <input type="number" class="form-control" id="monto" placeholder="0.00" required>
+              <input type="number" class="form-control" id="monto" name="monto" placeholder="0.00" step="0.01" min="0.01" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
             </div>
 
-            <div class="mb-3">
-              <label for="detalle" class="form-label text-primary"><i class="bi bi-pencil-square me-1"></i>Detalle</label>
-              <textarea class="form-control" id="detalle" rows="3" placeholder="Motivo de la transferencia"></textarea>
-            </div>
+            <!-- Detalle -->
+			  <div class="mb-3">
+			    <label for="detalle" class="form-label text-primary"><i class="bi bi-pencil-square me-1"></i>Detalle</label>
+			    <select class="form-select" id="detalle" name="detalle" required>
+				    <option value="" selected disabled>Seleccione un motivo…</option>
+				    <option value="Cuota">Cuota</option>
+				    <option value="Expensa">Expensa</option>
+				    <option value="Servicios">Pago de servicios</option>
+				    <option value="Impuestos">Impuestos</option>
+				    <option value="Honorarios">Honorarios</option>
+				    <option value="Préstamo">Préstamo</option>
+				    <option value="Otro">Otro</option>
+				  </select>
+			  </div>
 
             <div class="d-flex justify-content-end gap-2">
             <a type="button" class="btn btn-outline-secondary" href="Transferencias.jsp"><i class="bi bi-backspace"></i> Volver</a>

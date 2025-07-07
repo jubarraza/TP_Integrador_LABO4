@@ -27,10 +27,8 @@ public class ClienteImpl implements ClienteDao{
 			+ "(dni, cuil, nombre, apellido, sexo, nacionalidad, fechanacimiento, direccion, id_localidad, correo, telefono, fecha_alta) \r\n"
 			+ "values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String delete = "UPDATE clientes set estado = 0 WHERE dni LIKE ?";
-	private static final String readall =  "select * from vista_clientes WHERE estadoUsuario = 1";
+	private static final String readall =  "select * from vista_clientes";
 	private static final String READ_ONE_BY_ID = "SELECT * FROM vista_clientes WHERE id_cliente = ?";
-	
-	private static final String buscarDni = "select dni from clientes where dni = ?;";
 	
 	
 	public ClienteImpl(Connection conexion) {
@@ -258,11 +256,15 @@ public class ClienteImpl implements ClienteDao{
 	    String direccion = resultSet.getString("direccion");
 	    String correo = resultSet.getString("correo");
 	    String telefono = resultSet.getString("telefono");
-	    
 	    Date fechaAltaSQL = resultSet.getDate("altaCliente");
 	    LocalDate fechaAlta = (fechaAltaSQL != null) ? fechaAltaSQL.toLocalDate() : null;
-	    
-	    boolean estado = resultSet.getBoolean("estadoCliente");
+	    boolean estado = resultSet.getBoolean("estadoUsuario");
+	    boolean tienePrestamoActivo = false;
+	    try {
+	        tienePrestamoActivo = resultSet.getBoolean("tienePrestamoActivo");
+	    } catch (SQLException e) {
+	        // Si no está en la vista, lo dejamos en false por defecto
+	    }
 
 	    // Construcción final del objeto Cliente
 	    Cliente cliente = new Cliente(
@@ -282,6 +284,7 @@ public class ClienteImpl implements ClienteDao{
 	        fechaAlta,
 	        estado
 	    );
+	    cliente.setTienePrestamoActivo(tienePrestamoActivo);
 
 	    return cliente;
 	}
@@ -317,30 +320,39 @@ public class ClienteImpl implements ClienteDao{
 
 	    return cliente;
 	}
+	
+	public String getUsuarioPorCuenta(String numCuenta) {
+	    String nombreUsuario = "";
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
 
-	@Override
-	public boolean buscarDni(String dni) {
-		PreparedStatement statement;
-		Connection conexion = Conexion.getConexion().getSQLConexion();
-		boolean existe = false;
-		
-		try {
-			statement = conexion.prepareStatement(buscarDni);
-			statement.setString(1, dni);
-            ResultSet rs = statement.executeQuery();
-            
-            if (rs.next()) {
-            	existe = true;
-            }
-			
-		}catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				conexion.rollback();
-			} catch (SQLException e2) {
-				e2.printStackTrace();
-			}
-		}
-		return existe;
+	    String query = "SELECT u.nombreusuario FROM cuentas c " +
+	                   "JOIN usuarios u ON c.id_usuario = u.id_usuario " +
+	                   "WHERE c.num_de_cuenta = ?";
+
+	    try {
+	        Connection conn = Conexion.getConexion().getSQLConexion();
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, numCuenta);
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            nombreUsuario = rs.getString("nombreusuario");
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error al obtener nombre de usuario por cuenta: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (stmt != null) stmt.close();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+
+	    return nombreUsuario;
 	}
+	
 }
