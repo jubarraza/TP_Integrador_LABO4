@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ page import="java.util.List, entidad.Prestamo, java.text.NumberFormat, java.util.Locale" %>
 <%@ include file="fragmentos/VerificarSesion.jspf"%>
 	
 <!DOCTYPE html>
@@ -71,29 +72,33 @@ h2 {
 </head>
 <body>
 	<jsp:include page="Nav.jsp" />
-	
-<!-- Toast para el mensaje de exito/error post creacion -->>
-	<%
-    String toastExito = (String) session.getAttribute("toastExito");
-    String toastError = (String) session.getAttribute("toastError");
-    session.removeAttribute("toastExito");
-    session.removeAttribute("toastError");
-%>
 
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-    <div id="toastMensaje" class="toast align-items-center text-white 
-        <%= (toastExito != null) ? "bg-success" : (toastError != null) ? "bg-danger" : "" %> 
-        border-0" role="alert" aria-live="assertive" aria-atomic="true"
-        style="<%= (toastExito != null || toastError != null) ? "display:block;" : "display:none;" %>">
-        
-        <div class="d-flex">
-            <div class="toast-body">
-                <%= (toastExito != null) ? toastExito : toastError %>
-            </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
-        </div>
-    </div>
-</div>
+	<!-- Toast para el mensaje de exito/error post creacion -->
+	>
+	<%
+	String toastExito = (String) session.getAttribute("toastExito");
+	String toastError = (String) session.getAttribute("toastError");
+	session.removeAttribute("toastExito");
+	session.removeAttribute("toastError");
+	%>
+
+	<div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+		<div id="toastMensaje"
+			class="toast align-items-center text-white 
+        <%=(toastExito != null) ? "bg-success" : (toastError != null) ? "bg-danger" : ""%> 
+        border-0"
+			role="alert" aria-live="assertive" aria-atomic="true"
+			style="<%=(toastExito != null || toastError != null) ? "display:block;" : "display:none;"%>">
+
+			<div class="d-flex">
+				<div class="toast-body">
+					<%=(toastExito != null) ? toastExito : toastError%>
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto"
+					data-bs-dismiss="toast" aria-label="Cerrar"></button>
+			</div>
+		</div>
+	</div>
 
 	<div class="container">
 		<div class="d-flex justify-content-between align-items-center mb-4">
@@ -151,108 +156,64 @@ h2 {
 					</tr>
 				</thead>
 				<tbody>
+					<%
+					List<Prestamo> listaPrestamos = (List<Prestamo>) request.getAttribute("listaPrestamos");
+					NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
+
+					if (listaPrestamos != null && !listaPrestamos.isEmpty()) {
+						for (Prestamo p : listaPrestamos) {
+							String estadoTexto = "Pendiente";
+							String estadoClase = "bg-warning text-dark";
+							boolean puedePagar = false;
+
+							if (p.isFinalizado()) {
+						estadoTexto = "Finalizado";
+						estadoClase = "bg-info";
+							} else if (p.isAprobado()) {
+						estadoTexto = "Activo";
+						estadoClase = "bg-success";
+						puedePagar = true;
+							} else if (p.isEstado()) {
+						estadoTexto = "Rechazado";
+						estadoClase = "bg-danger";
+							}
+					%>
 					<tr>
-						<td>01/01/2024</td>
-						<td>$ 10.000,00</td>
-						<td>$ 1.000,00</td>
-						<td>12</td>
-						<td>3</td>
-						<td><span class="badge bg-success">Activo</span></td>
+						<td><%=p.getFecha()%></td>
+						<td><%=formatter.format(p.getImportePedido())%></td>
+						<td><%=formatter.format(p.getImporteMensual())%></td>
+						<td><%=p.getCuotas()%></td>
+						<td>Falta Lógica</td>
+						<td><span class="badge <%=estadoClase%>"><%=estadoTexto%></span></td>
 						<td>
-							<button type="submit" class="btn btn-success btn-sm btn-action"
-								name="btnPagarCuota">
-								<i class="fas fa-money-bill-wave"></i> Pagar Cuota
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<td>15/02/2024</td>
-						<td>$ 5.000,00</td>
-						<td>$ 208,33</td>
-						<td>24</td>
-						<td>24</td>
-						<td><span class="badge bg-warning text-dark">Pendiente
-								de aprobación</span></td>
-						<td>
+							<%
+							if (p.isAprobado()) {
+							%> <a
+							href="DetallePrestamoServlet?idPrestamo=<%=p.getIdPrestamo()%>"
+							class="btn btn-info btn-sm btn-action"> <i
+								class="fas fa-list-ol"></i> Ver Cuotas
+						</a> <%
+ } else {
+ %>
+
 							<button class="btn btn-secondary btn-sm btn-action" disabled>
-								<i class="fas fa-money-bill-wave"></i> Pagar Cuota
-							</button>
+								<i class="fas fa-list-ol"></i> Ver Cuotas
+							</button> <%
+ }
+ %>
 						</td>
 					</tr>
+					<%
+					}
+					} else {
+					%>
 					<tr>
-						<td>20/03/2024</td>
-						<td>$ 20.000,00</td>
-						<td>$ 555,56</td>
-						<td>36</td>
-						<td>0</td>
-						<td><span class="badge bg-info">Finalizado</span></td>
-						<td>
-							<button class="btn btn-secondary btn-sm btn-action" disabled>
-								<i class="fas fa-money-bill-wave"></i> Pagar Cuota
-							</button>
-						</td>
+						<td colspan="7" class="text-center">No tienes préstamos para
+							mostrar.</td>
 					</tr>
-					<tr>
-						<td>05/04/2024</td>
-						<td>$ 7.500,00</td>
-						<td>$ 625,00</td>
-						<td>12</td>
-						<td>8</td>
-						<td><span class="badge bg-success">Activo</span></td>
-						<td><a class="btn btn-success btn-sm btn-action"> <i
-								class="fas fa-money-bill-wave"></i> Pagar Cuota
-						</a></td>
-					</tr>
-					<tr>
-						<td>25/05/2025</td>
-						<td>$ 3.000,00</td>
-						<td>$ 0,00</td>
-						<td>0</td>
-						<td>0</td>
-						<td><span class="badge bg-danger">Rechazado</span></td>
-						<td>
-							<button class="btn btn-secondary btn-sm btn-action" disabled>
-								<i class="fas fa-money-bill-wave"></i> Pagar Cuota
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<td>01/06/2025</td>
-						<td>$ 15.000,00</td>
-						<td>$ 416,67</td>
-						<td>36</td>
-						<td>5</td>
-						<td><span class="badge bg-success">Activo</span></td>
-						<td>
-							<button class="btn btn-success btn-sm btn-action">
-								<i class="fas fa-money-bill-wave"></i> Pagar Cuota
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<td>22/06/2024</td>
-						<td>$ 6.000,00</td>
-						<td>$ 166,67</td>
-						<td>36</td>
-						<td>0</td>
-						<td><span class="badge bg-info">Finalizado</span></td>
-						<td>
-							<button class="btn btn-secondary btn-sm btn-action" disabled>
-								<i class="fas fa-money-bill-wave"></i> Pagar Cuota
-							</button>
-						</td>
-					</tr>
-					<tr>
-						<td>05/07/2024</td>
-						<td>$ 4.000,00</td>
-						<td>$ 333,33</td>
-						<td>12</td>
-						<td>4</td>
-						<td><span class="badge bg-success">Activo</span></td>
-						<td><a class="btn btn-success btn-sm btn-action"> <i
-								class="fas fa-money-bill-wave"></i> Pagar Cuota
-						</a></td>
-					</tr>
+					<%
+					}
+					%>
 				</tbody>
 			</table>
 
@@ -276,7 +237,7 @@ h2 {
 	<jsp:include page="Footer.html" />
 	<!--      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> 
 Se deja comentado porque sino genera conflicto con la declaracion que tiene el nav y no funcionan los dropdowns-->
-<script>
+	<script>
     window.addEventListener("DOMContentLoaded", () => {
         const toastEl = document.getElementById('toastMensaje');
         if (toastEl) {

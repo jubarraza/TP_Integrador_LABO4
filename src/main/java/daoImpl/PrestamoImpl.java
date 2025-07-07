@@ -12,6 +12,7 @@ import java.util.List;
 import dao.PrestamoDao;
 import entidad.Prestamo;
 
+
 public class PrestamoImpl implements PrestamoDao {
 
     private Connection conexion;
@@ -142,8 +143,31 @@ public class PrestamoImpl implements PrestamoDao {
         boolean estado = resultSet.getBoolean("estado");
         boolean aprobado = resultSet.getBoolean("aprobado");
         boolean finalizado = resultSet.getBoolean("finalizado");
-        String nombreUsuario = resultSet.getString("nombreusuario"); // desde la vista
+        String nombreUsuario = resultSet.getString("nombreusuario");
 
         return new Prestamo(id, numCuenta, nombreUsuario, fecha, importePedido, cuotas, importeMensual, estado, aprobado, finalizado);
     }
+    
+    @Override
+    public List<Prestamo> readAllByClienteId(int idCliente) {
+        PreparedStatement statement;
+        ResultSet resultSet;
+        ArrayList<Prestamo> prestamos = new ArrayList<>();
+        Connection conexion = Conexion.getConexion().getSQLConexion();
+
+        String query = "SELECT * FROM vista_prestamos WHERE id_cliente = ? ORDER BY fecha DESC";
+
+        try {
+            statement = conexion.prepareStatement(query);
+            statement.setInt(1, idCliente);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                prestamos.add(getPrestamo(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return prestamos;
+    }
+    
 }

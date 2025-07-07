@@ -93,7 +93,8 @@ SELECT
     p.estado,
     p.aprobado,
     p.finalizado,
-    u.nombreusuario
+    u.nombreusuario,
+    cli.id_cliente
 FROM prestamos p
 INNER JOIN cuentas c ON p.num_de_cuenta = c.num_de_cuenta
 INNER JOIN clientes cli ON c.id_cliente = cli.id_cliente

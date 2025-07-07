@@ -223,7 +223,7 @@ main {
 						</button>
 
 						<button class="btn-atajo"
-							onclick="location.href='ListadoDePrestamos.jsp'">
+							onclick="location.href='MisPrestamosServlet'">
 							<i class="fas fa-hand-holding-usd fa-2x mb-2"></i> Préstamos
 						</button>
 					</div>
