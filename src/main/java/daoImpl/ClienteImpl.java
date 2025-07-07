@@ -254,7 +254,12 @@ public class ClienteImpl implements ClienteDao{
 	    String telefono = resultSet.getString("telefono");
 	    LocalDate fechaAlta = resultSet.getDate("altaCliente").toLocalDate();
 	    boolean estado = resultSet.getBoolean("estadoUsuario");
-	    boolean tienePrestamo = resultSet.getBoolean("tienePrestamoActivo");
+	    boolean tienePrestamoActivo = false;
+	    try {
+	        tienePrestamoActivo = resultSet.getBoolean("tienePrestamoActivo");
+	    } catch (SQLException e) {
+	        // Si no está en la vista, lo dejamos en false por defecto
+	    }
 
 
 	    // Construcción final del objeto Cliente
@@ -275,7 +280,7 @@ public class ClienteImpl implements ClienteDao{
 	        fechaAlta,
 	        estado
 	    );
-	    cliente.setTienePrestamoActivo(tienePrestamo);
+	    cliente.setTienePrestamoActivo(tienePrestamoActivo);
 
 	    return cliente;
 	}
