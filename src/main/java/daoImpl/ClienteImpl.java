@@ -221,7 +221,7 @@ public class ClienteImpl implements ClienteDao{
 	public Cliente getCliente(ResultSet resultSet) throws SQLException {
 		
 		// Provincia
-	    short idProvincia = resultSet.getShort("idProvincia");
+	    short idProvincia = resultSet.getShort("id_provincia");
 	    String nombreProvincia = resultSet.getString("provincia");
 	    Provincia provincia = new Provincia(idProvincia, nombreProvincia);
 
@@ -246,13 +246,22 @@ public class ClienteImpl implements ClienteDao{
 	    String cuil = resultSet.getString("cuil");
 	    String nombre = resultSet.getString("nombre");
 	    String apellido = resultSet.getString("apellido");
-	    char sexo = resultSet.getString("sexo").charAt(0);
+
+	    String sexoStr = resultSet.getString("sexo");
+	    char sexo = (sexoStr != null && !sexoStr.isEmpty()) ? sexoStr.charAt(0) : 'N';
+
 	    String nacionalidad = resultSet.getString("nacionalidad");
-	    LocalDate fechaNacimiento = resultSet.getDate("fechanacimiento").toLocalDate();
+	    
+	    Date fechaNacSQL = resultSet.getDate("fechanacimiento");
+	    LocalDate fechaNacimiento = (fechaNacSQL != null) ? fechaNacSQL.toLocalDate() : null;
+	    
 	    String direccion = resultSet.getString("direccion");
 	    String correo = resultSet.getString("correo");
 	    String telefono = resultSet.getString("telefono");
-	    LocalDate fechaAlta = resultSet.getDate("altaCliente").toLocalDate();
+	    
+	    Date fechaAltaSQL = resultSet.getDate("altaCliente");
+	    LocalDate fechaAlta = (fechaAltaSQL != null) ? fechaAltaSQL.toLocalDate() : null;
+	    
 	    boolean estado = resultSet.getBoolean("estadoCliente");
 
 	    // Construcción final del objeto Cliente
