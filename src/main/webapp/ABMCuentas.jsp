@@ -136,18 +136,28 @@
 	<%
 	    String mensajeExito = (String) request.getAttribute("mensajeExito");
 	    String mensajeError = (String) request.getAttribute("mensajeError");
-    	if (mensajeExito != null) {
 	%>
-    	<%= mensajeExito %>
-	<%
-    	} else if (mensajeError != null) {
-	%>
-    	<%= mensajeError %>
-	<%
-    	}
-	%>
-	
+	<!-- Toast Notificación -->
+<div class="position-fixed top-0 end-0 p-4" style="z-index: 1055;">
+  <div id="toastNotificacion" class="toast align-items-center text-bg-<%= (mensajeExito != null ? "success" : "danger") %> border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body fs-5 fw-semibold">
+        <%= mensajeExito != null ? mensajeExito : mensajeError != null ? mensajeError : "" %>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+    </div>
+  </div>
+</div>
 <jsp:include page="Footer.html" />
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script> -->
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    <% if (mensajeExito != null || mensajeError != null) { %>
+      var toastEl = document.getElementById('toastNotificacion');
+      var toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    <% } %>
+  });
+</script>
 </body>
 </html>

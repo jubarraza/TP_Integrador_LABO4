@@ -44,7 +44,9 @@ public class CuentaImpl implements CuentaDao{
 			
 			LocalDate fecha_baja = cuenta.getFechaBaja();
 			if (fecha_baja != null) {
-				statement.setDate(4, Date.valueOf(fecha_baja));
+			    statement.setDate(4, Date.valueOf(fecha_baja));
+			} else {
+			    statement.setNull(4, java.sql.Types.DATE);
 			}
 			
 			statement.setInt(5, cuenta.getTipoCuenta().getIdTipoCuenta());
