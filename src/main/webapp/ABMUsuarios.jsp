@@ -1,7 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.List" %>
 <%@page import="entidad.Localidad" %>
 <%@page import="entidad.Provincia" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <%@ include file="fragmentos/VerificarSesion.jspf"%>
 
@@ -34,58 +34,60 @@
             <p class="text-muted">Completa los campos para dar de alta un usuario</p>
           </div>
 
-          <form action="InsertarUserClienteServlet" method="post" class="row g-3" onsubmit="return validarFormulario();">
+          <form action="InsertarUserClienteServlet" method="post" class="row g-3">
 			
 			
             <div class="col-md-6">
               <label for="txtCUIL" class="form-label">CUIL</label>
-              <input name="txtCUIL" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Ingrese CUIL" />
+              <input id="txtCUIL"name="txtCUIL" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Ingrese CUIL" value="<%= request.getAttribute("cuil") != null ? request.getAttribute("cuil") : "" %>" />
             </div>
 
             <div class="col-md-6">
               <label for="txtNombreUsuario" class="form-label">Nombre</label>
-              <input name="txtNombreUsuario" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Nombre completo" />
+              <input name="txtNombreUsuario" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Nombre completo" value="<%= request.getAttribute("nombre") != null ? request.getAttribute("nombre") : "" %>"/>
             </div>
 
             <div class="col-md-6">
               <label for="txtApellidoUsuario" class="form-label">Apellido</label>
-              <input name="txtApellidoUsuario" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Apellido" />
+              <input name="txtApellidoUsuario" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Apellido" value="<%= request.getAttribute("apellido") != null ? request.getAttribute("apellido") : "" %>"/>
             </div>
 
             <div class="col-md-6">
               <label for="ddlSexo" class="form-label">Sexo</label>
               <select name="ddlSexo"  id="ddlSexo" class="form-select rounded-pill bg-light border-0" required>
                 <option value="" disabled selected>Seleccione</option>
-                <option value="F">Femenino</option>
-                <option value="M">Masculino</option>
+                <option value="F" <%= "F".equals(request.getAttribute("sexo")) ? "selected" : "" %>>Femenino</option>
+                <option value="M" <%= "M".equals(request.getAttribute("sexo")) ? "selected" : "" %>>Masculino</option>
               </select>
             </div>
 
             <div class="col-md-6">
               <label for="txtNacionalidad" class="form-label">Nacionalidad</label>
-              <input name="txtNacionalidad" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Nacionalidad" />
+              <input name="txtNacionalidad" class="form-control rounded-pill bg-light border-0" type="text" value="<%= request.getAttribute("nacionalidad") != null ? request.getAttribute("nacionalidad") : "" %>"  />
             </div>
 
             <div class="col-md-6">
               <label for="txtFechaNac" class="form-label">Fecha de Nacimiento</label>
-              <input name="txtFechaNac" class="form-control rounded-pill bg-light border-0" type="date" />
+              <input name="txtFechaNac" class="form-control rounded-pill bg-light border-0" type="date" value="<%= request.getAttribute("fechaNacimiento") != null ? request.getAttribute("fechaNacimiento") : "" %>" />
             </div>
 
             <div class="col-md-6">
               <label for="txtDomicilio" class="form-label">Domicilio</label>
-              <input name="txtDomicilio" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Dirección" />
+              <input name="txtDomicilio" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Dirección" value="<%= request.getAttribute("direccion") != null ? request.getAttribute("direccion") : "" %>" />
             </div>
 
 			
             <div class="col-md-6">
-              <label for="txtLocalidad" class="form-label">Localidad</label>
+              <label for="Localidad" class="form-label">Localidad</label>
 			<select name="Localidad" class="form-select">
 		    <%
+		    String idLocalidadSel = (String) request.getAttribute("idLocalidadSeleccionada");
 		        List<Localidad> localidades = (List<Localidad>) request.getAttribute("localidades");
 		        if (localidades != null && !localidades.isEmpty()) {
 		            for (Localidad local : localidades) {
+		            	 boolean seleccionado = idLocalidadSel != null && idLocalidadSel.equals(String.valueOf(local.getIdLocalidad()));
 		    %>
-		                <option value="<%= local.getIdLocalidad() %>">
+		                <option value="<%= local.getIdLocalidad() %>" <%= seleccionado ? "selected" : "" %>>
 		                	<%= local.getDescripcion() %>
 		                </option>
 		    <%
@@ -100,46 +102,46 @@
             </div>
 
             <div class="col-md-6">
-              <label for="txtProvincia" class="form-label">Provincia</label>
-			<select name="Provincia" class="form-select">
+              <label for="Provincia" class="form-label">Provincia</label>
+			<select id="Provincia" name="Provincia" class="form-select">
 		    <%
+		    String idProvinciaSel = (String) request.getAttribute("idProvinciaSeleccionada");
 		        List<Provincia> provincias = (List<Provincia>) request.getAttribute("provincias");
-		        if (provincias != null && !provincias.isEmpty()) {
-		            for (Provincia provincia : provincias) {
+            		if (provincias != null) {
+            		  for (Provincia provincia : provincias) {
+		            	boolean seleccionado = idProvinciaSel != null && idProvinciaSel.equals(String.valueOf(provincia.getIdProvincia()));
 		    %>
-		                <option value="<%= provincia.getIdProvincia() %>">
+		                <option value="<%= provincia.getIdProvincia() %>" <%= seleccionado ? "selected" : "" %>>
 		                	<%= provincia.getDescripcion() %>
 		                </option>
 		    <%
 		            }
-		        } else {
-		    %>
-		        <option value="">No hay provincias disponibles</option>
-		    <%
-		        }
-		    %>
+		     } else {
+    		%>
+      			<option value="">No hay Provincias disponibles</option>
+    		<% } %>
 		</select>
             </div>
 
             <div class="col-md-6">
               <label for="txtEmail" class="form-label">Correo Electrónico</label>
-              <input name="txtEmail" class="form-control rounded-pill bg-light border-0" type="email" placeholder="nombre@ejemplo.com" />
+              <input name="txtEmail" class="form-control rounded-pill bg-light border-0" type="email" placeholder="nombre@ejemplo.com" value="<%= request.getAttribute("txtEmail") != null ? request.getAttribute("txtEmail") : "" %>"/>
             </div>
 
             <div class="col-md-6">
               <label for="txtTelefono" class="form-label">Teléfono</label>
-              <input name="txtTelefono" class="form-control rounded-pill bg-light border-0" type="tel" placeholder="Teléfono" />
+              <input name="txtTelefono" class="form-control rounded-pill bg-light border-0" type="tel" placeholder="Teléfono" value="<%= request.getAttribute("txtTelefono") != null ? request.getAttribute("txtTelefono") : "" %>" />
             </div>
             
              <div class="col-md-6">
               <label for="txtDNI" class="form-label">DNI</label>
-              <input id="txtDNI" name="txtDNI" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Ingrese DNI" />
+              <input id="txtDNI" name="txtDNI" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Ingrese DNI" value="<%= request.getAttribute("txtDNI") != null ? request.getAttribute("txtDNI") : "" %>"/>
             </div>
             
  			<div class="border row g-3 mt-3">
  			  <div class="col-md-6">
               <label for="txtUsuario" class="form-label">Usuario</label>
-              <input name="txtUsuario" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Nombre de usuario:" />
+              <input name="txtUsuario" class="form-control rounded-pill bg-light border-0" type="text" placeholder="Nombre de usuario:" value="<%= request.getAttribute("nombreUsuario") != null ? request.getAttribute("nombreUsuario") : "" %>" />
             </div>
 			
             <div class="col-md-6">
@@ -168,93 +170,17 @@
   </div>
 </div>
 
-<%
-	    String mensajeExito = (String) request.getAttribute("mensajeExito");
-	    String mensajeError = (String) request.getAttribute("mensajeError");
-    	if (mensajeExito != null) {
-	%>
-    	<%= mensajeExito %>
+    	<% if (request.getAttribute("mensajeError") != null) { %>
+    	<div class="alert alert-danger" role="alert">
+    	<%= request.getAttribute("mensajeError") %>
+    	</div>
 	<%
-    	} else if (mensajeError != null) {
-	%>
-    	<%= mensajeError %>
-	<%
-    	}
-	%>
-
-<script>
-  function mostrarError(mensaje) {
-    const errorDiv = document.getElementById("errorMensaje");
-    errorDiv.textContent = mensaje;
-    errorDiv.classList.remove("d-none");
-    errorDiv.classList.add("show");
-    window.scrollTo({ top: errorDiv.offsetTop - 20, behavior: 'smooth' });
-  }
-
-  function ocultarError() {
-    const errorDiv = document.getElementById("errorMensaje");
-    errorDiv.classList.add("d-none");
-    errorDiv.textContent = "";
-  }
-
-  function validarFormulario() {
-    ocultarError(); // Oculta errores anteriores
-
-    const dni = document.getElementById("txtDNI").value.trim();
-    const cuil = document.getElementsByName("txtCUIL")[0].value.trim();
-    const pass = document.getElementsByName("txtContrasenia")[0].value;
-    const passC = document.getElementsByName("txtContraseniaC")[0].value;
-    const email = document.getElementsByName("txtEmail")[0].value.trim();
-    const sexo = document.getElementById("ddlSexo").value;
-    const provincia = document.getElementsByName("Provincia")[0].value;
-    const localidad = document.getElementsByName("Localidad")[0].value;
-
-    if (dni === "" || !/^\d+$/.test(dni)) {
-      mostrarError("Por favor, ingrese un DNI válido (solo números).");
-      return false;
-    }
-
-    if (cuil === "" || !/^\d{10,11}$/.test(cuil)) {
-      mostrarError("Por favor, ingrese un CUIL válido (10 u 11 números).");
-      return false;
-    }
-
-    if (pass.length < 8) {
-      mostrarError("La contraseña debe tener al menos 8 caracteres.");
-      return false;
-    }
-
-    if (pass !== passC) {
-      mostrarError("Las contraseñas no coinciden.");
-      return false;
-    }
-
-    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regexEmail.test(email)) {
-      mostrarError("Ingrese un correo electrónico válido.");
-      return false;
-    }
-
-    if (sexo === "") {
-      mostrarError("Seleccione un sexo.");
-      return false;
-    }
-
-    if (provincia === "") {
-      mostrarError("Seleccione una provincia.");
-      return false;
-    }
-
-    if (localidad === "") {
-      mostrarError("Seleccione una localidad.");
-      return false;
-    }
-
-    return true;
-  }
-</script>
+    	} else if (request.getAttribute("mensajeExito") != null) { %>
+    		<div class="alert alert-success" role="alert">
+    	<%=request.getAttribute("mensajeExito") %>
+    	</div>
+	<% }%>
 <jsp:include page="Footer.html" />
 
 </body>
 </html>
-

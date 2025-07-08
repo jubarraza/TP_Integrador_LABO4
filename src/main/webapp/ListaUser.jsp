@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet"
+<link rel="stylesheet" 
 	href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.min.css" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
@@ -61,6 +61,12 @@ h2 {
 
 .table-responsive {
 	margin-top: 20px;
+	overflow-x: auto; 
+    width: 100%;
+}
+
+table{
+	min-width: 1200px;
 }
 </style>
 </head>
@@ -68,15 +74,17 @@ h2 {
 
 	<jsp:include page="Nav.jsp" />
 	<main class="container-fluid">
-		<div class="d-flex justify-content-between align-items-center mb-4">
-			<h2 class="fw-bold">
-				<i class="bi bi-person-lines-fill"></i> Administración de Clientes
-			</h2>
-			<a href="InsertarUserClienteServlet?action=alta"
-				class="btn btn-primary btn-lg"> <i class="fas fa-plus-circle"></i>
-				Agregar Usuario
-			</a>
-
+		<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+			<div class="d-flex align-items-center gap-3">
+				<i class="bi bi-person-lines-fill fs-1 text-primary"></i> 
+			<div>
+			<h2 class="fw-bold mb-0"> Administración de Clientes</h2>
+				 <small class="text-muted">Gestione altas, bajas y modificaciones de clientes</small>
+				</div>
+				</div>
+			<a href="InsertarUserClienteServlet?action=alta" class="btn btn-primary btn-lg mt-3 mt-md-0">
+  <i class="fas fa-plus-circle mw-2"></i> Agregar Usuario
+</a>
 		</div>
 
 		<%
@@ -88,21 +96,19 @@ h2 {
 				class="table table-striped table-hover w-100">
 				<thead class="table-dark">
 					<tr>
-						<th>ID</th>
-						<th>DNI</th>
-						<th>CUIL</th>
-						<th>ID USUARIO</th>
-						<th>NOMBRE</th>
-						<th>APELLIDO</th>
-						<th>NACIONALIDAD</th>
-						<th>FECHA NAC</th>
-						<th>DIRECCION</th>
-						<th>LOCALIDAD</th>
-						<th>TELEFONO</th>
-						<th>FECHA ALTA</th>
-						<th>ESTADO</th>
-						<th>Editar</th>
-						<th>Eliminar</th>
+						<th class="text-center">DNI</th>
+						<th class="text-center">CUIL</th>
+						<th class="text-center">NOMBRE</th>
+						<th class="text-center">APELLIDO</th>
+						<th class="text-center">NACIONALIDAD</th>
+						<th class="text-center">FECHA NAC</th>
+						<th class="text-center">DIRECCION</th>
+						<th class="text-center">LOCALIDAD</th>
+						<th class="text-center">TELEFONO</th>
+						<th class="text-center">FECHA ALTA</th>
+						<th class="text-center">ESTADO</th>
+						<th class="text-center">Editar</th>
+						<th class="text-center">Eliminar</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -113,10 +119,8 @@ h2 {
 						continue;
 					%>
 					<tr>
-						<td><%=c.getIdCliente()%></td>
 						<td><%=c.getDni()%></td>
 						<td><%=c.getCuil()%></td>
-						<td><%=c.getUser() != null ? c.getUser().getIdUsuario() : "Sin usuario"%></td>
 						<td><%=c.getNombre()%></td>
 						<td><%=c.getApellido()%></td>
 						<td><%=c.getNacionalidad()%></td>
@@ -133,8 +137,8 @@ h2 {
 							if (c.getUser() != null) {
 							%> <a
 							href="perfil?action=edit&idUsuario=<%=c.getUser().getIdUsuario()%>"
-							class="btn btn-outline-primary btn-sm btn-action"> <i
-								class="bi bi-pen"></i>
+							class="btn btn-outline-primary btn-sm btn-action" title="Editar"> <i
+								class="bi bi-pencil-square"></i>
 						</a> <%
  }
  %>
@@ -161,8 +165,8 @@ h2 {
 									type="hidden" name="idUsuario"
 									value="<%=c.getUser().getIdUsuario()%>" />
 								<button type="submit"
-									class="btn btn-outline-danger btn-sm btn-action">
-									<i class="bi bi-trash"></i> Eliminar
+									class="btn btn-outline-danger btn-sm btn-action" title="Eliminar">
+									<i class="bi bi-trash"></i>
 								</button>
 							</form> <%
  }

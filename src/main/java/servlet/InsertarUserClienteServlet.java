@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Validacion.Validaciones;
 import daoImpl.ClienteImpl;
 import daoImpl.Conexion;
 import daoImpl.LocalidadImpl;
@@ -27,6 +29,7 @@ import entidad.Usuario;
 
 
 @WebServlet("/InsertarUserClienteServlet")
+
 public class InsertarUserClienteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -38,20 +41,9 @@ public class InsertarUserClienteServlet extends HttpServlet {
 
     @Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	String action = request.getParameter("action");
-    	
-    	if ("alta".equals(action)) {
-    	ProvinciaImp provDao = new ProvinciaImp();
-		List<Provincia> provinciaList = provDao.readAll();
-		request.setAttribute("provincias", provinciaList);
+		cargarListas(request);
+		request.getRequestDispatcher("/ABMUsuarios.jsp").forward(request, response);
 		
-		LocalidadImpl lcDao = new LocalidadImpl();
-		List<Localidad> localidadesList = lcDao.readAll();
-		request.setAttribute("localidades", localidadesList);
-		
-		RequestDispatcher rd = request.getRequestDispatcher("/ABMUsuarios.jsp");
-		rd.forward(request, response);
-    	}
 	}
 
 
@@ -60,42 +52,102 @@ public class InsertarUserClienteServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		
 	    String dni = request.getParameter("txtDNI");
+	    if (dni == null || !dni.matches("\\d+")) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "DNI inválido. Debe contener solo números.");
+			return;
+	    }
+	    // Validar si DNI ya existe en la BD
+	    if (Validaciones.existeDNI(dni)) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "El DNI ya está registrado.");
+			return;
+	    }
+	    
 	    String cuil = request.getParameter("txtCUIL");
+	    if (cuil == null || !cuil.matches("\\d{10,11}")) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "CUIL inválido. Debe tener entre 10 y 11 dígitos.");
+			return;
+	    }
+	    
 	    String nombre = request.getParameter("txtNombreUsuario");
 	    String apellido = request.getParameter("txtApellidoUsuario");
+	    String nacionalidad = request.getParameter("txtNacionalidad");
+	    String direccion = request.getParameter("txtDomicilio");
+	    
+	    if(esVacio(nombre)) {setValoresFormularioEnRequest(request); mostrarError(request, response, "El nombre no puede estar vacío."); return;}
+	    if(esVacio(apellido)) {setValoresFormularioEnRequest(request); mostrarError(request, response, "El apellido no puede estar vacío."); return;}
+	    if(esVacio(nacionalidad)) {setValoresFormularioEnRequest(request); mostrarError(request, response, "La nacionalidad no puede estar vacía."); return;}
+	    if(esVacio(direccion)) {setValoresFormularioEnRequest(request); mostrarError(request, response, "La dirección no puede estar vacía."); return;}
+	    
+	    
+	    
 	    String sexoStr = request.getParameter("ddlSexo");
 	    char sexo = ' ';
 	    if (sexoStr != null && !sexoStr.trim().isEmpty()) {
 	        sexo = sexoStr.trim().charAt(0);
 	    }
-	    String nacionalidad = request.getParameter("txtNacionalidad");
+
+	    
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    LocalDate fechaNacimiento = LocalDate.parse(request.getParameter("txtFechaNac"), formatter);
-	    String direccion = request.getParameter("txtDomicilio");
-	    short idLocalidad = Short.parseShort(request.getParameter("Localidad"));
-	    short idProvincia = Short.parseShort(request.getParameter("Provincia"));
+	    //LocalDate fechaNacimiento = LocalDate.parse(request.getParameter("txtFechaNac"), formatter);
+	    // Validar fecha de nacimiento con método existente (si querés)
+	    LocalDate fechaNacimiento;
+		try {
+			fechaNacimiento = LocalDate.parse(request.getParameter("txtFechaNac"), formatter);
+			int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+			if (edad < 18 || edad > 100) {
+				setValoresFormularioEnRequest(request);
+				mostrarError(request, response, "Debe tener entre 18 y 100 años para registrarse.");
+				return;
+			}
+		} catch (Exception e) {
+			setValoresFormularioEnRequest(request);
+			mostrarError(request, response, "Fecha de nacimiento inválida.");
+			return;
+		}
+	    
+	    short idLocalidad, idProvincia;
+	    try {
+	    	  idLocalidad = Short.parseShort(request.getParameter("Localidad"));
+	    	  idProvincia = Short.parseShort(request.getParameter("Provincia"));
+	    } catch(NumberFormatException e) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "Debe seleccionar una provincia y localidad válidas.");
+			return;
+	    }
 	    String correo = request.getParameter("txtEmail");
+	    if (correo == null || !correo.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "Correo electrónico inválido.");
+			return;
+	    }
+	    if (Validaciones.existeEmail(correo)) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "El correo electrónico ya está registrado.");
+			return;
+	    }
+	    
 	    String telefono = request.getParameter("txtTelefono");
+	    if(telefono == null || telefono.trim().isEmpty() || !telefono.matches("\\d+")) {
+	    	setValoresFormularioEnRequest(request);
+	    	mostrarError(request, response, "El teléfono debe contener solo números.");
+			return;
+		}
+	    
 	    LocalDate fechaAlta = LocalDate.now();
 
 	    
 	    // USUARIO
 	    String nombreUsuario = request.getParameter("txtUsuario");
 	    String contrasenia = request.getParameter("txtContrasenia");
-	    System.out.println("Contraseña recibida: '" + contrasenia + "'");
 	    String contraseñaC = request.getParameter("txtContraseniaC");
+	    
+	    if(esVacio(nombreUsuario)) {setValoresFormularioEnRequest(request); mostrarError(request, response, "El nombre de usuario no puede estar vacío."); return; }	    
+		if (contrasenia == null || contrasenia.length() < 8) { mostrarError(request, response, "La contraseña debe tener al menos 8 caracteres."); return; }
+		if (!contrasenia.equals(contraseñaC)) { mostrarError(request, response, "Las contraseñas no coinciden."); return; }
 
-	    if (contrasenia == null || contrasenia.trim().isEmpty()) {
-	        request.setAttribute("mensajeError", "La contraseña no puede estar vacía.");
-	        doGet(request, response);
-	        return;
-	    }
-
-	    if (!contrasenia.equals(contraseñaC)) {
-	        request.setAttribute("mensajeError", "Las contraseñas no coinciden.");
-	        doGet(request, response);
-	        return;
-	    }
 	    
 	    // Asociar provincia y localidad
 	    Localidad localidad = new Localidad();
@@ -118,7 +170,7 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	    nuevoCliente.setCorreo(correo);
 	    nuevoCliente.setTelefono(telefono);
 	    nuevoCliente.setFechaAlta(fechaAlta);
-
+        System.out.println("Paso 2: Insertando cliente");
 	    Connection conexion = null;
 	    boolean exito = false;
 
@@ -129,7 +181,8 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	        // Insertar cliente
 	        ClienteImpl clienteDao = new ClienteImpl(conexion);
 	        int idGenerado = clienteDao.Insert(nuevoCliente); 
-
+		    System.out.println("Paso 3: Cliente insertado, id: " + idGenerado);
+		    
 	        boolean insertado = false;
 
 	        if (idGenerado > 0) {
@@ -143,20 +196,20 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	            tipoUser.setIdTipoUser((byte) 2);
 	            user.setTipoUser(tipoUser);
 
-	            UsuarioImpl dao = new UsuarioImpl();
+	            UsuarioImpl dao = new UsuarioImpl(conexion);
 	            insertado = dao.Insert(user);
 	        }
 
 	        if (idGenerado > 0 && insertado) {
 	            conexion.commit(); 
-	            request.setAttribute("mensajeExito", "Usuario agregado exitosamente");
+	            System.out.println("Paso 4: Insertando usuario");
+	            request.setAttribute("mensajeExito", "Cliente agregado correctamente.");
 	            request.getRequestDispatcher("Home.jsp").forward(request, response);
+	            return;
 
 	        } else {
 	        	conexion.rollback(); 
-	        	RequestDispatcher rd = request.getRequestDispatcher("/ABMUsuarios.jsp");
-	        	rd.forward(request, response);
-
+	        	mostrarError(request, response, "Error al registrar usuario/cliente.");
 	        }
 
 	    } catch (Exception e) {
@@ -164,20 +217,45 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	            if (conexion != null) conexion.rollback(); 
 	        } catch (SQLException ex) {
 	            ex.printStackTrace();
-	        }
-	        e.printStackTrace();
-	        request.setAttribute("mensajeError", "Error en la base de datos: " + e.getMessage());
-	    } finally {
-	        try {
-	            if (conexion != null) {
-	                conexion.setAutoCommit(true); // restaurar autocommit por si se reutiliza
-	                conexion.close();
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+	        
+	        	} 
+	        mostrarError(request, response, "Error de base de datos: " + e.getMessage());
 	    }
+	    //RequestDispatcher rd = request.getRequestDispatcher("/ABMUsuarios.jsp");
+		//rd.forward(request, response);
 
-	    doGet(request, response);
 	}
+	
+	private boolean esVacio(String valor) {
+		return valor == null || valor.trim().isEmpty();
+	}
+	
+	private void mostrarError(HttpServletRequest request, HttpServletResponse response, String mensaje) throws ServletException, IOException {
+		cargarListas(request);
+		request.setAttribute("mensajeError", mensaje);
+		request.getRequestDispatcher("/ABMUsuarios.jsp").forward(request, response);
+	}
+	
+	private void cargarListas(HttpServletRequest request) {
+		request.setAttribute("provincias", new ProvinciaImp().readAll());
+		request.setAttribute("localidades", new LocalidadImpl().readAll());
+	}
+
+	private void setValoresFormularioEnRequest(HttpServletRequest request) {
+	    request.setAttribute("txtDNI", request.getParameter("txtDNI"));
+	    request.setAttribute("txtCUIL", request.getParameter("txtCUIL"));
+	    request.setAttribute("txtNombreUsuario", request.getParameter("txtNombreUsuario"));
+	    request.setAttribute("txtApellidoUsuario", request.getParameter("txtApellidoUsuario"));
+	    request.setAttribute("txtNacionalidad", request.getParameter("txtNacionalidad"));
+	    request.setAttribute("txtDomicilio", request.getParameter("txtDomicilio"));
+	    request.setAttribute("ddlSexo", request.getParameter("ddlSexo"));
+	    request.setAttribute("txtFechaNac", request.getParameter("txtFechaNac"));
+	    request.setAttribute("Localidad", request.getParameter("Localidad"));
+	    request.setAttribute("Provincia", request.getParameter("Provincia"));
+	    request.setAttribute("txtEmail", request.getParameter("txtEmail"));
+	    request.setAttribute("txtTelefono", request.getParameter("txtTelefono"));
+	    request.setAttribute("txtUsuario", request.getParameter("txtUsuario"));
+	}
+
+
 }

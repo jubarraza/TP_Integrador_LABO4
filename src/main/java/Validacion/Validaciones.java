@@ -13,6 +13,8 @@ import daoImpl.Conexion;
 public class Validaciones {
 	
 	private static final String select = "select * from cuentas where num_de_cuenta like ?;";
+	private static final String selectEmail = "Select 1 from clientes where email like ?;";
+	private static final String selectDNI ="Select 1 from clientes where dni like ?;";
 	private static final String buscarDni = "select dni from clientes where dni = ?;";
 	private static final String buscarNumCuenta = "select num_de_cuenta from cuentas where num_de_cuenta = ?;";
 	private static final String buscarCbu = "select cbu from cuentas where cbu = ?;";
@@ -91,6 +93,93 @@ public class Validaciones {
     	return false;
     }
 
+public static boolean existeEmail(String email) {
+        
+    	PreparedStatement statement = null;
+    	Connection conexion = (Connection) Conexion.getConexion().getSQLConexion();
+        ResultSet resultSet = null;       
+        boolean existeEmail = false;
+
+        try {
+                      
+            statement = (PreparedStatement) conexion.prepareStatement(selectEmail);
+            statement.setString(1, email); 
+            resultSet = statement.executeQuery(); 
+
+            if (resultSet.next()) { 
+                existeEmail = true; 
+            }
+            
+
+        } catch (SQLException e) {
+            System.err.println("Error SQL al buscar el email " + e.getMessage());
+
+        } catch (Exception e) {
+           
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (resultSet != null) resultSet.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar ResultSet: " + e.getMessage());
+                e.printStackTrace();
+            }
+            try {
+                if (statement != null) statement.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar PreparedStatement: " + e.getMessage());
+                e.printStackTrace();
+            }           
+        }
+        return existeEmail;
+    }
+    
+
+public static boolean existeDNI(String DNI) {
+    
+	PreparedStatement statement = null;
+	Connection conexion = (Connection) Conexion.getConexion().getSQLConexion();
+    ResultSet resultSet = null;       
+    boolean existeDNI = false;
+
+    try {
+                  
+        statement = (PreparedStatement) conexion.prepareStatement(selectDNI);
+        statement.setString(1, DNI); 
+        resultSet = statement.executeQuery(); 
+
+        if (resultSet.next()) { 
+            existeDNI = true; 
+        }
+        
+
+    } catch (SQLException e) {
+        System.err.println("Error SQL al buscar el DNI" + e.getMessage());
+
+    } catch (Exception e) {
+       
+        System.err.println("Error: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+
+        try {
+            if (resultSet != null) resultSet.close();
+        } catch (SQLException e) {
+            System.err.println("Error al cerrar ResultSet: " + e.getMessage());
+            e.printStackTrace();
+        }
+        try {
+            if (statement != null) statement.close();
+        } catch (SQLException e) {
+            System.err.println("Error al cerrar PreparedStatement: " + e.getMessage());
+            e.printStackTrace();
+        }           
+    }
+    return existeDNI;
+}
+
     public boolean buscarDni(String dni) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
@@ -165,8 +254,7 @@ public class Validaciones {
 		}
 		return existe;
 	}
-    
-    
+
     
     
     
