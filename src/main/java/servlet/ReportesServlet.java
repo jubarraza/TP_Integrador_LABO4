@@ -33,14 +33,14 @@ import negocioImpl.negocioPrestamiImpl;
 @WebServlet("/ReportesServlet")
 public class ReportesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ReportesServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ReportesServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -66,37 +66,36 @@ public class ReportesServlet extends HttpServlet {
     
         
         LocalDate fechaHasta = LocalDate.now();
-        LocalDate fechaInicio = Year.of(fechaHasta.getYear()).atDay(1);;
+        LocalDate fechaInicio = Year.of(fechaHasta.getYear()).atDay(1);
         
         
         
-        boolean VerificarImput = true;
+        boolean VerificarInput = true;
 
-       
         
-        if(request.getParameter("btnfiltrar")!=null) 
+        if(request.getParameter("btnfiltrar")!=null)
         {	
         	String fechaInicioStr = request.getParameter("fechaInicio");
             String fechaHastaStr = request.getParameter("fechaHasta");
              
             if(Validaciones.Verificarfecha(fechaInicioStr) && Validaciones.Verificarfecha(fechaHastaStr))
             {	
-            	if(fechaHasta.isBefore(fechaInicio))
-            	{
             		fechaInicio = LocalDate.parse(fechaInicioStr);
                 	fechaHasta = LocalDate.parse(fechaHastaStr); 
-            	}
-            	else
+            	
+                if(fechaHasta.isBefore(fechaInicio))
             	{
-            		VerificarImput = false;
+            		VerificarInput = false;
+            		fechaHasta = LocalDate.now();
+                    fechaInicio = Year.of(fechaHasta.getYear()).atDay(1);
             	}
             }
             else
             {
-            	 VerificarImput = false;            	  
-            }                   
-        }
+            	 VerificarInput = false;
+            }
         
+        }
         
         while(lista.hasNext())
         {	
@@ -237,7 +236,7 @@ public class ReportesServlet extends HttpServlet {
 		
 		request.setAttribute("clientesActivos", clientesActivos);
 		
-	    request.setAttribute("VerificarImput", VerificarImput);
+	    request.setAttribute("VerificarImput", VerificarInput);
 	    
 		
 		
@@ -245,85 +244,80 @@ public class ReportesServlet extends HttpServlet {
 		RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp"); 
 		rd.forward(request, response);
 		response.getWriter().append("Served at: ").append(request.getContextPath());
+        
 		
 		
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
-	
-	
-	
+
 	// Guardar cantidad de prestamos en meses solictados
 	private int[] contarMeses(List<Prestamo> prestamos) {
-        
-        int[] meses = new int[12];              
-        if (prestamos == null || prestamos.isEmpty()) {
-            return meses; 
-        }
-        
-        for (Prestamo prestamo : prestamos) {
-        	
-            LocalDate fecha = prestamo.getFecha();
-            if (fecha != null) {        
-                int indiceMes = fecha.getMonthValue() - 1;
-                meses[indiceMes]++;
-            }
-        }
-        return meses;
-    }
-	
-	// Devolver clientes unicos 
+
+		int[] meses = new int[12];
+		if (prestamos == null || prestamos.isEmpty()) {
+			return meses;
+		}
+
+		for (Prestamo prestamo : prestamos) {
+
+			LocalDate fecha = prestamo.getFecha();
+			if (fecha != null) {
+				int indiceMes = fecha.getMonthValue() - 1;
+				meses[indiceMes]++;
+			}
+		}
+		return meses;
+	}
+
+	// Devolver clientes unicos
 	public List<Cliente> clientesUnicos(List<Cliente> listaClientes) {
-	    Set<Cliente> clientesUnicosSet = new HashSet<>(listaClientes);
-	    List<Cliente> listaClientesUnicos = new ArrayList<>(clientesUnicosSet);
-	    return listaClientesUnicos;
+		Set<Cliente> clientesUnicosSet = new HashSet<>(listaClientes);
+		List<Cliente> listaClientesUnicos = new ArrayList<>(clientesUnicosSet);
+		return listaClientesUnicos;
 	}
 
-	
-	//Cargar prestamos 
-	
-	private List<Prestamo> ListPrestamosPeriodo(LocalDate inicio, LocalDate fin)
-	{
+	// Cargar prestamos
+
+	private List<Prestamo> ListPrestamosPeriodo(LocalDate inicio, LocalDate fin) {
 		negocioPrestamo prestamosNegoio = new negocioPrestamiImpl();
-		  
-		  List<Prestamo> lista = prestamosNegoio.readAll();
-		  Iterator<Prestamo> listaP = lista.iterator();
-		  List<Prestamo> listaDevolver = new ArrayList<>();
-		  
-		  Prestamo prestamo = new Prestamo();
-		  while(listaP.hasNext())
-		  {	
-			  prestamo = listaP.next();
-			  if(!prestamo.getFecha().isBefore(inicio) && !prestamo.getFecha().isAfter(fin))
-			  {
-				  listaDevolver.add(prestamo);
-			  }
-			  
-		  }
-		  return listaDevolver;
-		  
-	}
-	
-	private double obtGananciaPrestamo(List<Prestamo> prestamos) {
-        
-        double ganancia = 0;              
-        if (prestamos == null || prestamos.isEmpty()) {
-            return ganancia; 
-        }
-        
-        for (Prestamo prestamo : prestamos) { 
-        		if(prestamo.isAprobado())
-        		  {
-        			ganancia +=  (prestamo.getImporteMensual() * prestamo.getCuotas()) -  prestamo.getImportePedido();  
-        		  }
-            }
-        return ganancia;
-    }	
-}
 
+		List<Prestamo> lista = prestamosNegoio.readAll();
+		Iterator<Prestamo> listaP = lista.iterator();
+		List<Prestamo> listaDevolver = new ArrayList<>();
+
+		Prestamo prestamo = new Prestamo();
+		while (listaP.hasNext()) {
+			prestamo = listaP.next();
+			if (!prestamo.getFecha().isBefore(inicio) && !prestamo.getFecha().isAfter(fin)) {
+				listaDevolver.add(prestamo);
+			}
+
+		}
+		return listaDevolver;
+
+	}
+
+	private double obtGananciaPrestamo(List<Prestamo> prestamos) {
+
+		double ganancia = 0;
+		if (prestamos == null || prestamos.isEmpty()) {
+			return ganancia;
+		}
+
+		for (Prestamo prestamo : prestamos) {
+			if (prestamo.isAprobado()) {
+				ganancia += (prestamo.getImporteMensual() * prestamo.getCuotas()) - prestamo.getImportePedido();
+			}
+		}
+		return ganancia;
+	}
+}
