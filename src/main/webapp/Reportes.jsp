@@ -1,14 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
 <%@ include file="fragmentos/VerificarSesion.jspf"%>
 
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Reportes</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+<link rel="icon" href="assets/bank.png" type="image/png" />
 
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
     .report-btn-primary, .report-btn-secondary {
         color: white;
@@ -21,192 +24,142 @@
         align-items: center;
         border: none;
     }
-
-    .report-btn-primary {
-        background-color: #3B82F6;
-    }
-    .report-btn-primary:hover {
-        background-color: #2563EB;
-    }
-
-    .report-btn-secondary {
-        background-color: #6B7280;
-    }
-    .report-btn-secondary:hover {
-        background-color: #4B5563;
-    }
-
-    .report-error-message {
-        color: #EF4444;
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
-    }
-
-    .report-bg-primary {
-        background-color: #3B82F6 !important;
-        color: white !important;
-    }
-    .report-bg-success {
-        background-color: #22C55E !important;
-        color: white !important;
-    }
-    .report-bg-warning {
-        background-color: #FBBF24 !important;
-        color: white !important;
-    }
-    .report-bg-danger {
-        background-color: #EF4444 !important;
-        color: white !important;
-    }
-    
-    .report-card {
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(0,0,0,0.1);
-    }
-    .report-card-header {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-        font-weight: 600;
-        background-color: rgba(0,0,0,0.03); 
-    }
-    .report-card-body {
-        padding: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-        .report-col-md-5 {
-            width: 41.666667%; 
-        }
-        .report-col-md-2 {
-            width: 16.666667%; 
-        }
-    }
+    .report-btn-primary { background-color: #3B82F6; }
+    .report-btn-primary:hover { background-color: #2563EB; }
+    .report-btn-secondary { background-color: #6B7280; }
+    .report-btn-secondary:hover { background-color: #4B5563; }
+    .report-error-message { color: #EF4444; font-size: 0.875rem; margin-top: 0.5rem; }
+    .report-bg-primary { background-color: #3B82F6 !important; color: white !important; }
+    .report-bg-success { background-color: #22C55E !important; color: white !important; }
+    .report-bg-warning { background-color: #FBBF24 !important; color: white !important; }
+    .report-bg-danger { background-color: #EF4444 !important; color: white !important; }
+    .report-card { border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid rgba(0,0,0,0.1); }
+    .report-card-header { padding: 1rem 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.1); font-weight: 600; background-color: rgba(0,0,0,0.03); }
+    .report-card-body { padding: 1.5rem; }
 </style>
-
 </head>
 <body>
-	<jsp:include page="Nav.jsp" />
+<jsp:include page="Nav.jsp" />
 
-	<div class="container mx-auto px-4 mt-4">
-	    <section class="flex flex-wrap -mx-2">
-	    	<article class="w-full text-center mb-4">
-				<h1 class="font-semibold text-blue-600 text-3xl">
-					Reportes
-				</h1>
-			</article>			
-			<form action="ReportesServlet" method="POST" id="filterForm" class="w-full">
-			<%String fechaInicio = (String) request.getAttribute("fechaInicio"); %>
-			<%String fechaHasta = (String) request.getAttribute("fechaHasta"); %>
-			<section class="w-full px-2 mt-4 mb-8">
-                <article class="w-full">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex flex-wrap -mx-2 items-end"> 
-                                <div class="w-full md:w-4/12 px-2 mb-4 md:mb-0">
-        							<label for="IdfechaInicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha desde:</label>
-        							<input type="date" class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              								 id="IdfechaInicio" name="fechaInicio" value="<%= fechaInicio != null ? fechaInicio : "" %>">
-   								</div>
-    							<div class="w-full md:w-4/12 px-2 mb-4 md:mb-0">
-        							<label for="IdfechaHasta" class="block text-gray-700 text-sm font-bold mb-2">Fecha Hasta:</label>
-        							<input type="date" class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-               								id="IdfechaHasta" name="fechaHasta" value="<%= fechaHasta != null ? fechaHasta : "" %>">
-    							</div>
-                                <div class="w-full md:w-4/12 px-2 mb-4 md:mb-0 flex flex-col">
-                                    <div class="block text-gray-700 text-sm font-bold mb-2 invisible">Placeholder</div>
-                                    <div class="flex space-x-2">
-                                        <button type="submit" name="btnfiltrar" id="Bfiltro" class="report-btn-primary flex-grow">Filtrar</button>
-                                        <button type="submit" name="btnLimpiar" id="Blimpiar" class="report-btn-secondary flex-grow">Limpiar</button>
-                                    </div>
-    							</div>
-                        </div>
-
-                        <%boolean verificarInput = (boolean) request.getAttribute("VerificarImput"); 
-                        if(!verificarInput)
-                        { 
-                        %>	                        
-                        	<div id="dateError" class="report-error-message mt-2">
-                            "Verifique las fechas ingresadas"
-                            </div>
-                            <% }%> 
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1 class="text-primary fw-semibold fs-3">Reportes</h1>
+    </div>
+    <form action="ReportesServlet" method="POST" id="filterForm">
+        <%String fechaInicio = (String) request.getAttribute("fechaInicio"); %>
+        <%String fechaHasta = (String) request.getAttribute("fechaHasta"); %>
+        <div class="card p-4 mb-4">
+            <div class="row align-items-end">
+                <div class="col-md-4 mb-3">
+                    <label for="IdfechaInicio" class="form-label fw-bold">Fecha desde:</label>
+                    <input type="date" class="form-control" id="IdfechaInicio" name="fechaInicio" value="<%= fechaInicio != null ? fechaInicio : "" %>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="IdfechaHasta" class="form-label fw-bold">Fecha hasta:</label>
+                    <input type="date" class="form-control" id="IdfechaHasta" name="fechaHasta" value="<%= fechaHasta != null ? fechaHasta : "" %>">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="d-flex gap-2">
+                        <button type="submit" name="btnfiltrar" class="report-btn-primary w-100">Filtrar</button>
+                        <button type="submit" name="btnLimpiar" class="report-btn-secondary w-100">Limpiar</button>
                     </div>
-                </article>
-            </section>
-            </form>
+                </div>
+            </div>
+            <%boolean verificarInput = (boolean) request.getAttribute("VerificarImput"); 
+            if(!verificarInput) { %>
+                <div class="report-error-message">"Verifique las fechas ingresadas"</div>
+            <% } %>
+        </div>
+    </form>
 
-	    	<%int cuentasActivas = (int) request.getAttribute("cuentasActivas"); %>	    	
-	    	<%float porcCuentasActivas = (float) request.getAttribute("porcCuentasActivas"); %>
-	    	<%float porcCuentasInactivas = (float) request.getAttribute("porcCuentasInactivas"); %>
-	    	<%int cuentasInactivadas =  (int) request.getAttribute("cuentasInactivadas");%>
-	    	<%int clientesActivos = (int) request.getAttribute("clientesActivos"); %>
-			<%int cuentasActivadas = (int) request.getAttribute("cuentasActivadas"); %>
-
-
-	        <article class="w-full md:w-1/4 px-2 mb-4">
-	            <div class="report-card report-bg-primary h-full">
-	                <div class="report-card-header">Clientes Actuales</div>
-	                <div class="report-card-body">
-	                    <h5 class="report-card-title text-2xl font-bold"><%= clientesActivos %></h5>
-	                    <p class="report-card-text">Total de clientes actuales.</p>
-	                </div>
-	            </div>
-	        </article>
-	        <article class="w-full md:w-1/4 px-2 mb-4">
-	            <div class="report-card report-bg-success h-full">
-	                <div class="report-card-header">Cuentas Activas</div>
-	                <div class="report-card-body">
-	                    <h5 class="report-card-title text-2xl font-bold"><%= cuentasActivas%></h5>
-	                    <p class="report-card-text">Total de cuentas activas</p>
-	                </div>
-	            </div>
-	        </article>
-	        <article class="w-full md:w-1/4 px-2 mb-4">
-	            <div class="report-card report-bg-warning h-full">
-	                <div class="report-card-header">Cuentas activadas</div>
-	                <div class="report-card-body">
-	                    <h5 class="report-card-title text-2xl font-bold"><%= cuentasActivadas %></h5>
-	                    <p class="report-card-text">Total Periodo seleccionado</p>
-	                </div>
-	            </div>
-	        </article>
-	        <article class="w-full md:w-1/4 px-2 mb-4">
-	             <div class="report-card report-bg-danger h-full"> <div class="report-card-header">Cuentas desactivadas</div>
-	                <div class="report-card-body">
-	                    <h5 class="report-card-title text-2xl font-bold"><%=cuentasInactivadas %></h5>
-	                    <p class="report-card-text">Total Periodo seleccionado</p>
-	                </div>
-	            </div>
-	        </article>
-	        
-	        
-	    </section>
-
-	    <div class="flex flex-wrap -mx-2">
-	        <div class="w-full px-2 mb-4">
-	            <div class="report-card"> <div class="report-card-header">Altas de Cuentas Mensuales (Pendiente para prestamos)</div> <div class="report-card-body"> <canvas id="barChart"></canvas>
-	                </div>
-	            </div>
-	        </div>
-	        <div class="w-full md:w-1/2 px-2 mt-3 mb-4">
-	            <div class="report-card h-full"> <div class="report-card-header">Porcentaje de Cuentas (Activas/Inactivas)</div> <div class="report-card-body"> <canvas id="pieChart"></canvas>
-	                </div>
-	            </div>
-	        </div>
-	        <div class="w-full md:w-1/2 px-2 mt-3 mb-4">
-	            <div class="report-card h-full"> <div class="report-card-header">Porcentaje de prestamos (Activos/Finalizados)</div> <div class="report-card-body"> <canvas id="pieChart2"></canvas>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	</div>
+    <%int cuentasActivas = (int) request.getAttribute("cuentasActivas"); %>	    	
+	<%float porcCuentasActivas = (float) request.getAttribute("porcCuentasActivas"); %>
+	<%float porcCuentasInactivas = (float) request.getAttribute("porcCuentasInactivas"); %>
+	<%int cuentasInactivadas =  (int) request.getAttribute("cuentasInactivadas");%>
+	<%int clientesActivos = (int) request.getAttribute("clientesActivos"); %>
+	<%int cuentasActivadas = (int) request.getAttribute("cuentasActivadas"); %>
+			
+	<%float PorcPrestAprobados = (float) request.getAttribute("PorcPrestAprobados"); %>
+	<%float PorcPrestRechazados = (float) request.getAttribute("PorcPrestRechazados"); %>
+	<%String gananciaPrestamosString = (String) request.getAttribute("gananciaPrestamosString"); %>
+	<%int PrestAprobados = (int) request.getAttribute("PrestAprobados"); %>
+	<%int totalPrestamos = (int) request.getAttribute("totalPrestamos"); %>
 	
-	<jsp:include page="Footer.html" />
 
+
+
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="report-card report-bg-primary">
+                <div class="report-card-header">Clientes Actuales</div>
+                <div class="report-card-body">
+                    <h5 class="fs-4 fw-bold"><%= clientesActivos %></h5>
+                    <p>Total de clientes actuales.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="report-card report-bg-success">
+                <div class="report-card-header">Cuentas Activas</div>
+                <div class="report-card-body">
+                    <h5 class="fs-4 fw-bold"><%= cuentasActivas %></h5>
+                    <p>Total de cuentas activas.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="report-card report-bg-warning">
+                <div class="report-card-header">Cuentas activadas</div>
+                <div class="report-card-body">
+                    <h5 class="fs-4 fw-bold"><%= cuentasActivadas %></h5>
+                    <p>Total periodo seleccionado.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="report-card report-bg-danger">
+                <div class="report-card-header">Cuentas desactivadas</div>
+                <div class="report-card-body">
+                    <h5 class="fs-4 fw-bold"><%= cuentasInactivadas %></h5>
+                    <p>Total periodo seleccionado.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="report-card">
+                <div class="report-card-header">Prestamos solicitados</div>
+                <div class="report-card-body">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="report-card h-100">
+                <div class="report-card-header">Porcentaje de Cuentas (Activas/Inactivas)</div>
+                <div class="report-card-body">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="report-card h-100">
+                <div class="report-card-header">Porcentaje de Préstamos (Aprobados/Rechazados)</div>
+                <div class="report-card-body">
+                    <canvas id="pieChart2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<jsp:include page="Footer.html" />
 <%int[] meses = (int[]) request.getAttribute("meses"); %>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-
 <script>
     
     Chart.register(ChartDataLabels);
@@ -217,7 +170,7 @@
         data: {
             labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
             datasets: [{
-                label: 'Altas de cuentas mensual',
+            	label: 'Aprobados: <%= PrestAprobados %> / <%= totalPrestamos %> solicitudes - Ganancia obtenida de intereses $ <%= gananciaPrestamosString %>',
                 data: [<%=meses[0]%>, <%=meses[1]%>, <%=meses[2]%>, <%=meses[3]%>, <%=meses[4]%>, <%=meses[5]%>, <%=meses[6]%>, <%=meses[7]%>, <%=meses[8]%>, <%=meses[9]%>, <%=meses[10]%>, <%=meses[11]%>],
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
@@ -234,8 +187,8 @@
             
             plugins: {
                 datalabels: {
-                    anchor: 'end', 
-                    align: 'top',  
+                	anchor: 'Center', 
+                    align: 'Center',    
                     formatter: function(value, context) {
                         return value; 
                     },
@@ -308,7 +261,7 @@
         data: {
             labels: ['Aprobados', 'Rechazados'],
             datasets: [{
-                data: [50, 50], 
+                data: [<%= PorcPrestAprobados%>, <%= PorcPrestRechazados%>], 
                 backgroundColor: ['#85c1e9', '#8e44ad']
             }]
         },

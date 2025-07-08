@@ -1,10 +1,12 @@
 package servlet;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -17,9 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Validacion.Validaciones;
-import daoImpl.CuentaImpl;
 import entidad.Cliente;
 import entidad.Cuenta;
+import entidad.Prestamo;
+import negocio.negocioCuenta;
+import negocio.negocioPrestamo;
+import negocioImpl.negocioCuentaImpl;
+import negocioImpl.negocioPrestamiImpl;
 
 /**
  * Servlet implementation class ReportesServlet
@@ -41,7 +47,8 @@ public class ReportesServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		CuentaImpl cuentaDao = new CuentaImpl();
+		negocioCuenta cuentaNegocio = new negocioCuentaImpl();
+		
 		
 		int cuentasActivas = 0;
         int cuentasActivadas = 0;
@@ -51,8 +58,7 @@ public class ReportesServlet extends HttpServlet {
         
         List<Cliente> listaClientes = new ArrayList<>();
         
-        List<Cuenta> listaCuentas = cuentaDao.readAll();        
-        listaCuentas = cuentaDao.readAll();        
+        List<Cuenta> listaCuentas = cuentaNegocio.readAll();                
         ListIterator<Cuenta> lista = listaCuentas.listIterator();
         
         int clientesActivos = 0;
@@ -74,19 +80,21 @@ public class ReportesServlet extends HttpServlet {
             String fechaHastaStr = request.getParameter("fechaHasta");
              
             if(Validaciones.Verificarfecha(fechaInicioStr) && Validaciones.Verificarfecha(fechaHastaStr))
-            {
-            	fechaInicio = LocalDate.parse(fechaInicioStr);
-            	fechaHasta = LocalDate.parse(fechaHastaStr);           	   
+            {	
+            	if(fechaHasta.isBefore(fechaInicio))
+            	{
+            		fechaInicio = LocalDate.parse(fechaInicioStr);
+                	fechaHasta = LocalDate.parse(fechaHastaStr); 
+            	}
+            	else
+            	{
+            		VerificarImput = false;
+            	}
             }
             else
             {
             	 VerificarImput = false;            	  
-            }
-            
-            if(fechaHasta.isBefore(fechaInicio))
-            {
-            	VerificarImput = false; 
-            }
+            }                   
         }
         
         
@@ -154,6 +162,65 @@ public class ReportesServlet extends HttpServlet {
 		        porcCuentasInactivas =  ((float)cuentasInactivadas/(cuentasActivadas+cuentasInactivadas))*100;	
 			}			
 		}
+		
+		List<Prestamo> prestamos = ListPrestamosPeriodo(fechaInicio, fechaHasta);
+		int[] meses = contarMeses(prestamos);	
+		
+		int PrestAprobados=0;
+		int PrestRechazados=0;
+		float PorcPrestAprobados = 100;
+		float PorcPrestRechazados = 100;
+		
+		if(prestamos!=null)
+		{
+			for (Prestamo prestamo : prestamos) 
+			{
+				if(prestamo.isEstado())
+				{
+					if(prestamo.isAprobado())
+					{
+						PrestAprobados++;
+					}
+					if(!prestamo.isAprobado())
+					{
+						PrestRechazados++;
+					}
+				}	
+			}
+				
+		}
+		
+		if(PrestAprobados == 0)
+		{
+			PorcPrestAprobados = 0;				
+		} 
+		else 
+		{
+			if (PrestRechazados == 0)
+			{
+				PorcPrestRechazados = 0;
+			}
+			else
+			{				
+				PorcPrestAprobados =  ((float)PrestAprobados/(PrestAprobados+PrestRechazados))*100;
+				PorcPrestRechazados =  ((float)PrestRechazados/(PrestAprobados+PrestRechazados))*100;	
+			}			
+		}
+		
+		double gananciaPrestamos = obtGananciaPrestamo(prestamos);		
+		DecimalFormat df = new DecimalFormat("#.00");
+		String gananciaPrestamosString = df.format(gananciaPrestamos);
+		
+		int totalPrestamos = PrestRechazados + PrestAprobados;
+		
+		request.setAttribute("gananciaPrestamosString", gananciaPrestamosString);	
+		request.setAttribute("meses", meses);
+		request.setAttribute("PrestAprobados", PrestAprobados);
+		request.setAttribute("totalPrestamos", totalPrestamos);
+		request.setAttribute("PorcPrestAprobados", PorcPrestAprobados);
+		request.setAttribute("PorcPrestRechazados", PorcPrestRechazados);
+		
+		
 
         request.setAttribute("porcCuentasActivas", porcCuentasActivas);
         request.setAttribute("porcCuentasInactivas", porcCuentasInactivas);
@@ -172,8 +239,7 @@ public class ReportesServlet extends HttpServlet {
 		
 	    request.setAttribute("VerificarImput", VerificarImput);
 	    
-		int[] meses = contarMeses(listaCuentas, 1);
-		request.setAttribute("meses", meses);
+		
 		
 		
 		RequestDispatcher rd = request.getRequestDispatcher("Reportes.jsp"); 
@@ -193,13 +259,17 @@ public class ReportesServlet extends HttpServlet {
 	
 	
 	
-	private int[] contarMeses(List<Cuenta> cuentas,int anio) {
+	// Guardar cantidad de prestamos en meses solictados
+	private int[] contarMeses(List<Prestamo> prestamos) {
         
-        int[] meses = new int[12]; 
-
-        for (Cuenta cuenta : cuentas) {
+        int[] meses = new int[12];              
+        if (prestamos == null || prestamos.isEmpty()) {
+            return meses; 
+        }
+        
+        for (Prestamo prestamo : prestamos) {
         	
-            LocalDate fecha = cuenta.getFechaCreacion();
+            LocalDate fecha = prestamo.getFecha();
             if (fecha != null) {        
                 int indiceMes = fecha.getMonthValue() - 1;
                 meses[indiceMes]++;
@@ -208,12 +278,52 @@ public class ReportesServlet extends HttpServlet {
         return meses;
     }
 	
-	 
+	// Devolver clientes unicos 
 	public List<Cliente> clientesUnicos(List<Cliente> listaClientes) {
 	    Set<Cliente> clientesUnicosSet = new HashSet<>(listaClientes);
 	    List<Cliente> listaClientesUnicos = new ArrayList<>(clientesUnicosSet);
 	    return listaClientesUnicos;
 	}
 
-
+	
+	//Cargar prestamos 
+	
+	private List<Prestamo> ListPrestamosPeriodo(LocalDate inicio, LocalDate fin)
+	{
+		negocioPrestamo prestamosNegoio = new negocioPrestamiImpl();
+		  
+		  List<Prestamo> lista = prestamosNegoio.readAll();
+		  Iterator<Prestamo> listaP = lista.iterator();
+		  List<Prestamo> listaDevolver = new ArrayList<>();
+		  
+		  Prestamo prestamo = new Prestamo();
+		  while(listaP.hasNext())
+		  {	
+			  prestamo = listaP.next();
+			  if(!prestamo.getFecha().isBefore(inicio) && !prestamo.getFecha().isAfter(fin))
+			  {
+				  listaDevolver.add(prestamo);
+			  }
+			  
+		  }
+		  return listaDevolver;
+		  
+	}
+	
+	private double obtGananciaPrestamo(List<Prestamo> prestamos) {
+        
+        double ganancia = 0;              
+        if (prestamos == null || prestamos.isEmpty()) {
+            return ganancia; 
+        }
+        
+        for (Prestamo prestamo : prestamos) { 
+        		if(prestamo.isAprobado())
+        		  {
+        			ganancia +=  (prestamo.getImporteMensual() * prestamo.getCuotas()) -  prestamo.getImportePedido();  
+        		  }
+            }
+        return ganancia;
+    }	
 }
+

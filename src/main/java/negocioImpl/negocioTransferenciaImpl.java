@@ -1,12 +1,17 @@
 package negocioImpl;
 
 import dao.TransferenciaDao;
+import daoImpl.TransferenciaImpl;
 import entidad.Transferencia;
 import negocio.negocioTransferencia;
 
 public class negocioTransferenciaImpl implements negocioTransferencia {
 	
 	private TransferenciaDao transferenciaDao;
+	
+	public negocioTransferenciaImpl() {
+		this.transferenciaDao = new TransferenciaImpl();
+	}
 
 	public negocioTransferenciaImpl(TransferenciaDao transferenciaDao) {
 		this.transferenciaDao = transferenciaDao;

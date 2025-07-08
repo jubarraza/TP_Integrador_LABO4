@@ -3,6 +3,7 @@ package negocioImpl;
 import java.util.List;
 
 import dao.ClienteDao;
+import daoImpl.ClienteImpl;
 import entidad.Cliente;
 import negocio.negocioCliente;
 
@@ -11,6 +12,10 @@ public class negocioClienteImpl implements negocioCliente {
 
 	public negocioClienteImpl(ClienteDao clienteDao) {
 		this.clienteDao = clienteDao;
+	}
+	
+	public negocioClienteImpl() {
+		clienteDao = new ClienteImpl();
 	}
 
 	@Override

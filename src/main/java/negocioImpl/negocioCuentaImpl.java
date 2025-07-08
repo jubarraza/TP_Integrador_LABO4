@@ -3,6 +3,7 @@ package negocioImpl;
 import java.util.List;
 
 import dao.CuentaDao;
+import daoImpl.CuentaImpl;
 import entidad.Cuenta;
 import entidad.TipoDeCuenta;
 import negocio.negocioCuenta;
@@ -11,6 +12,12 @@ public class negocioCuentaImpl implements negocioCuenta {
 	
 	private CuentaDao cuentaDao; 
 	
+	
+	
+	public negocioCuentaImpl() {
+		cuentaDao = new CuentaImpl();
+	}
+
 	@Override
 	public boolean insert(Cuenta cuenta) {
 		return cuentaDao.insert(cuenta);

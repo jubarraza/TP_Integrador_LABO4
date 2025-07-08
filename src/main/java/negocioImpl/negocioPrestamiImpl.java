@@ -3,6 +3,7 @@ package negocioImpl;
 import java.util.List;
 
 import dao.PrestamoDao;
+import daoImpl.PrestamoImpl;
 import entidad.Prestamo;
 import negocio.negocioPrestamo;
 
@@ -10,6 +11,10 @@ public class negocioPrestamiImpl implements negocioPrestamo {
 	
 	private PrestamoDao prestamoDao;
 
+	public negocioPrestamiImpl() {
+		this.prestamoDao = new PrestamoImpl();
+	}
+	
 	public negocioPrestamiImpl(PrestamoDao prestamoDao) {
 		this.prestamoDao = prestamoDao;
 	}
