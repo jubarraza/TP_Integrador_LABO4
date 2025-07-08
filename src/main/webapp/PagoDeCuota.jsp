@@ -1,7 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="entidad.Usuario, entidad.Cuota, entidad.Cuenta, java.util.List, java.text.NumberFormat, java.util.Locale" %>    
     
     <%@ include file="fragmentos/VerificarSesion.jspf"%>
+<%
+    Cuota cuotaAPagar = (Cuota) request.getAttribute("cuotaAPagar");
+    List<Cuenta> listaCuentas = (List<Cuenta>) request.getAttribute("listaCuentas");
+    
+    if (cuotaAPagar == null || listaCuentas == null) {
+        response.sendRedirect("MisPrestamosServlet");
+        return;
+    }
+    
+    NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
+%>    
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,67 +58,52 @@
        <p class="text-muted mb-4">Revise los datos y seleccione una cuenta para realizar el pago.</p>
        
 		<table class="table table-bordered text-center">
-		  <thead class="table-primary">
-		    <tr>
-		      <th scope="col">Fecha pago</th>
-		      <th scope="col">Valor Cuota</th>
-		      <th scope="col">Nro. Cuota</th>
-		    </tr>
-		  </thead>
-		  <tbody>		    
-		    <tr>
-		      <td>10/03/2024</td>
-		      <td class="text-success fw-semibold">$ 1.000,00</td>
-		      <td>2</td>
-		    </tr>
-		  </tbody>
-		</table>
+          <thead class="table-primary">
+            <tr>
+              <th scope="col">Préstamo N°</th>
+              <th scope="col">Nro. Cuota</th>
+              <th scope="col">Valor a Pagar</th>
+            </tr>
+          </thead>
+          <tbody>		    
+            <tr>
+              <td><%= cuotaAPagar.getIdPrestamo() %></td>
+              <td><%= cuotaAPagar.getNumCuota() %></td>
+              <td class="text-success fw-semibold"><%= formatter.format(cuotaAPagar.getMonto()) %></td>
+            </tr>
+          </tbody>
+        </table>
 		
 		<br>
 		
-		<form class="row g-2">
-		<div class="input-group">
-            <select class="form-select" id="selectCuenta">
-              <option selected disabled></option>
-              <option value="1">Caja de ahorro</option>
-              <option value="2">Cuenta sueldo</option>
-              <option value="2">Cuenta corriente</option>
-            </select>
-            <button class="btn btn-primary" type="button">
-			  <i class="bi bi-check2-circle me-1"></i> Seleccionar
-			</button>
-            <button class="btn btn-secondary" type="button">
-			  <i class="bi bi-x-circle me-1"></i> Limpiar
-			</button>
-          </div>
+		<form action="ProcesarPagoServlet" method="post">
+            <input type="hidden" name="idCuota" value="<%= cuotaAPagar.getIdPagoDeCuota() %>">
+            <input type="hidden" name="idPrestamo" value="<%= cuotaAPagar.getIdPrestamo() %>">
+
+            <div class="mb-3">
+                <label for="selectCuenta" class="form-label fw-bold">Pagar desde la cuenta:</label>
+                <select class="form-select" id="selectCuenta" name="numCuentaOrigen" required>
+                    <option value="" selected disabled>-- Seleccione una cuenta --</option>
+                    <%
+                        for (Cuenta c : listaCuentas) {
+                            if (c.getSaldo() >= cuotaAPagar.getMonto()) {
+                    %>
+                                <option value="<%= c.getNumDeCuenta() %>">
+                                    <%= c.getTipoCuenta().getDescripcion() %> N° <%= c.getNumDeCuenta() %> (Saldo: <%= formatter.format(c.getSaldo()) %>)
+                                </option>
+                    <%
+                            }
+                        }
+                    %>
+                </select>
+            </div>
 			 
-		<br>
-			 
-		<div class="d-grid gap-2 col-6 mx-auto">
-		<!-- Button trigger modal -->
-		<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-		 Confirmar pago<i class="bi bi-check2"></i>
-		</button>
-		</div>
-	
-		<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-		  <div class="modal-dialog modal-dialog-centered">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		      	<h4 class="modal-title fw-bold text-primary mt-3">Confirmación de pago <i class="bi bi-check2-all"></i></h4>
-		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.href='CuotasPendientes.jsp'"></button>
-		      </div>
-		      <div class="modal-body">
-		       <i class="bi bi-stars"></i> Su pago fue realizado exitosamente! <i class="bi bi-stars"></i>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="window.location.href='CuotasPendientes.jsp'">
-		        Cerrar</button>
-		      </div>
-		    </div>
-		  </div>
-		</div> 		
-		
+            <div class="d-grid gap-2 col-8 mx-auto mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                     Confirmar y Pagar <i class="bi bi-check2"></i>
+                </button>
+                <a href="DetallePrestamoServlet?idPrestamo=<%= cuotaAPagar.getIdPrestamo() %>" class="btn btn-secondary">Cancelar</a>
+            </div>
 		</form>
 		
 		</div>

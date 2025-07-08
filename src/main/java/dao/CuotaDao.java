@@ -10,5 +10,5 @@ public interface CuotaDao {
 	public boolean generarCuotas(Prestamo prestamo);
 	List<Cuota> readAllByPrestamoId(int idPrestamo);
 	Cuota readOne(int idCuota);
-
+	boolean pagarCuota(int idCuota, String numCuentaOrigen);
 }

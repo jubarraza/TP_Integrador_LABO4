@@ -125,6 +125,82 @@ public class CuotaImpl implements CuotaDao {
 	    }
 	    return null;
 	}
+	
+	@Override
+	public boolean pagarCuota(int idCuota, String numCuentaOrigen) {
+	    Connection cn = Conexion.getConexion().getSQLConexion();
+	    try {
+	        cn.setAutoCommit(false);
+
+	        //  Obtener datos de la cuota
+	        double montoCuota = 0;
+	        int idPrestamo = 0;
+	        try (PreparedStatement st1 = cn.prepareStatement("SELECT monto, id_prestamo FROM cuotas WHERE id_pago_de_cuota = ? AND estado = 1")) {
+	            st1.setInt(1, idCuota);
+	            ResultSet rs = st1.executeQuery();
+	            if (rs.next()) {
+	                montoCuota = rs.getDouble("monto");
+	                idPrestamo = rs.getInt("id_prestamo");
+	            } else {
+	                throw new SQLException("La cuota no existe o ya fue pagada.");
+	            }
+	        }
+
+	        //  Descontar saldo de la cuenta de origen
+	        try (PreparedStatement st2 = cn.prepareStatement("UPDATE cuentas SET saldo = saldo - ? WHERE num_de_cuenta = ? AND saldo >= ?")) {
+	            st2.setDouble(1, montoCuota);
+	            st2.setString(2, numCuentaOrigen);
+	            st2.setDouble(3, montoCuota);
+	            if (st2.executeUpdate() == 0) {
+	                throw new SQLException("Saldo insuficiente o cuenta no encontrada.");
+	            }
+	        }
+
+	        // Actualizar estado de la cuota a "Pagado"
+	        try (PreparedStatement st3 = cn.prepareStatement("UPDATE cuotas SET estado = 0, fecha_pago = CURDATE() WHERE id_pago_de_cuota = ?")) {
+	            st3.setInt(1, idCuota);
+	            st3.executeUpdate();
+	        }
+
+	        // Verifica si quedan cuotas pendientes para ese prstamo
+	        int cuotasPendientes = 0;
+	        try (PreparedStatement st4 = cn.prepareStatement("SELECT COUNT(*) FROM cuotas WHERE id_prestamo = ? AND estado = 1")) {
+	            st4.setInt(1, idPrestamo);
+	            ResultSet rs = st4.executeQuery();
+	            if (rs.next()) {
+	                cuotasPendientes = rs.getInt(1);
+	            }
+	        }
+
+	        // Si no quedan cuotas pendientes, marcar el prestamo como finalizado
+	        if (cuotasPendientes == 0) {
+	            try (PreparedStatement st5 = cn.prepareStatement("UPDATE prestamos SET finalizado = 1 WHERE id_prestamo = ?")) {
+	                st5.setInt(1, idPrestamo);
+	                st5.executeUpdate();
+	                System.out.println("PRÉSTAMO FINALIZADO: ID " + idPrestamo);
+	            }
+	        }
+
+	        //confirmar la transaccion completa
+	        cn.commit();
+	        return true;
+
+	    } catch (SQLException e) {
+	        System.err.println("ERROR EN LA TRANSACCIÓN DE PAGO, revirtiendo cambios: " + e.getMessage());
+	        try {
+	            if (cn != null) cn.rollback();
+	        } catch (SQLException e2) {
+	            e2.printStackTrace();
+	        }
+	        return false;
+	    } finally {
+	        try {
+	            cn.setAutoCommit(true); 
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 
 
 }
