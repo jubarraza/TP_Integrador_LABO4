@@ -67,9 +67,12 @@ public class PrestamoImpl implements PrestamoDao {
         PreparedStatement statement;
         ResultSet resultSet;
         ArrayList<Prestamo> prestamos = new ArrayList<>();
+        Connection conexion = Conexion.getConexion().getSQLConexion();
+        
+        String query = "SELECT * FROM vista_prestamos";
 
         try {
-            statement = this.conexion.prepareStatement(readAll);
+        	statement = conexion.prepareStatement(query);
             resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
@@ -144,8 +147,12 @@ public class PrestamoImpl implements PrestamoDao {
         boolean aprobado = resultSet.getBoolean("aprobado");
         boolean finalizado = resultSet.getBoolean("finalizado");
         String nombreUsuario = resultSet.getString("nombreusuario");
+        int cuotasPagadas = resultSet.getInt("cuotasPagadas");
+        
+        Prestamo prestamo = new Prestamo(id, numCuenta, nombreUsuario, fecha, importePedido, cuotas, importeMensual, estado, aprobado, finalizado);
+        prestamo.setCuotasPagadas(cuotasPagadas);
 
-        return new Prestamo(id, numCuenta, nombreUsuario, fecha, importePedido, cuotas, importeMensual, estado, aprobado, finalizado);
+        return prestamo;
     }
     
     @Override

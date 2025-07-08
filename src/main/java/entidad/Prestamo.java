@@ -14,6 +14,7 @@ public class Prestamo {
     private boolean estado;    // 0: Pendiente, 1: Respondido
     private boolean aprobado;  // 0: Rechazado, 1: Activo
     private boolean finalizado; // 0: No finalizado, 1: Finalizado
+    private int cuotasPagadas;
 
     public Prestamo() {
     }
@@ -112,6 +113,14 @@ public class Prestamo {
 
     public void setFinalizado(boolean finalizado) {
         this.finalizado = finalizado;
+    }
+    
+    public int getCuotasPagadas() {
+        return cuotasPagadas;
+    }
+
+    public void setCuotasPagadas(int cuotasPagadas) {
+        this.cuotasPagadas = cuotasPagadas;
     }
 
     @Override

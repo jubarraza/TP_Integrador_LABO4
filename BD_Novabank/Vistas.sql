@@ -11,7 +11,7 @@ SELECT
     u.id_usuario, u.nombreusuario, u.contrasenia, 
     u.id_tipouser, tu.descripcion AS descUsuario, 
     u.estado AS estadoUsuario, 
-    p.id_provincia AS idProvincia, 
+    p.id_provincia, 
     p.descripcion AS provincia, 
     c.correo, c.telefono, 
     c.fecha_alta AS altaCliente, 
@@ -30,8 +30,8 @@ CREATE VIEW vista_cuentas AS
 SELECT 
 	cue.num_de_cuenta, cue.cbu, cue.fecha_creacion as altaCuenta, cue.fecha_baja as bajaCuenta, tc.id_tipocuenta, tc.descripcion as descTipoCuenta,
     c.id_cliente, c.dni, c.cuil, c.nombre, c.apellido, c.sexo, c.nacionalidad, c.fechanacimiento, c.direccion, l.id_localidad ,l.descripcion AS localidad,
-    u.id_usuario, u.nombreusuario,u.contrasenia ,u.id_tipouser, tu.descripcion as descUsuario, u.estado as estadoUsuario, p.id_provincia AS idProvincia, p.descripcion AS provincia, c.correo, 
-    c.telefono, c.fecha_alta as altaCliente, c.estado as estadoCliente, cue.saldo, cue.estado as estadoCuenta
+    u.id_usuario, u.nombreusuario,u.contrasenia ,u.id_tipouser, tu.descripcion as descUsuario, u.estado as estadoUsuario, p.id_provincia, p.descripcion AS provincia, c.correo, 
+    c.telefono, c.fecha_alta as altaCliente, c.estado as estadoCliente, cue.saldo, cue.estado as estadoCuenta, (SELECT COUNT(*) FROM prestamos pr INNER JOIN cuentas cu_pr ON pr.num_de_cuenta = cu_pr.num_de_cuenta WHERE cu_pr.id_cliente = c.id_cliente AND (pr.finalizado IS NULL OR pr.finalizado = 0)) > 0 AS tienePrestamoActivo
 FROM
     clientes AS c
 INNER JOIN
@@ -94,7 +94,8 @@ SELECT
     p.aprobado,
     p.finalizado,
     u.nombreusuario,
-    cli.id_cliente
+    cli.id_cliente,
+    (SELECT COUNT(*) FROM cuotas WHERE id_prestamo = p.id_prestamo AND estado = 0) AS cuotasPagadas
 FROM prestamos p
 INNER JOIN cuentas c ON p.num_de_cuenta = c.num_de_cuenta
 INNER JOIN clientes cli ON c.id_cliente = cli.id_cliente

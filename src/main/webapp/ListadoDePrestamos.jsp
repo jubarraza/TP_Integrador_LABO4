@@ -183,7 +183,7 @@ h2 {
 						<td><%=formatter.format(p.getImportePedido())%></td>
 						<td><%=formatter.format(p.getImporteMensual())%></td>
 						<td><%=p.getCuotas()%></td>
-						<td>Falta Lógica</td>
+						<td><%= p.getCuotas() - p.getCuotasPagadas() %></td>
 						<td><span class="badge <%=estadoClase%>"><%=estadoTexto%></span></td>
 						<td>
 							<%
