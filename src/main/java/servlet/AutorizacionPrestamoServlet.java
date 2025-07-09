@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import daoImpl.Conexion;
+import daoImpl.CuentaImpl;
 import daoImpl.CuotaImpl;
 import daoImpl.MovimientoImpl;
 import daoImpl.PrestamoImpl;
@@ -79,6 +80,7 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
                     return;
                 }
 
+                //insertar el movimiento
                 MovimientoImpl movDao = new MovimientoImpl(conn);
 
                 Movimiento mov = new Movimiento();
@@ -96,6 +98,16 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
                 if (idMov <= 0) {
                     conn.rollback();
                     request.setAttribute("mensajeError", "Error al registrar el movimiento de acreditación.");
+                    forwardToListar(request, response);
+                    return;
+                }
+
+                // actualizacion del saldo
+                CuentaImpl cuentaDao = new CuentaImpl();
+                boolean saldoOk = cuentaDao.acreditarSaldo(prestamo.getNumDeCuenta(), prestamo.getImportePedido());
+                if (!saldoOk) {
+                    conn.rollback();
+                    request.setAttribute("mensajeError", "Error al acreditar el saldo en la cuenta destino.");
                     forwardToListar(request, response);
                     return;
                 }

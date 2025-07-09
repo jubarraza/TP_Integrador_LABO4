@@ -446,4 +446,31 @@ public class CuentaImpl implements CuentaDao{
 
 	    return cuenta;
 	}
+	
+	public boolean acreditarSaldo(String numCuenta, double monto) {
+	    String sql = "UPDATE cuentas SET saldo = saldo + ? WHERE num_de_cuenta = ?";
+	    boolean actualizado = false;
+
+	    try (PreparedStatement stmt = Conexion.getConexion().getSQLConexion().prepareStatement(sql)) {
+	        stmt.setDouble(1, monto);
+	        stmt.setString(2, numCuenta);
+	        actualizado = stmt.executeUpdate() > 0;
+
+	        if (actualizado) {
+	            Conexion.getConexion().getSQLConexion().commit();
+	        }
+
+	    } catch (SQLException e) {
+	        System.err.println("Error al acreditar saldo en cuenta.");
+	        e.printStackTrace();
+	        try {
+	            Conexion.getConexion().getSQLConexion().rollback();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+
+	    return actualizado;
+	}
+
 }
