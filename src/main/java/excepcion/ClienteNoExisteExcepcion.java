@@ -1,10 +1,10 @@
 package excepcion;
 
-public class ClienteNoExiste extends RuntimeException {
-
+public class ClienteNoExisteExcepcion extends Exception{
+		
 	private static final long serialVersionUID = 1L;
 
-	public ClienteNoExiste() {
+	public ClienteNoExisteExcepcion() {
 		
 	}
 

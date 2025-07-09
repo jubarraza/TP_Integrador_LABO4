@@ -9,6 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import daoImpl.Conexion;
+import excepcion.ClienteNoExisteExcepcion;
+import excepcion.FechaInvalidaException;
+import excepcion.SaldoInsuficienteException;
 
 public class Validaciones {
 	
@@ -19,7 +22,7 @@ public class Validaciones {
 	private static final String buscarNumCuenta = "select num_de_cuenta from cuentas where num_de_cuenta = ?;";
 	private static final String buscarCbu = "select cbu from cuentas where cbu = ?;";
     
-    public static boolean Verificarfecha(String fecha) {    
+    public static boolean Verificarfecha(String fecha) throws FechaInvalidaException {    
         
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -36,9 +39,14 @@ public class Validaciones {
             if (!fechaValidar.isBefore(fechaMinima) && !fechaValidar.isAfter(fechaMaxima)) {
                 return true;
             }
+            else
+            {
+            	FechaInvalidaException exc1 = new FechaInvalidaException();
+                throw exc1;	
+            }
         }
-
         return false;
+        
     }
     
     public static boolean existeCuenta(String cbu) {
@@ -242,8 +250,7 @@ public static boolean existeDNI(String DNI) {
             
             if (rs.next()) {
             	existe = true;
-            }
-			
+            }			
 		}catch (SQLException e) {
 			e.printStackTrace();
 			try {
@@ -256,6 +263,21 @@ public static boolean existeDNI(String DNI) {
 	}
 
     
+    public static boolean FaltaSaldo(double saldo) throws SaldoInsuficienteException {
+        if (saldo <= 0) {
+            SaldoInsuficienteException exc1 = new SaldoInsuficienteException();
+            throw exc1;
+        }
+        return false;                      
+    }
     
+    
+    public static boolean ClienteInexistente(int id) throws ClienteNoExisteExcepcion {
+        if (id == 0) {
+        	ClienteNoExisteExcepcion exc1 = new ClienteNoExisteExcepcion();
+            throw exc1;
+        }
+        return false;                      
+    }
     
 }

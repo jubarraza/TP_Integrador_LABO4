@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Validacion.Validaciones;
 import entidad.Cuenta;
 import entidad.Transferencia;
 import entidad.Usuario;
+import excepcion.SaldoInsuficienteException;
 import negocioImpl.negocioCuentaImpl;
 import negocioImpl.negocioTransferenciaImpl;
 
@@ -66,11 +68,15 @@ public class TransferenciaCbuServlet extends HttpServlet {
 	        }
 
 	        double monto = Double.parseDouble(montoStr);
-	        if (monto <= 0) {
+	        
+	        try {
+	            Validaciones.FaltaSaldo(monto);
+	        } catch (NumberFormatException e) {
+	            response.sendRedirect("Transferencias.jsp?mensaje=formatoMontoInvalido");
+	        } catch (SaldoInsuficienteException e) {
 	            response.sendRedirect("Transferencias.jsp?mensaje=montoInvalido");
-	            return;
-	        }
-
+	        } 
+	        	    
 	        negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 	        Cuenta cuentaDestino = negocioCuentaImpl.obtenerCuentaPorCBU(cbuDestino);
 

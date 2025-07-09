@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import Validacion.Validaciones;
 import entidad.Cliente;
 import entidad.Cuenta;
 import entidad.TipoDeCuenta;
+import excepcion.ClienteNoExisteExcepcion;
 import negocioImpl.negocioCuentaImpl;
 
 
@@ -78,11 +80,16 @@ public class InsertCuentasServlet extends HttpServlet {
 
 	    // Verificar si el cliente existe por su DNI
 	    int idCliente = negocioCuentaImpl.buscarId(dni);
-	    if (idCliente <= 0) {
+	   	    
+	    try {
+	        Validaciones.ClienteInexistente(idCliente); 
+	    } catch (ClienteNoExisteExcepcion e) {
 	        request.setAttribute("mensajeError", "El DNI no pertenece a un cliente.");
 	        doGet(request, response);
 	        return;
 	    }
+	    
+	    
 	    
 	    //Verificar cantidad de cuentas
 	    int cantCuenta = negocioCuentaImpl.cantidadCuentas(dni);

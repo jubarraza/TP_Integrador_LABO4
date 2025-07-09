@@ -22,6 +22,7 @@ import Validacion.Validaciones;
 import entidad.Cliente;
 import entidad.Cuenta;
 import entidad.Prestamo;
+import excepcion.FechaInvalidaException;
 import negocio.negocioCuenta;
 import negocio.negocioPrestamo;
 import negocioImpl.negocioCuentaImpl;
@@ -78,22 +79,28 @@ public class ReportesServlet extends HttpServlet {
         	String fechaInicioStr = request.getParameter("fechaInicio");
             String fechaHastaStr = request.getParameter("fechaHasta");
              
-            if(Validaciones.Verificarfecha(fechaInicioStr) && Validaciones.Verificarfecha(fechaHastaStr))
-            {	
-            		fechaInicio = LocalDate.parse(fechaInicioStr);
-                	fechaHasta = LocalDate.parse(fechaHastaStr); 
-            	
-                if(fechaHasta.isBefore(fechaInicio))
-            	{
-            		VerificarInput = false;
-            		fechaHasta = LocalDate.now();
-                    fechaInicio = Year.of(fechaHasta.getYear()).atDay(1);
-            	}
-            }
-            else
-            {
-            	 VerificarInput = false;
-            }
+            try {
+				if(Validaciones.Verificarfecha(fechaInicioStr) && Validaciones.Verificarfecha(fechaHastaStr))
+				{	
+						fechaInicio = LocalDate.parse(fechaInicioStr);
+				    	fechaHasta = LocalDate.parse(fechaHastaStr); 
+					
+				    if(fechaHasta.isBefore(fechaInicio))
+					{
+						VerificarInput = false;
+						fechaHasta = LocalDate.now();
+				        fechaInicio = Year.of(fechaHasta.getYear()).atDay(1);
+					}
+				}
+				else
+				{
+					 VerificarInput = false;
+				}
+			} catch (FechaInvalidaException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				VerificarInput = false;
+			}
         
         }
         
