@@ -2,15 +2,20 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.time.LocalDate;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import daoImpl.Conexion;
 import daoImpl.CuotaImpl;
+import daoImpl.MovimientoImpl;
 import daoImpl.PrestamoImpl;
+import entidad.Movimiento;
 import entidad.Prestamo;
+import entidad.TipoDeMovimiento;
 
 @WebServlet("/AutorizacionPrestamoServlet")
 public class AutorizacionPrestamoServlet extends HttpServlet {
@@ -27,7 +32,8 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
         String idPrest = request.getParameter("idPrestamo");
 
         if (idPrest == null || accion == null) {
-            response.sendRedirect("ListarPrestamoServlet?error=parametros");
+            request.setAttribute("mensajeError", "Faltan parámetros requeridos.");
+            forwardToListar(request, response);
             return;
         }
 
@@ -35,7 +41,8 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
         try {
             idPrestamo = Integer.parseInt(idPrest);
         } catch (NumberFormatException e) {
-            response.sendRedirect("ListarPrestamoServlet?error=formato");
+            request.setAttribute("mensajeError", "El ID del préstamo no es válido.");
+            forwardToListar(request, response);
             return;
         }
 
@@ -45,34 +52,57 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
 
         Prestamo prestamo = prestamoDao.readById(idPrestamo);
         if (prestamo == null) {
-            response.sendRedirect("ListarPrestamoServlet?error=noexiste");
+            request.setAttribute("mensajeError", "El préstamo no existe.");
+            forwardToListar(request, response);
             return;
         }
 
         try {
             if (accion.equals("aprobar")) {
-                // Actualizar estado
                 prestamo.setEstado(true);
                 prestamo.setAprobado(true);
                 prestamo.setFinalizado(false);
 
                 boolean actualizado = prestamoDao.actualizarEstado(prestamo);
-
                 if (!actualizado) {
                     conn.rollback();
-                    response.sendRedirect("ListarPrestamoServlet?error=update");
+                    request.setAttribute("mensajeError", "Error al actualizar el préstamo.");
+                    forwardToListar(request, response);
                     return;
                 }
 
                 boolean cuotasOk = cuotaDao.generarCuotas(prestamo);
                 if (!cuotasOk) {
                     conn.rollback();
-                    response.sendRedirect("ListarPrestamoServlet?error=cuotas");
+                    request.setAttribute("mensajeError", "Error al generar las cuotas.");
+                    forwardToListar(request, response);
+                    return;
+                }
+
+                MovimientoImpl movDao = new MovimientoImpl(conn);
+
+                Movimiento mov = new Movimiento();
+                mov.setFecha(LocalDate.now());
+                mov.setDetalle("Acreditación préstamo aprobado");
+                mov.setImporte(prestamo.getImportePedido());
+
+                TipoDeMovimiento tipo = new TipoDeMovimiento();
+                tipo.setIdTipoMovimiento((short) 6); // 6 = Acreditación Préstamo
+                mov.setIdTipoMovimiento(tipo);
+
+                mov.setNumDeCuenta(prestamo.getNumDeCuenta());
+
+                int idMov = movDao.Insert(mov);
+                if (idMov <= 0) {
+                    conn.rollback();
+                    request.setAttribute("mensajeError", "Error al registrar el movimiento de acreditación.");
+                    forwardToListar(request, response);
                     return;
                 }
 
                 conn.commit();
-                response.sendRedirect("ListarPrestamoServlet?success=aprobado");
+                request.setAttribute("mensajeExito", "Préstamo aprobado correctamente.");
+                forwardToListar(request, response);
 
             } else if (accion.equals("rechazar")) {
                 prestamo.setEstado(true);
@@ -82,14 +112,18 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
                 boolean actualizado = prestamoDao.actualizarEstado(prestamo);
                 if (actualizado) {
                     conn.commit();
-                    response.sendRedirect("ListarPrestamoServlet?success=rechazado");
+                    request.setAttribute("mensajeExito", "Préstamo rechazado correctamente.");
                 } else {
                     conn.rollback();
-                    response.sendRedirect("ListarPrestamoServlet?error=update");
+                    request.setAttribute("mensajeError", "Error al rechazar el préstamo.");
                 }
+                forwardToListar(request, response);
+
             } else {
-                response.sendRedirect("ListarPrestamoServlet?error=accion");
+                request.setAttribute("mensajeError", "Acción no reconocida.");
+                forwardToListar(request, response);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             try {
@@ -97,7 +131,14 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-            response.sendRedirect("ListarPrestamoServlet?error=excepcion");
+            request.setAttribute("mensajeError", "Ocurrió un error inesperado.");
+            forwardToListar(request, response);
         }
+    }
+
+    private void forwardToListar(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher rd = request.getRequestDispatcher("ListarPrestamoServlet");
+        rd.forward(request, response);
     }
 }

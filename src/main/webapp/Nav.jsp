@@ -82,11 +82,11 @@ if (usuarioLogueado != null) {
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"
 									href="TransferenciaPropiaServlet"><i class="bi bi-repeat me-2"></i> Entre Cuentas Propias</a></li>
 								<li><a class="dropdown-item fs-5 text-dark"
-									href="ListadoDePrestamos.jsp"><i class="bi bi-cash-stack me-2"></i> Préstamos</a></li>
+									href="MisPrestamosServlet"><i class="bi bi-cash-stack me-2"></i> Préstamos</a></li>
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"
 									href="GetionPrestamoServelet"><i class="bi bi-pencil-square me-2"></i> Solicitar</a></li>
 								<li><a class="dropdown-item ps-4 d-flex align-items-center fs-5"
-									href="CuotasPendientes.jsp"><i class="bi bi-currency-dollar me-2"></i> Pagar Cuotas</a></li>
+									href="MisPrestamosServlet"><i class="bi bi-currency-dollar me-2"></i> Pagar Cuotas</a></li>
 							</ul>
 						</li>
 						<% } else if (tipoUsuario == 1) { %>

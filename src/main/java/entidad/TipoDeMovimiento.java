@@ -14,7 +14,11 @@ public class TipoDeMovimiento {
         this.descripcion = descripcion;
     }
 
-    public short getIdTipoMovimiento() {
+    public TipoDeMovimiento() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public short getIdTipoMovimiento() {
         return idTipoMovimiento;
     }
 
