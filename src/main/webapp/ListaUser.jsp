@@ -153,7 +153,7 @@ table{
 								class="btn btn-outline-danger btn-sm btn-action" disabled
 								data-bs-toggle="tooltip" data-bs-placement="top"
 								title="No se puede eliminar, tiene préstamos activos">
-								<i class="bi bi-trash"></i> Eliminar
+								<i class="bi bi-trash"></i> 
 							</button> <%-- Si NO tiene préstamos activos --%> <%
  } else {
  %>

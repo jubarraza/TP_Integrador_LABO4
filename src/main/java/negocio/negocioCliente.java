@@ -11,4 +11,6 @@ public interface negocioCliente {
 	public boolean update(Cliente cliente);
 	public boolean Delete(String dni);
 	public Cliente ReadOne(int idCliente);
+	public Cliente getClientePorID(int id);
+	public Cliente getPorIdUsuario(int idUsuario);
 }

@@ -16,6 +16,8 @@ import dao.UsuarioDao;
 import daoImpl.Conexion;
 import daoImpl.UsuarioImpl;
 import entidad.Usuario;
+import negocio.negocioUsuario;
+import negocioImpl.negocioUsuarioImpl;
 
 @WebServlet("/admin/usuarios")
 public class GestionUsuariosServlet extends HttpServlet {
@@ -26,13 +28,14 @@ public class GestionUsuariosServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Connection conn = null;
+    	 Connection conn = null;
         try {
-            conn = Conexion.getConexion().getSQLConexion();
-            UsuarioDao usuarioDao = new UsuarioImpl(conn);
-            List<Usuario> listaUsuarios = usuarioDao.ReadAll();
+        	conn = Conexion.getConexion().getSQLConexion();
+        	
+        	negocioUsuario usuarioNegocio = new negocioUsuarioImpl(conn);
+            List<Usuario> listaUsuarios = usuarioNegocio.ReadAll();
             
-            System.out.println("DEBUG: Cantidad de usuarios encontrados en el DAO: " + listaUsuarios.size());
+            //System.out.println("DEBUG: Cantidad de usuarios encontrados en el DAO: " + listaUsuarios.size());
             
             request.setAttribute("listaUsuarios", listaUsuarios);
             
@@ -54,8 +57,8 @@ public class GestionUsuariosServlet extends HttpServlet {
                 conn = Conexion.getConexion().getSQLConexion();
                 int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
                 
-                UsuarioDao usuarioDao = new UsuarioImpl(conn);
-                usuarioDao.logicalDelete(idUsuario);
+                negocioUsuario usuarioNegocio = new negocioUsuarioImpl(conn);
+                usuarioNegocio.logicalDelete(idUsuario);
             }
         } catch (Exception e) {
             e.printStackTrace();

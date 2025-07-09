@@ -18,6 +18,9 @@ import daoImpl.LocalidadImpl;
 import entidad.Cliente;
 import entidad.Localidad;
 import entidad.Usuario;
+import negocio.negocioCliente;
+import negocioImpl.negocioClienteImpl;
+import negocioImpl.negocioLocalidadImpl;
 
 @WebServlet("/perfil")
 public class PerfilServlet extends HttpServlet {
@@ -53,8 +56,9 @@ public class PerfilServlet extends HttpServlet {
             loc.setIdLocalidad((short) Integer.parseInt(request.getParameter("localidad")));
             cliente.setLocalidad(loc);
             
-            ClienteDao clienteDao = new ClienteImpl(conn);
-            boolean exito = clienteDao.update(cliente);
+            //ClienteDao clienteDao = new ClienteImpl(conn);
+            negocioCliente clienteNegocio = new negocioClienteImpl(conn);
+            boolean exito = clienteNegocio.update(cliente);
 
             if (exito) {
                 request.setAttribute("mensaje", "Perfil actualizado con éxito.");
@@ -89,8 +93,9 @@ public class PerfilServlet extends HttpServlet {
                 return;
             }
 
-            ClienteDao clienteDao = new ClienteImpl(conn);
-            Cliente cliente = clienteDao.ReadOne(usuarioLogueado.getIdcliente());
+            //ClienteDao clienteDao = new ClienteImpl(conn);
+            negocioCliente clienteNegocio = new negocioClienteImpl(conn);
+            Cliente cliente = clienteNegocio.ReadOne(usuarioLogueado.getIdcliente());
 
             request.setAttribute("cliente", cliente);
             RequestDispatcher dispatcher = request.getRequestDispatcher("/ListaUser.jsp");
@@ -107,14 +112,15 @@ public class PerfilServlet extends HttpServlet {
         Connection conn = null;
         try {
             conn = Conexion.getConexion().getSQLConexion();
-            ClienteDao clienteDao = new ClienteImpl(conn);
+            //ClienteDao clienteDao = new ClienteImpl(conn);
+            negocioCliente clienteNegocio = new negocioClienteImpl(conn);
 
             String idUsuarioParam = request.getParameter("idUsuario");
             Cliente cliente;
 
             if (idUsuarioParam != null) {
                 int idUsuario = Integer.parseInt(idUsuarioParam);
-                cliente = clienteDao.getPorIdUsuario(idUsuario);
+                cliente = clienteNegocio.getPorIdUsuario(idUsuario);
             } else {
                 HttpSession session = request.getSession();
                 Usuario usuarioLogueado = (Usuario) session.getAttribute("usuario");
@@ -124,11 +130,11 @@ public class PerfilServlet extends HttpServlet {
                     return;
                 }
 
-                cliente = clienteDao.ReadOne(usuarioLogueado.getIdcliente());
+                cliente = clienteNegocio.ReadOne(usuarioLogueado.getIdcliente());
             }
 
-            LocalidadDao localidadDao = new LocalidadImpl(conn);
-            List<Localidad> listaLocalidades = localidadDao.readAll();
+            negocioLocalidadImpl localidadNegocio = new negocioLocalidadImpl(conn);
+            List<Localidad> listaLocalidades = localidadNegocio.readAll();
 
             request.setAttribute("cliente", cliente);
             request.setAttribute("listaLocalidades", listaLocalidades);

@@ -7,9 +7,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import dao.CuotaDao;
-import daoImpl.CuotaImpl;
+
 import entidad.Cuota;
+import negocioImpl.negocioCuotaImpl;
 
 @WebServlet("/DetallePrestamoServlet")
 public class DetallePrestamoServlet extends HttpServlet {
@@ -23,8 +23,8 @@ public class DetallePrestamoServlet extends HttpServlet {
             e.printStackTrace();
         }
         
-        CuotaDao cuotaDao = new CuotaImpl();
-        List<Cuota> listaCuotas = cuotaDao.readAllByPrestamoId(idPrestamo);
+        negocioCuotaImpl cuotaNegocio = new negocioCuotaImpl();
+        List<Cuota> listaCuotas = cuotaNegocio.readAllByPrestamoId(idPrestamo);
         
         request.setAttribute("listaCuotas", listaCuotas);
         request.getRequestDispatcher("/CuotasPendientes.jsp").forward(request, response);

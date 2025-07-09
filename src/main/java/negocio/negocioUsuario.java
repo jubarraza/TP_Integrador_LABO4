@@ -1,12 +1,10 @@
-package dao;
+package negocio;
 
 import java.util.List;
 
-
 import entidad.Usuario;
 
-public interface UsuarioDao {
-	
+public interface negocioUsuario {
 	public boolean Insert(Usuario usuario);
 	public List<Usuario> ReadAll();
 	public List<Usuario> ReadAll(int estado);
@@ -16,4 +14,5 @@ public interface UsuarioDao {
 	public boolean logicalDelete(int idUsuario);
 	public boolean modificarPassword(String nuevaContrasenia, String usuario);
 	public boolean verificarPassword(String nombreUsuario, String contraseniaActual);
+
 }

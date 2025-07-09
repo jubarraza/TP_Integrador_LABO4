@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import dao.CuotaDao;
 import daoImpl.CuotaImpl;
+import negocioImpl.negocioCuotaImpl;
 
 @WebServlet("/ProcesarPagoServlet")
 public class ProcesarPagoServlet extends HttpServlet {
@@ -18,8 +19,8 @@ public class ProcesarPagoServlet extends HttpServlet {
         int idPrestamo = Integer.parseInt(request.getParameter("idPrestamo"));
         String numCuentaOrigen = request.getParameter("numCuentaOrigen");
         
-        CuotaDao cuotaDao = new CuotaImpl();
-        boolean exito = cuotaDao.pagarCuota(idCuota, numCuentaOrigen);
+        negocioCuotaImpl cuotaNegocio = new negocioCuotaImpl();
+        boolean exito = cuotaNegocio.pagarCuota(idCuota, numCuentaOrigen);
         
         if (exito) {
             request.getSession().setAttribute("mensajeExito", "El pago de la cuota se realizo exitosamente!");

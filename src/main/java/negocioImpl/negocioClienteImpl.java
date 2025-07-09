@@ -1,5 +1,6 @@
 package negocioImpl;
 
+import java.sql.Connection;
 import java.util.List;
 
 import dao.ClienteDao;
@@ -12,6 +13,10 @@ import negocio.negocioCliente;
 public class negocioClienteImpl implements negocioCliente {
 	
 	private ClienteDao clienteDao;
+	
+	public negocioClienteImpl(Connection conexion) {
+		this.clienteDao = new ClienteImpl(conexion);
+	}
 
 	public negocioClienteImpl(ClienteDao clienteDao) {
 		this.clienteDao = clienteDao;
@@ -49,6 +54,16 @@ public class negocioClienteImpl implements negocioCliente {
 	@Override
 	public Cliente ReadOne(int idCliente) {
 		return clienteDao.ReadOne(idCliente);
+	}
+
+	@Override
+	public Cliente getClientePorID(int id) {
+		return clienteDao.getClientePorID(id);
+	}
+
+	@Override
+	public Cliente getPorIdUsuario(int idUsuario) {
+		return clienteDao.getPorIdUsuario(idUsuario);
 	}
 
 	
