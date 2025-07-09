@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import daoImpl.CuentaImpl;
 import entidad.Cuenta;
 import entidad.TipoDeCuenta;
+import negocioImpl.negocioCuentaImpl;
 
 
 @WebServlet("/ModificarCuentaServlet")
@@ -28,9 +28,9 @@ public class ModificarCuentaServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String numeroCuenta = request.getParameter("nroCuenta");
-
-	    CuentaImpl cuentaDao = new CuentaImpl();
-	    List<Cuenta> cuentas = cuentaDao.readAll("num_de_cuenta = '" + numeroCuenta + "'");
+	    
+	    negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+	    List<Cuenta> cuentas = negocioCuentaImpl.readAll("num_de_cuenta = '" + numeroCuenta + "'");
 
 	    if (!cuentas.isEmpty()) {
 	        Cuenta cuenta = cuentas.get(0);
@@ -57,9 +57,9 @@ public class ModificarCuentaServlet extends HttpServlet {
 	        cuenta.setNumDeCuenta(numeroCuenta);
 	        cuenta.setTipoCuenta(tipoDeCuenta);
 	        cuenta.setEstado(estado);
-
-	        CuentaImpl cuentaDao = new CuentaImpl();
-	        boolean exito = cuentaDao.actualizarTipoCuentaYEstado(cuenta);
+	        
+	        negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+	        boolean exito = negocioCuentaImpl.actualizarTipoCuentaYEstado(cuenta);
 
 	        if (exito) {
 	            response.sendRedirect("ListarCuentasServlet");

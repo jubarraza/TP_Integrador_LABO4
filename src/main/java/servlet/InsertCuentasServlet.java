@@ -10,12 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import daoImpl.CuentaImpl;
 import entidad.Cliente;
 import entidad.Cuenta;
 import entidad.TipoDeCuenta;
+import negocioImpl.negocioCuentaImpl;
 
 
 @WebServlet("/InsertCuentasServlet")
@@ -31,8 +30,9 @@ public class InsertCuentasServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		CuentaImpl cuentaI = new CuentaImpl();
-		List<TipoDeCuenta> listaTipo = cuentaI.readAllTipoDeCuenta();
+		negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+		List<TipoDeCuenta> listaTipo = negocioCuentaImpl.readAllTipoDeCuenta();
+		
 		request.setAttribute("tipoCuenta", listaTipo);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("ABMCuentas.jsp");
@@ -74,10 +74,10 @@ public class InsertCuentasServlet extends HttpServlet {
 	    int idTipo = Integer.parseInt(request.getParameter("tipoCuenta"));
 
 	    // Instancia de acceso a datos
-	    CuentaImpl cuentaI = new CuentaImpl();
+	    negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 
 	    // Verificar si el cliente existe por su DNI
-	    int idCliente = cuentaI.buscarId(dni);
+	    int idCliente = negocioCuentaImpl.buscarId(dni);
 	    if (idCliente <= 0) {
 	        request.setAttribute("mensajeError", "El DNI no pertenece a un cliente.");
 	        doGet(request, response);
@@ -85,7 +85,7 @@ public class InsertCuentasServlet extends HttpServlet {
 	    }
 	    
 	    //Verificar cantidad de cuentas
-	    int cantCuenta = cuentaI.cantidadCuentas(dni);
+	    int cantCuenta = negocioCuentaImpl.cantidadCuentas(dni);
 	    if (cantCuenta >= 3) {
 	    	request.setAttribute("mensajeError", "No puede crear mas cuentas, 3 es el limite.");
 	        doGet(request, response);
@@ -103,7 +103,7 @@ public class InsertCuentasServlet extends HttpServlet {
 	    Cuenta cuenta = new Cuenta(numCuenta, cbu, fechaAlta, tipo, cliente);
 
 	    // Intentar insertar la cuenta
-	    boolean insertCuenta = cuentaI.insert(cuenta);
+	    boolean insertCuenta = negocioCuentaImpl.insert(cuenta);
 	    if (insertCuenta) {
 	        request.setAttribute("mensajeExito", "Cuenta agregada correctamente.");
 	    } else {

@@ -18,7 +18,6 @@ public class PrestamoImpl implements PrestamoDao {
     private Connection conexion;
 
     private static final String insertPrestamo = "INSERT INTO prestamos (num_de_cuenta, fecha, importe_pedido, cuotas, importe_mensual, estado, aprobado, finalizado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String readAll = "SELECT * FROM vista_prestamos";
     private static final String readById = "SELECT * FROM vista_prestamos WHERE id = ?";
     private static final String updateEstado = "UPDATE prestamos SET estado = ?, aprobado = ?, finalizado = ? WHERE id_prestamo = ?";
 
@@ -85,7 +84,8 @@ public class PrestamoImpl implements PrestamoDao {
         }
         return prestamos;
     }
-
+    
+    @Override
     public Prestamo readById(int idPrestamo) {
         PreparedStatement statement;
         ResultSet resultSet;

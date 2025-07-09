@@ -52,7 +52,7 @@ public class PerfilServlet extends HttpServlet {
             Localidad loc = new Localidad();
             loc.setIdLocalidad((short) Integer.parseInt(request.getParameter("localidad")));
             cliente.setLocalidad(loc);
-
+            
             ClienteDao clienteDao = new ClienteImpl(conn);
             boolean exito = clienteDao.update(cliente);
 

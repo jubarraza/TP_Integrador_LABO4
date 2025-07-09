@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import daoImpl.ClienteImpl;
 import entidad.Cliente;
+import negocioImpl.negocioClienteImpl;
 
 @WebServlet("/listarClientes")
 public class ListarClientesServlet extends HttpServlet {
@@ -22,8 +23,8 @@ public class ListarClientesServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ClienteImpl clienteImpl = new ClienteImpl();
-        List<Cliente> clientesList = clienteImpl.ReadAll(); 
+        negocioClienteImpl negocioClienteImpl = new negocioClienteImpl();
+        List<Cliente> clientesList = negocioClienteImpl.ReadAll(); 
         request.setAttribute("listaUsuarios", clientesList);
         request.getRequestDispatcher("ListaUser.jsp").forward(request, response);
     }

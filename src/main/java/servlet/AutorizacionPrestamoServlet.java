@@ -17,6 +17,7 @@ import daoImpl.PrestamoImpl;
 import entidad.Movimiento;
 import entidad.Prestamo;
 import entidad.TipoDeMovimiento;
+import negocioImpl.negocioPrestamiImpl;
 
 @WebServlet("/AutorizacionPrestamoServlet")
 public class AutorizacionPrestamoServlet extends HttpServlet {
@@ -49,9 +50,10 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
 
         Connection conn = Conexion.getConexion().getSQLConexion();
         PrestamoImpl prestamoDao = new PrestamoImpl(conn);
+        negocioPrestamiImpl negocioPrestamoImpl = new negocioPrestamiImpl();
         CuotaImpl cuotaDao = new CuotaImpl(conn);
 
-        Prestamo prestamo = prestamoDao.readById(idPrestamo);
+        Prestamo prestamo = negocioPrestamoImpl.readById(idPrestamo);
         if (prestamo == null) {
             request.setAttribute("mensajeError", "El préstamo no existe.");
             forwardToListar(request, response);

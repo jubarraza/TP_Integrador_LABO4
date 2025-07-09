@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import daoImpl.CuentaImpl;
-import entidad.Usuario;
+import negocioImpl.negocioCuentaImpl;
 
 
 @WebServlet("/EliminarCuentaServlet")
@@ -33,8 +32,8 @@ public class EliminarCuentaServlet extends HttpServlet {
 		 String numCuenta = request.getParameter("numCuenta");
 
 		    if (numCuenta != null && !numCuenta.isEmpty()) {
-		        CuentaImpl cuentaDao = new CuentaImpl();
-		        cuentaDao.darDeBajaCuenta(numCuenta);
+		        negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+		        negocioCuentaImpl.darDeBajaCuenta(numCuenta);
 		    }
 
 		    response.sendRedirect("ListarCuentasServlet");

@@ -10,4 +10,5 @@ public interface negocioCliente {
 	public int Insert(Cliente cliente);
 	public boolean update(Cliente cliente);
 	public boolean Delete(String dni);
+	public Cliente ReadOne(int idCliente);
 }

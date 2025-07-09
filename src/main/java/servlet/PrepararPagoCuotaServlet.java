@@ -10,13 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.CuentaDao;
 import dao.CuotaDao;
-import daoImpl.CuentaImpl;
 import daoImpl.CuotaImpl;
 import entidad.Cuenta;
 import entidad.Cuota;
 import entidad.Usuario;
+import negocioImpl.negocioCuentaImpl;
 
 @WebServlet("/PrepararPagoCuotaServlet")
 public class PrepararPagoCuotaServlet extends HttpServlet {
@@ -36,8 +35,8 @@ public class PrepararPagoCuotaServlet extends HttpServlet {
         CuotaDao cuotaDao = new CuotaImpl();
         Cuota cuotaAPagar = cuotaDao.readOne(idCuota);
         
-        CuentaDao cuentaDao = new CuentaImpl();
-        List<Cuenta> listaCuentas = cuentaDao.readAllByClienteId(usuario.getIdcliente());
+        negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+        List<Cuenta> listaCuentas = negocioCuentaImpl.readAllByClienteId(usuario.getIdcliente());
 
         request.setAttribute("cuotaAPagar", cuotaAPagar);
         request.setAttribute("listaCuentas", listaCuentas);

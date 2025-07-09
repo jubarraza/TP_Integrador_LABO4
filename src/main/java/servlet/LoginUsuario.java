@@ -4,16 +4,19 @@ import java.io.IOException;
 import java.util.List; 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
+
+
+import daoImpl.UsuarioImpl;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import daoImpl.UsuarioImpl;
 import entidad.Usuario;
+import negocioImpl.negocioCuentaImpl;
 import entidad.Cuenta;
-import dao.CuentaDao;
-import daoImpl.CuentaImpl;
+
 
 
 @WebServlet("/LoginUsuario")
@@ -45,16 +48,16 @@ public class LoginUsuario extends HttpServlet {
 		        if (request.getParameter("btnLogin") != null) {
 		            String username = request.getParameter("username");
 		            String password = request.getParameter("password");
-
-		            UsuarioImpl usuarioImpl = new UsuarioImpl();
-		            Usuario usuario = usuarioImpl.Autenticar(username, password);
+		            
+		            UsuarioImpl dao = new UsuarioImpl();
+		            Usuario usuario = dao.Autenticar(username, password);
 
 		            if (usuario != null) {
 		                HttpSession session = request.getSession();
 		                session.setAttribute("usuario", usuario); 
-
-		                CuentaDao cuentaDao = new CuentaImpl();
-		                List<Cuenta> listaCuentas = cuentaDao.readAllByClienteId(usuario.getIdcliente());
+		                
+		                negocioCuentaImpl negocioCuentaImpl = new negocioImpl.negocioCuentaImpl();
+		                List<Cuenta> listaCuentas = negocioCuentaImpl.readAllByClienteId(usuario.getIdcliente());
 		                session.setAttribute("listaCuentas", listaCuentas);
 
 		                response.sendRedirect("Home.jsp");

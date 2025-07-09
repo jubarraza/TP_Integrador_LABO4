@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import daoImpl.CuentaImpl;
-import daoImpl.TransferenciaImpl;
 import entidad.Cuenta;
 import entidad.Transferencia;
 import entidad.Usuario;
+import negocioImpl.negocioCuentaImpl;
+import negocioImpl.negocioTransferenciaImpl;
 
 @WebServlet("/TransferenciaCbuServlet")
 public class TransferenciaCbuServlet extends HttpServlet {
@@ -37,8 +37,8 @@ public class TransferenciaCbuServlet extends HttpServlet {
 
 		    int idCliente = usuarioLogueado.getIdcliente();
 
-		    CuentaImpl cuentaDao = new CuentaImpl();
-		    List<Cuenta> cuentasCliente = cuentaDao.readAllByClienteId(idCliente);
+		    negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+		    List<Cuenta> cuentasCliente = negocioCuentaImpl.readAllByClienteId(idCliente);
 
 		    request.setAttribute("cuentasCliente", cuentasCliente);
 		    request.getRequestDispatcher("TransferenciaCbu.jsp").forward(request, response);
@@ -71,8 +71,8 @@ public class TransferenciaCbuServlet extends HttpServlet {
 	            return;
 	        }
 
-	        CuentaImpl cuentaDao = new CuentaImpl();
-	        Cuenta cuentaDestino = cuentaDao.obtenerCuentaPorCBU(cbuDestino);
+	        negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+	        Cuenta cuentaDestino = negocioCuentaImpl.obtenerCuentaPorCBU(cbuDestino);
 
 	        if (cuentaDestino == null) {
 	            response.sendRedirect("Transferencias.jsp?mensaje=cbuInvalido");
@@ -81,7 +81,7 @@ public class TransferenciaCbuServlet extends HttpServlet {
 
 	        String numCuentaDestino = cuentaDestino.getNumDeCuenta();
 
-	        List<Cuenta> cuentasCliente = cuentaDao.readAllByClienteId(usuarioLogueado.getIdcliente());
+	        List<Cuenta> cuentasCliente = negocioCuentaImpl.readAllByClienteId(usuarioLogueado.getIdcliente());
 
 	        boolean esCuentaPropia = cuentasCliente.stream()
 	            .anyMatch(c -> c.getNumDeCuenta().equals(numCuentaDestino));
@@ -98,9 +98,9 @@ public class TransferenciaCbuServlet extends HttpServlet {
 	        }
 
 	        Transferencia transferencia = new Transferencia(cuentaOrigen, numCuentaDestino, monto);
-	        TransferenciaImpl dao = new TransferenciaImpl();
+	        negocioTransferenciaImpl negocioTransferenciaImpl = new negocioTransferenciaImpl();
 
-	        boolean exito = dao.Insert(transferencia, detalle);
+	        boolean exito = negocioTransferenciaImpl.Insert(transferencia, detalle);
 
 	        if (exito) {
 	            response.sendRedirect("Transferencias.jsp?mensaje=ok");

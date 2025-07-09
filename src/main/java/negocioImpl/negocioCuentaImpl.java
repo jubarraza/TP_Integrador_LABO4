@@ -3,16 +3,16 @@ package negocioImpl;
 import java.util.List;
 
 import dao.CuentaDao;
+import dao.UsuarioDao;
 import daoImpl.CuentaImpl;
 import entidad.Cuenta;
 import entidad.TipoDeCuenta;
 import negocio.negocioCuenta;
 
-public class negocioCuentaImpl implements negocioCuenta {
+
+public class negocioCuentaImpl implements negocioCuenta{
 	
 	private CuentaDao cuentaDao; 
-	
-	
 	
 	public negocioCuentaImpl() {
 		cuentaDao = new CuentaImpl();
@@ -56,6 +56,26 @@ public class negocioCuentaImpl implements negocioCuenta {
 	@Override
 	public List<Cuenta> readAllByClienteId(int idCliente) {
 		return cuentaDao.readAllByClienteId(idCliente);
+	}
+
+	@Override
+	public boolean darDeBajaCuenta(String cuenta) {
+		return cuentaDao.darDeBajaCuenta(cuenta);
+	}
+
+	@Override
+	public int buscarId(String dni) {
+		return cuentaDao.buscarId(dni);
+	}
+
+	@Override
+	public int cantidadCuentas(String dni) {
+		return cuentaDao.cantidadCuentas(dni);
+	}
+
+	@Override
+	public Cuenta obtenerCuentaPorCBU(String cbu) {
+		return cuentaDao.obtenerCuentaPorCBU(cbu);
 	}
 
 }

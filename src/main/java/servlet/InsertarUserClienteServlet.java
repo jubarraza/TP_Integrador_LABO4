@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Validacion.Validaciones;
-import daoImpl.ClienteImpl;
 import daoImpl.Conexion;
 import daoImpl.LocalidadImpl;
 import daoImpl.ProvinciaImp;
@@ -26,6 +23,7 @@ import entidad.Localidad;
 import entidad.Provincia;
 import entidad.TipoUser;
 import entidad.Usuario;
+import negocioImpl.negocioClienteImpl;
 
 
 @WebServlet("/InsertarUserClienteServlet")
@@ -172,15 +170,14 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	    nuevoCliente.setFechaAlta(fechaAlta);
         System.out.println("Paso 2: Insertando cliente");
 	    Connection conexion = null;
-	    boolean exito = false;
 
 	    try {
 	        conexion = Conexion.getConexion().getSQLConexion();
 	        conexion.setAutoCommit(false); // IMPORTANTE: para manejar manualmente la transacción
 
 	        // Insertar cliente
-	        ClienteImpl clienteDao = new ClienteImpl(conexion);
-	        int idGenerado = clienteDao.Insert(nuevoCliente); 
+	        negocioClienteImpl negocioClienteImpl = new negocioClienteImpl();
+	        int idGenerado = negocioClienteImpl.Insert(nuevoCliente); 
 		    System.out.println("Paso 3: Cliente insertado, id: " + idGenerado);
 		    
 	        boolean insertado = false;

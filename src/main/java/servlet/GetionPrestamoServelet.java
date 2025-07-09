@@ -15,9 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import daoImpl.CuentaImpl;
 import entidad.Cuenta;
 import entidad.Usuario;
+import negocioImpl.negocioCuentaImpl;
+
 
 
 
@@ -34,14 +35,14 @@ public class GetionPrestamoServelet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 HttpSession session = request.getSession(false); // no crea nueva sesión si no existe
-		 CuentaImpl cimpl = new CuentaImpl();
+		 negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 		 
 		    if (session != null) {
 		    	Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 
 		        if (usuario != null) {
 		            int idCliente = usuario.getIdcliente();
-		            List<Cuenta> listCuentas = cimpl.readAllByClienteId(idCliente);
+		            List<Cuenta> listCuentas = negocioCuentaImpl.readAllByClienteId(idCliente);
 		            
 		            request.setAttribute("cuentasTotal", listCuentas);
 		        }
@@ -67,8 +68,8 @@ public class GetionPrestamoServelet extends HttpServlet {
 	    if (session != null) {
 	        Usuario usuario = (Usuario) session.getAttribute("usuario");
 	        if (usuario != null) {
-	            CuentaImpl cimpl = new CuentaImpl();
-	            List<Cuenta> cuentas = cimpl.readAllByClienteId(usuario.getIdcliente());
+	        	negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
+	            List<Cuenta> cuentas = negocioCuentaImpl.readAllByClienteId(usuario.getIdcliente());
 	            request.setAttribute("cuentasTotal", cuentas);
 	        }
 	    }

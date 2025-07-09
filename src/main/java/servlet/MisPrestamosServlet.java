@@ -10,10 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.PrestamoDao;
-import daoImpl.PrestamoImpl;
 import entidad.Prestamo;
 import entidad.Usuario;
+import negocioImpl.negocioPrestamiImpl;
 
 @WebServlet("/MisPrestamosServlet")
 public class MisPrestamosServlet extends HttpServlet {
@@ -30,9 +29,9 @@ public class MisPrestamosServlet extends HttpServlet {
         }
 
         String estadoFiltro = request.getParameter("estado");
-
-        PrestamoDao prestamoDao = new PrestamoImpl();
-        List<Prestamo> todos = prestamoDao.readAllByClienteId(usuario.getIdcliente());
+        
+        negocioPrestamiImpl negocioPrestamoImpl = new negocioPrestamiImpl();
+        List<Prestamo> todos = negocioPrestamoImpl.readAllByClienteId(usuario.getIdcliente());
         List<Prestamo> filtrados = new ArrayList<>();
 
         if (estadoFiltro == null || estadoFiltro.isEmpty()) {

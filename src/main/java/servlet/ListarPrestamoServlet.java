@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import daoImpl.PrestamoImpl;
 import entidad.Prestamo;
+import negocioImpl.negocioPrestamiImpl;
 
 @WebServlet("/ListarPrestamoServlet")
 public class ListarPrestamoServlet extends HttpServlet {
@@ -24,9 +24,9 @@ public class ListarPrestamoServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	    PrestamoImpl prestamoDao = new PrestamoImpl();
-	    List<Prestamo> prestamos = prestamoDao.readAll();
+		
+		negocioPrestamiImpl negocioPrestamoImpl = new negocioPrestamiImpl();
+	    List<Prestamo> prestamos = negocioPrestamoImpl.readAll();
 	    List<Prestamo> filtrados = new ArrayList<>();
 
 	    String estadoFiltro = request.getParameter("estado");

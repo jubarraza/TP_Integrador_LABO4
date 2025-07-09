@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import daoImpl.Conexion;
-import daoImpl.CuentaImpl;
 import daoImpl.MovimientoImpl;
 import entidad.Cuenta;
 import entidad.Movimiento;
 import entidad.Usuario;
+import negocioImpl.negocioCuentaImpl;
 
 @WebServlet("/MovimientoServlet")
 public class MovimientoServlet extends HttpServlet {
@@ -32,13 +32,12 @@ public class MovimientoServlet extends HttpServlet {
 
 	@Override
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		    MovimientoImpl movDao = new MovimientoImpl(conn);
-		    CuentaImpl cuentaDao = new CuentaImpl();
+		    negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 		    
 		    Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 		    
 		    int idCliente = usuario.getIdcliente(); //
-		    List<Cuenta> listCuentas = cuentaDao.readAllByClienteId(idCliente);
+		    List<Cuenta> listCuentas = negocioCuentaImpl.readAllByClienteId(idCliente);
 
 		    request.setAttribute("cuentas", listCuentas);  
 		    request.getRequestDispatcher("Movimientos.jsp").forward(request, response);
@@ -47,7 +46,7 @@ public class MovimientoServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    MovimientoImpl movDao = new MovimientoImpl(conn);
-	    CuentaImpl cuentaDao = new CuentaImpl();
+	    negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 
 	    Usuario usuario = (Usuario) request.getSession().getAttribute("usuario");
 	    
@@ -59,7 +58,7 @@ public class MovimientoServlet extends HttpServlet {
 	        List<Movimiento> movimientos;
 	        if (numCuenta == null || numCuenta.isEmpty()) {
 	            movimientos = new ArrayList<>();
-	            List<Cuenta> cuentasCliente = cuentaDao.readAllByClienteId(idCliente);
+	            List<Cuenta> cuentasCliente = negocioCuentaImpl.readAllByClienteId(idCliente);
 	            for (Cuenta cuenta : cuentasCliente) {
 	            	List<Movimiento> movs = movDao.getMovimientosPorCuenta(numCuenta);
 	            	if(movs != null) {
@@ -70,7 +69,7 @@ public class MovimientoServlet extends HttpServlet {
 	            movimientos = movDao.getMovimientosPorCuenta(numCuenta);
 	        }
 
-	        List<Cuenta> cuentas = cuentaDao.readAllByClienteId(idCliente);
+	        List<Cuenta> cuentas = negocioCuentaImpl.readAllByClienteId(idCliente);
 	        request.setAttribute("cuentaSeleccionada", numCuenta);
 	        request.setAttribute("cuentas", cuentas);             
 	        request.setAttribute("movimientos", movimientos);      

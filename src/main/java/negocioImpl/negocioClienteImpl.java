@@ -5,9 +5,12 @@ import java.util.List;
 import dao.ClienteDao;
 import daoImpl.ClienteImpl;
 import entidad.Cliente;
+
 import negocio.negocioCliente;
 
+
 public class negocioClienteImpl implements negocioCliente {
+	
 	private ClienteDao clienteDao;
 
 	public negocioClienteImpl(ClienteDao clienteDao) {
@@ -42,6 +45,11 @@ public class negocioClienteImpl implements negocioCliente {
 	public boolean Delete(String dni) {
 		return clienteDao.Delete(dni);
 	}
-	
+
+	@Override
+	public Cliente ReadOne(int idCliente) {
+		return clienteDao.ReadOne(idCliente);
+	}
+
 	
 }

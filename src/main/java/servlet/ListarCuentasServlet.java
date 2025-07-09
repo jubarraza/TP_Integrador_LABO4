@@ -8,8 +8,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import daoImpl.CuentaImpl; 
-import entidad.Cuenta; 
+import entidad.Cuenta;
+import negocioImpl.negocioCuentaImpl; 
 
 
 @WebServlet("/ListarCuentasServlet")
@@ -25,7 +25,7 @@ public class ListarCuentasServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		CuentaImpl cuentaDao = new CuentaImpl();
+		negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 
 		// Parametros ingresados
 		String filtroTipoCuenta = request.getParameter("filtroTipoCuenta");
@@ -45,7 +45,7 @@ public class ListarCuentasServlet extends HttpServlet {
 
 		if (filtrosVacios) {
 		    // Si los filtros vienen vacios mostramos todo
-		    listaCuentas = cuentaDao.readAll();
+		    listaCuentas = negocioCuentaImpl.readAll();
 		} else {
 		    // si ingresa algun filtro
 			String query = "";
@@ -63,14 +63,14 @@ public class ListarCuentasServlet extends HttpServlet {
 		        query += "estadoCuenta = " + estado;
 		    }
 
-		    listaCuentas = cuentaDao.readAll(query.toString());
+		    listaCuentas = negocioCuentaImpl.readAll(query.toString());
 		}
 		
 		if (btnLimpiar) {
 		    filtroTipoCuenta = "";
 		    filtroEstado     = "";
 		    filtroDni = "";
-		    listaCuentas = cuentaDao.readAll(); 
+		    listaCuentas = negocioCuentaImpl.readAll(); 
 		}
 
 

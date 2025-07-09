@@ -15,7 +15,7 @@ import entidad.Cuenta;
 import entidad.TipoDeCuenta;
 
 public class CuentaImpl implements CuentaDao{
-
+	
 	private static final String insert = "insert into cuentas (num_de_cuenta, cbu, fecha_creacion, fecha_baja, id_tipocuenta, id_cliente, saldo, estado) values (?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String baja = "update cuentas set estado = 0, fecha_baja = (curdate()) where num_de_cuenta = ?;";
 	private static final String readall = "select * from vista_cuentas";

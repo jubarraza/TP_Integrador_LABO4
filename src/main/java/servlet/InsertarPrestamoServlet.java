@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import daoImpl.PrestamoImpl;
 import entidad.Prestamo;
+import negocioImpl.negocioPrestamiImpl;
 
 
 @WebServlet("/InsertarPrestamoServlet")
@@ -48,8 +49,8 @@ public class InsertarPrestamoServlet extends HttpServlet {
 	        // Creacion del prestamo
 	        Prestamo nuevo = new Prestamo(numCuenta, monto, cuotas, importeMensual);
 
-	        PrestamoImpl prestamoImpl = new PrestamoImpl();
-	        boolean insertOK = prestamoImpl.insert(nuevo);
+	        negocioPrestamiImpl negocioPrestamoImpl = new negocioPrestamiImpl();
+	        boolean insertOK = negocioPrestamoImpl.insert(nuevo);
 
 	        if (insertOK) {
 	            session.setAttribute("toastExito", "Préstamo solicitado con éxito.");

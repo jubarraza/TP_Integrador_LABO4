@@ -14,4 +14,8 @@ public interface negocioCuenta {
 	public boolean actualizarTipoCuentaYEstado(Cuenta cuenta);
 	boolean deactivateAccountsByClientId(int idCliente);
 	List<Cuenta> readAllByClienteId(int idCliente);
+	public boolean darDeBajaCuenta(String cuenta);
+	public int buscarId(String dni);
+	public int cantidadCuentas(String dni);
+	public Cuenta obtenerCuentaPorCBU(String cbu);
 }
