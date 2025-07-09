@@ -60,6 +60,8 @@ String toastError = (String) session.getAttribute("toastError");
 session.removeAttribute("toastExito");
 session.removeAttribute("toastError");
 %>
+
+<!-- Notificaciones toast -->
 <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
   <div id="toastMensaje" class="toast align-items-center text-white <%= (toastExito != null) ? "bg-success" : (toastError != null) ? "bg-danger" : "" %> border-0" role="alert" aria-live="assertive" aria-atomic="true" style="<%= (toastExito != null || toastError != null) ? "display:block;" : "display:none;" %>">
     <div class="d-flex">
@@ -70,6 +72,8 @@ session.removeAttribute("toastError");
     </div>
   </div>
 </div>
+
+
 <div class="container">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Tus Préstamos</h2>
@@ -79,6 +83,8 @@ session.removeAttribute("toastError");
       </button>
     </form>
   </div>
+  
+  
   <hr class="my-4">
   <div class="filtrosPrestamos">
     <form action="MisPrestamosServlet" method="get">
@@ -171,7 +177,7 @@ session.removeAttribute("toastError");
   </div>
 </div>
 <jsp:include page="Footer.html" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.min.js"></script>
 <script>
@@ -191,10 +197,20 @@ session.removeAttribute("toastError");
       scrollX: false
     });
   });
+  
   function limpiarFiltros() {
     document.getElementById("estado").value = "";
     document.querySelector("form[action='MisPrestamosServlet']").submit();
   }
+  
+//Ocultar automáticamente el toast
+  document.addEventListener("DOMContentLoaded", function () {
+	    const toastEl = document.getElementById("toastMensaje");
+	    if (toastEl) {
+	      const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+	      toast.show();
+	    }
+	  });
 </script>
 </body>
 </html>

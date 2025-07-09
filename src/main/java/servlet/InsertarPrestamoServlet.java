@@ -62,7 +62,7 @@ public class InsertarPrestamoServlet extends HttpServlet {
 	    }
 
 	    // Redirigir a la pantalla de préstamos
-	    response.sendRedirect("ListadoDePrestamos.jsp");
+	    response.sendRedirect("MisPrestamosServlet");
 	}
 
 }
