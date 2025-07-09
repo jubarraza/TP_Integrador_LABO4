@@ -20,6 +20,8 @@ public class UsuarioImpl implements UsuarioDao {
 	private static final String insert = "Insert into usuarios\r\n"
 			+ "(id_cliente, nombreusuario, contrasenia, id_tipouser) \r\n" + "values(?, ?, ?, ?)";
 	private static final String readall = "select * from vista_usuarios";
+	private static final String updatePassword = "UPDATE usuarios SET contrasenia = ? WHERE nombreusuario = ?";
+	private static final String readPassword = "SELECT * FROM usuarios WHERE nombreusuario = ? AND contrasenia = ?";
 
 	public UsuarioImpl(Connection conexion) {
 		this.conexion = conexion;
@@ -252,6 +254,64 @@ public class UsuarioImpl implements UsuarioDao {
 	    } 
 
 	    return isSuccess;
+	}
+
+	@Override
+	public boolean modificarPassword(String nuevaContrasenia, String usuario) {
+	    Conexion conexion = Conexion.getConexion();
+	    Connection cn = conexion.getSQLConexion();
+	    boolean updateExitoso = false;
+	    PreparedStatement pst = null;
+
+	    try {
+	        pst = cn.prepareStatement(updatePassword);
+	        pst.setString(1, nuevaContrasenia);
+	        pst.setString(2, usuario);
+
+	        if (pst.executeUpdate() > 0) {
+	            cn.commit();
+	            updateExitoso = true;
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        try {
+	            cn.rollback();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            if (pst != null) pst.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return updateExitoso;
+	}
+
+	
+	public boolean verificarPassword(String nombreUsuario, String contraseniaActual) {
+	    boolean esCorrecta = false;
+	    Conexion conexion = Conexion.getConexion();
+	    Connection cn = conexion.getSQLConexion();
+
+	    try (PreparedStatement ps = cn.prepareStatement(readPassword)) {
+	        ps.setString(1, nombreUsuario);
+	        ps.setString(2, contraseniaActual);
+
+	        ResultSet rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            esCorrecta = true;
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return esCorrecta;
 	}
 
 

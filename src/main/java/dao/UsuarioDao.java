@@ -14,4 +14,6 @@ public interface UsuarioDao {
 	public boolean Update(Usuario usuario);
 	Usuario Autenticar(String username, String password);
 	public boolean logicalDelete(int idUsuario);
+	public boolean modificarPassword(String nuevaContrasenia, String usuario);
+	public boolean verificarPassword(String nombreUsuario, String contraseniaActual);
 }
