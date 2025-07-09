@@ -94,7 +94,8 @@ body {
           <%
           List<Cuota> listaCuotas = (List<Cuota>) request.getAttribute("listaCuotas");
           NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("es", "AR"));
-          if (listaCuotas != null && !listaCuotas.isEmpty()) {
+          boolean hayCuotas = (listaCuotas != null && !listaCuotas.isEmpty());
+          if (hayCuotas) {
             for (Cuota cuota : listaCuotas) {
           %>
           <tr>
@@ -117,14 +118,17 @@ body {
           </tr>
           <%
             }
-          } else {
+          }
           %>
-          <tr>
-            <td colspan="6" class="text-center">No se encontraron cuotas para este préstamo.</td>
-          </tr>
-          <% } %>
         </tbody>
       </table>
+
+      <% if (!hayCuotas) { %>
+        <div class="alert alert-info text-center mt-3">
+          No se encontraron cuotas para este préstamo.
+        </div>
+      <% } %>
+
     </div>
   </div>
 </div>
@@ -132,22 +136,27 @@ body {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.min.js"></script>
+
 <script>
+  const hayCuotas = <%= hayCuotas %>;
+
   $(document).ready(function () {
-    $('#tablaCuotas').DataTable({
-      language: {
-        url: "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
-      },
-      paging: true,
-      pageLength: 12,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      order: [[0, 'asc']],
-      info: true,
-      autoWidth: false,
-      scrollX: false
-    });
+    if (hayCuotas) {
+      $('#tablaCuotas').DataTable({
+        language: {
+          url: "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
+        },
+        paging: true,
+        pageLength: 12,
+        lengthChange: false,
+        searching: false,
+        ordering: true,
+        order: [[0, 'asc']],
+        info: true,
+        autoWidth: false,
+        scrollX: false
+      });
+    }
   });
 </script>
 </body>
