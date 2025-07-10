@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import conexion.Conexion;
 import dao.CuotaDao;
 import entidad.Cuota;
 import entidad.Prestamo;

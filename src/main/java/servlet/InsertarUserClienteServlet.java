@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Validacion.Validaciones;
-import daoImpl.Conexion;
+import conexion.Conexion;
 import daoImpl.LocalidadImpl;
 import daoImpl.ProvinciaImp;
 import entidad.Cliente;

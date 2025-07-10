@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import daoImpl.Conexion;
+import conexion.Conexion;
 import excepcion.ClienteNoExisteExcepcion;
 import excepcion.FechaInvalidaException;
 import excepcion.SaldoInsuficienteException;

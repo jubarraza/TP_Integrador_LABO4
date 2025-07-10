@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
-import daoImpl.Conexion;
+import conexion.Conexion;
 import daoImpl.CuentaImpl;
 import daoImpl.CuotaImpl;
 import daoImpl.MovimientoImpl;
