@@ -42,7 +42,7 @@
 <body>
 <jsp:include page="Nav.jsp" />
   <main class="container py-5">
-    <h2 class="text-center mb-4">Nueva Cuenta</h2>
+    <h2 class="text-primary text-center mb-4">Crear Nueva Cuenta</h2>
 
     <div class="form-container">
       <form method="post" action="InsertCuentasServlet">
@@ -104,7 +104,7 @@
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalGuardar">
             <i class="fas fa-save me-1"></i> Registar
           </button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.href='ListarCuentasServlet'">
             <i class="fas fa-trash-alt me-1"></i> Cancelar
           </button>
         </div>
