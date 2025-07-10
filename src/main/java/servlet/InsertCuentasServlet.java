@@ -48,20 +48,7 @@ public class InsertCuentasServlet extends HttpServlet {
 		 // Obtener parámetros del formulario
 	    String dni = request.getParameter("txtDni");
 	    String numCuenta = request.getParameter("txtNumeroCuenta");
-	    
-	    if (numCuenta.length() > 13) {
-	        request.setAttribute("mensajeError", "Número de cuenta excede la longitud permitida.");
-	        doGet(request, response);
-	        return;
-	    }
-	    
 	    String cbu = request.getParameter("txtCbu");
-	    
-	    if (cbu.length() > 23) {
-	        request.setAttribute("mensajeError", "CBU excede la longitud permitida.");
-	        doGet(request, response);
-	        return;
-	    }
 	    
 	    if (dni == null || dni.trim().isEmpty() || numCuenta == null || numCuenta.trim().isEmpty() ||
 	            cbu == null || cbu.trim().isEmpty()) {
@@ -70,6 +57,26 @@ public class InsertCuentasServlet extends HttpServlet {
 	            doGet(request, response);
 	            return;
 	        }
+	    
+	    if (!dni.matches("\\d{7,8}")) {
+	        request.setAttribute("mensajeError", "El DNI debe contener solo números y tener entre 7 y 8 dígitos.");
+	        doGet(request, response);
+	        return;
+	    }
+	    
+	    
+	    if (!numCuenta.matches("\\d{11,13}")) {
+	        request.setAttribute("mensajeError", "El número de cuenta debe contener solo números y tener entre 11 y 13 dígitos.");
+	        doGet(request, response);
+	        return;
+	    }
+	    
+	    
+	    if (!cbu.matches("\\d{22}")) {
+	        request.setAttribute("mensajeError", "El CBU debe contener exactamente 22 dígitos numéricos.");
+	        doGet(request, response);
+	        return;
+	    }
 	    
 	    LocalDate fechaAlta = LocalDate.now();
 	    
