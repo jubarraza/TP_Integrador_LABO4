@@ -7,13 +7,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import daoImpl.UsuarioImpl;
+import negocioImpl.negocioUsuarioImpl;
 import entidad.Usuario;
 
 @WebServlet("/ModificarPasswordServlet")
 public class ModificarPasswordServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private UsuarioImpl usuarioImpl = new UsuarioImpl();
+    private negocioUsuarioImpl usuarioImpl = new negocioUsuarioImpl();
     
     public ModificarPasswordServlet() {
         super();
