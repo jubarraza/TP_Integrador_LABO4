@@ -24,6 +24,7 @@ import entidad.Provincia;
 import entidad.TipoUser;
 import entidad.Usuario;
 import negocioImpl.negocioClienteImpl;
+import negocioImpl.negocioUsuarioImpl;
 
 
 @WebServlet("/InsertarUserClienteServlet")
@@ -193,8 +194,8 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	            tipoUser.setIdTipoUser((byte) 2);
 	            user.setTipoUser(tipoUser);
 
-	            UsuarioImpl dao = new UsuarioImpl(conexion);
-	            insertado = dao.Insert(user);
+	            negocioUsuarioImpl negocio = new negocioUsuarioImpl(conexion);
+	            insertado = negocio.Insert(user);
 	        }
 
 	        if (idGenerado > 0 && insertado) {
