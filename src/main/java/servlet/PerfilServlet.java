@@ -69,16 +69,8 @@ public class PerfilServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("mensaje", "Ocurrió un error inesperado.");
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
         }
-        mostrarPerfil(request, response);
+        response.sendRedirect(request.getContextPath() + "/listarClientes");
     }
 
     private void mostrarPerfil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -103,8 +95,6 @@ public class PerfilServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 
@@ -144,8 +134,6 @@ public class PerfilServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 }
