@@ -51,8 +51,12 @@ public class ListarPrestamoServlet extends HttpServlet {
 	                            ? LocalDate.parse(fechaHastaParam)
 	                            : (sinFiltros ? hoy : null);
 
-	    if (estadoFiltro == null || estadoFiltro.isEmpty()) {
-	        estadoFiltro = "pendiente";
+	    boolean aplicarFiltroEstado = true;
+
+	    if (estadoFiltro == null) {
+	        estadoFiltro = "pendiente"; // por defecto filtra pendientes
+	    } else if (estadoFiltro.isEmpty()) {
+	        aplicarFiltroEstado = false; // si eligio el filtro "Todos"
 	    }
 
 	    Integer cuotasSeleccionadas = null;
@@ -65,12 +69,12 @@ public class ListarPrestamoServlet extends HttpServlet {
 	    }
 
 	    for (Prestamo p : prestamos) {
-	        boolean pasaEstado = switch (estadoFiltro) {
-	            case "pendiente" -> !p.isEstado();
-	            case "activo" -> p.isEstado() && p.isAprobado() && !p.isFinalizado();
-	            case "rechazado" -> p.isEstado() && !p.isAprobado();
-	            case "finalizado" -> p.isFinalizado();
-	            default -> true;
+	    	boolean pasaEstado = !aplicarFiltroEstado || switch (estadoFiltro) {
+	        case "pendiente" -> !p.isEstado();
+	        case "activo" -> p.isEstado() && p.isAprobado() && !p.isFinalizado();
+	        case "rechazado" -> p.isEstado() && !p.isAprobado();
+	        case "finalizado" -> p.isFinalizado();
+	        default -> true;
 	        };
 
 	        boolean pasaCuotas = cuotasSeleccionadas == null || p.getCuotas() == cuotasSeleccionadas;

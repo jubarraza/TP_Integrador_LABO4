@@ -166,16 +166,13 @@ tfoot {
 						<td>
 							<%
 							if (!p.isEstado()) {
-							%> <span class="badge bg-warning text-dark">Pendiente</span>
-							<%
-							} else if (p.isFinalizado()) {
-							%> <span class="badge bg-primary">Finalizado</span>
-							<%
-							} else if (p.isAprobado()) {
-							%> <span class="badge bg-success">Activo</span>
-							<%
-							} else {
-							%> <span class="badge bg-danger">Rechazado</span> <%
+							%> <span class="badge bg-warning text-dark">Pendiente</span> <%
+ } else if (p.isFinalizado()) {
+ %> <span class="badge bg-primary">Finalizado</span> <%
+ } else if (p.isAprobado()) {
+ %> <span class="badge bg-success">Activo</span> <%
+ } else {
+ %> <span class="badge bg-danger">Rechazado</span> <%
  }
  %>
 						</td>
@@ -208,7 +205,17 @@ tfoot {
 											<div class="modal-footer">
 												<input type="hidden" name="idPrestamo"
 													value="<%=p.getIdPrestamo()%>"> <input
-													type="hidden" name="accion" value="aprobar">
+													type="hidden" name="accion" value="aprobar"> <input
+													type="hidden" name="fechaDesde"
+													value="<%=request.getAttribute("fechaDesdeSeleccionada")%>">
+												<input type="hidden" name="fechaHasta"
+													value="<%=request.getAttribute("fechaHastaSeleccionada")%>">
+												<input type="hidden" name="estado" value="<%=estadoSel%>">
+												<input type="hidden" name="cliente"
+													value="<%=request.getAttribute("cliente") != null ? request.getAttribute("cliente") : ""%>">
+												<input type="hidden" name="cuotas"
+													value="<%=request.getAttribute("cuotasSeleccionadas") != null ? request.getAttribute("cuotasSeleccionadas") : ""%>">
+
 												<button type="submit" class="btn btn-success">Sí,
 													aprobar</button>
 												<button type="button" class="btn btn-secondary"
@@ -243,7 +250,17 @@ tfoot {
 											<div class="modal-footer">
 												<input type="hidden" name="idPrestamo"
 													value="<%=p.getIdPrestamo()%>"> <input
-													type="hidden" name="accion" value="rechazar">
+													type="hidden" name="accion" value="rechazar"> <input
+													type="hidden" name="fechaDesde"
+													value="<%=request.getAttribute("fechaDesdeSeleccionada")%>">
+												<input type="hidden" name="fechaHasta"
+													value="<%=request.getAttribute("fechaHastaSeleccionada")%>">
+												<input type="hidden" name="estado" value="<%=estadoSel%>">
+												<input type="hidden" name="cliente"
+													value="<%=request.getAttribute("cliente") != null ? request.getAttribute("cliente") : ""%>">
+												<input type="hidden" name="cuotas"
+													value="<%=request.getAttribute("cuotasSeleccionadas") != null ? request.getAttribute("cuotasSeleccionadas") : ""%>">
+
 												<button type="submit" class="btn btn-danger">Sí,
 													rechazar</button>
 												<button type="button" class="btn btn-secondary"
