@@ -160,7 +160,7 @@
             <!-- Botones -->
             <div class="col-12 d-grid gap-2 mt-3">
               <button type="submit" class="btn btn-primary btn-lg rounded-pill">Guardar</button>
-              <button type="reset" class="btn btn-outline-secondary btn-lg rounded-pill">Cancelar</button>
+              <button type="reset" class="btn btn-outline-secondary btn-lg rounded-pill" onclick="location.href='listarClientes'">Cancelar</button>
             </div>
 
           </form>

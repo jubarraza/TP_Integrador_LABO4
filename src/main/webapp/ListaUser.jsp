@@ -146,7 +146,7 @@ table{
                         <td><%=c.getNacionalidad()%></td>
                         <td><%=c.getFechaNacimiento()%></td>
                         <td><%=c.getDireccion()%></td>
-                        <td><%=c.getLocalidad()%></td>
+                        <td><%=c.getLocalidad().getDescripcion()%></td>
                         <td><%=c.getTelefono()%></td>
                         <td><%=c.getFechaAlta()%></td>
                         <td><%=c.Estado() ? "<span class='badge bg-success'>Activo</span>" : "<span class='badge bg-danger'>Inactivo</span>"%>
