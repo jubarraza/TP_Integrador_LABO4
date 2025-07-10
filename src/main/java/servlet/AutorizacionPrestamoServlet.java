@@ -61,6 +61,8 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
         }
 
         try {
+            conn.setAutoCommit(false); // ✅ Clave
+
             if (accion.equals("aprobar")) {
                 prestamo.setEstado(true);
                 prestamo.setAprobado(true);
@@ -82,18 +84,15 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
                     return;
                 }
 
-                //insertar el movimiento
                 MovimientoImpl movDao = new MovimientoImpl(conn);
-
                 Movimiento mov = new Movimiento();
                 mov.setFecha(LocalDate.now());
                 mov.setDetalle("Acreditación préstamo aprobado");
                 mov.setImporte(prestamo.getImportePedido());
 
                 TipoDeMovimiento tipo = new TipoDeMovimiento();
-                tipo.setIdTipoMovimiento((short) 6); // 6 = Acreditación Préstamo
+                tipo.setIdTipoMovimiento((short) 6); // Acreditación préstamo
                 mov.setIdTipoMovimiento(tipo);
-
                 mov.setNumDeCuenta(prestamo.getNumDeCuenta());
 
                 int idMov = movDao.Insert(mov);
@@ -104,8 +103,7 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
                     return;
                 }
 
-                // actualizacion del saldo
-                CuentaImpl cuentaDao = new CuentaImpl();
+                CuentaImpl cuentaDao = new CuentaImpl(conn);
                 boolean saldoOk = cuentaDao.acreditarSaldo(prestamo.getNumDeCuenta(), prestamo.getImportePedido());
                 if (!saldoOk) {
                     conn.rollback();
@@ -141,12 +139,22 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                conn.rollback();
+                if (conn != null) conn.rollback();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
             request.setAttribute("mensajeError", "Ocurrió un error inesperado.");
             forwardToListar(request, response);
+
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

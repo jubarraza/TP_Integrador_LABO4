@@ -209,14 +209,22 @@ session.removeAttribute("toastError");
     document.querySelector("form[action='MisPrestamosServlet']").submit();
   }
   
-//Ocultar automáticamente el toast
   document.addEventListener("DOMContentLoaded", function () {
-	    const toastEl = document.getElementById("toastMensaje");
-	    if (toastEl) {
-	      const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
-	      toast.show();
-	    }
-	  });
+	  const toastEl = document.getElementById("toastMensaje");
+	  if (toastEl) {
+	    const toast = new bootstrap.Toast(toastEl, {
+	      delay: 4000,
+	      autohide: true
+	    });
+	    
+	    toastEl.addEventListener('hidden.bs.toast', function () {
+	      toastEl.style.display = 'none';
+	    });
+
+	    toast.show();
+	  }
+	});
+
 </script>
 </body>
 </html>

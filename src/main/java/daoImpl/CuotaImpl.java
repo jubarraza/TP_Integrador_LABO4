@@ -29,7 +29,7 @@ public class CuotaImpl implements CuotaDao {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
+    @Override
     public boolean generarCuotas(Prestamo prestamo) {
         boolean exito = false;
         PreparedStatement stmt = null;
@@ -37,28 +37,20 @@ public class CuotaImpl implements CuotaDao {
         try {
             stmt = conexion.prepareStatement(INSERT_CUOTA);
 
-
             for (int i = 1; i <= prestamo.getCuotas(); i++) {
                 stmt.setInt(1, prestamo.getIdPrestamo());
                 stmt.setInt(2, i);
                 stmt.setDouble(3, prestamo.getImporteMensual());
 
                 stmt.setNull(4, java.sql.Types.TIMESTAMP);
-
                 stmt.addBatch();
             }
 
             int[] resultados = stmt.executeBatch();
-            conexion.commit();
             exito = resultados.length == prestamo.getCuotas();
 
         } catch (SQLException e) {
             e.printStackTrace();
-            try {
-                if (conexion != null) conexion.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         } finally {
             try {
                 if (stmt != null) stmt.close();
@@ -69,6 +61,7 @@ public class CuotaImpl implements CuotaDao {
 
         return exito;
     }
+
 	
 
 	@Override

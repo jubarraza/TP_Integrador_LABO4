@@ -26,7 +26,15 @@ public class CuentaImpl implements CuentaDao{
 	
 	private static final String cantCuentas = "SELECT cantidad FROM vista_cantidad_cuentas_activas WHERE dni = ?;";
 	private static final  String readAllxID = "SELECT * FROM vista_cuentas WHERE id_cliente = ? AND estadoCuenta = 1";
+	private Connection conexion;
+	
+	public CuentaImpl() {
+		
+	}
 
+	public CuentaImpl(Connection conn) {
+	    this.conexion = conn;
+	}
 	
 	@Override
 	public boolean insert(Cuenta cuenta) {
@@ -447,30 +455,38 @@ public class CuentaImpl implements CuentaDao{
 	    return cuenta;
 	}
 	
-	public boolean acreditarSaldo(String numCuenta, double monto) {
-	    String sql = "UPDATE cuentas SET saldo = saldo + ? WHERE num_de_cuenta = ?";
-	    boolean actualizado = false;
+	public boolean acreditarSaldo(String numeroCuenta, double monto) {
+	    boolean exito = false;
+	    PreparedStatement stmt = null;
 
-	    try (PreparedStatement stmt = Conexion.getConexion().getSQLConexion().prepareStatement(sql)) {
+	    try {
+	        String sql = "UPDATE cuentas SET saldo = saldo + ? WHERE num_de_cuenta = ?";
+	        stmt = conexion.prepareStatement(sql);
 	        stmt.setDouble(1, monto);
-	        stmt.setString(2, numCuenta);
-	        actualizado = stmt.executeUpdate() > 0;
+	        stmt.setString(2, numeroCuenta);
 
-	        if (actualizado) {
-	            Conexion.getConexion().getSQLConexion().commit();
-	        }
+	        int rowsAffected = stmt.executeUpdate();
+	        exito = rowsAffected > 0;
 
 	    } catch (SQLException e) {
-	        System.err.println("Error al acreditar saldo en cuenta.");
 	        e.printStackTrace();
 	        try {
-	            Conexion.getConexion().getSQLConexion().rollback();
+	            if (conexion != null) conexion.rollback(); 
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            if (stmt != null) stmt.close();
 	        } catch (SQLException ex) {
 	            ex.printStackTrace();
 	        }
 	    }
 
-	    return actualizado;
+	    return exito;
 	}
+
+
+
 
 }
