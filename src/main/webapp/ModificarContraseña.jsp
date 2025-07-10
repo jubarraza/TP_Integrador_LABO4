@@ -89,7 +89,7 @@
 								<button type="submit"
 									class="btn btn-primary btn-lg rounded-pill">Guardar</button>
 								<button type="reset"
-									class="btn btn-outline-secondary btn-lg rounded-pill" onclick="location.href='Home.jsp'">Cancelar</button>
+									class="btn btn-outline-secondary btn-lg rounded-pill">Cancelar</button>
 							</div>
 
 							<%
