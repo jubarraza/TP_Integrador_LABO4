@@ -228,6 +228,12 @@ public class UsuarioImpl implements UsuarioDao {
 	        //  DESACTIVAR LAS CUENTAS DE ESE CLIENTE
 	        CuentaDao cuentaDao = new CuentaImpl(); 
 	        boolean cuentasDesactivadas = cuentaDao.deactivateAccountsByClientId(idCliente);
+	        
+	        String updateClienteSQL = "UPDATE clientes SET estado = 0 WHERE id_cliente = ?";
+	        try (PreparedStatement stUpdateCliente = cn.prepareStatement(updateClienteSQL)) {
+	            stUpdateCliente.setInt(1, idCliente);
+	            stUpdateCliente.executeUpdate();
+	        }
 
 
 	        CallableStatement cst = cn.prepareCall("CALL EliminarLogicoUsuario(?)");
