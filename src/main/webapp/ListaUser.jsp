@@ -165,33 +165,50 @@ table{
                         </td>
 
                         <td>
-                            <%
-                            if (c.isTienePrestamoActivo()) {
-                            %>
+					    <% if (c.isTienePrestamoActivo()) { %>
+					        <button type="button"
+					            class="btn btn-outline-secondary btn-sm btn-action disabled"
+					            style="opacity: 0.6; cursor: not-allowed;"
+					            title="No se puede eliminar, tiene préstamos activos">
+					            <i class="bi bi-trash3-fill text-secondary"></i>
+					        </button>
+					    <% } else { %>
+					        <!-- Botón que dispara el modal -->
+					        <button type="button" class="btn btn-outline-danger btn-sm btn-action" 
+					                data-bs-toggle="modal" 
+					                data-bs-target="#confirmarEliminarModal<%=c.getUser().getIdUsuario()%>">
+					            <i class="bi bi-trash"></i>
+					        </button>
+					
+					        <!-- Modal de confirmación -->
+					        <div class="modal fade" id="confirmarEliminarModal<%=c.getUser().getIdUsuario()%>" 
+					             tabindex="-1" aria-labelledby="confirmarEliminarLabel<%=c.getUser().getIdUsuario()%>" 
+					             aria-hidden="true">
+					            <div class="modal-dialog modal-dialog-centered">
+					                <div class="modal-content">
+					                    <form action="<%=request.getContextPath()%>/admin/usuarios" method="post">
+					                        <div class="modal-header">
+					                            <h5 class="modal-title" id="confirmarEliminarLabel<%=c.getUser().getIdUsuario()%>">
+					                                Confirmar Eliminación
+					                            </h5>
+					                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+					                        </div>
+					                        <div class="modal-body">
+					                            ¿Estás seguro que deseas eliminar al usuario <strong><%=c.getNombre()%> <%=c.getApellido()%></strong>?
+					                        </div>
+					                        <div class="modal-footer">
+					                            <input type="hidden" name="action" value="delete" />
+					                            <input type="hidden" name="idUsuario" value="<%=c.getUser().getIdUsuario()%>" />
+					                            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+					                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+					                        </div>
+					                    </form>
+					                </div>
+					            </div>
+					        </div>
+					    <% } %>
+					</td>
 
-                            <button type="button"
-                                class="btn btn-outline-danger btn-sm btn-action" disabled
-                                data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="No se puede eliminar, tiene préstamos activos">
-                                <i class="bi bi-trash"></i> 
-                            </button> <%-- Si NO tiene préstamos activos --%> <%
-             } else {
-             %>
-
-                            <form action="<%=request.getContextPath()%>/admin/usuarios"
-                                method="post"
-                                onsubmit="return confirm('¿Estás seguro que deseas eliminar este usuario?');">
-                                <input type="hidden" name="action" value="delete" /> <input
-                                    type="hidden" name="idUsuario"
-                                    value="<%=c.getUser().getIdUsuario()%>" />
-                                <button type="submit"
-                                    class="btn btn-outline-danger btn-sm btn-action" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form> <%
-             }
-             %>
-                        </td>
                         <%
                         }
                         }
@@ -208,18 +225,18 @@ table{
                 .ready(function() {
                 	$('#clientesTable').DataTable({
                                                 "paging" : true,
-                                                "pageLength" : 10,
-                                                "lengthChange" : false,
-                                                "searching" : true,
-                                                "ordering" : true,
-                                                "info" : true,
-                                                "autoWidth" : false,
-                                                "scrollX" : true,
-                                                "language" : {
-                                                    "url" : "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
-                                                }
-                                            });
-                        });
+                    "pageLength" : 10,
+                    "lengthChange" : false,
+                     "searching" : true,
+                     "ordering" : true,
+                     "info" : true,
+                     "autoWidth" : false,
+                     "scrollX" : true,
+                     "language" : {
+                     "url" : "https://cdn.datatables.net/plug-ins/1.13.1/i18n/es-ES.json"
+                     }
+                   });
+               });
     </script>
 </body>
 </html>
