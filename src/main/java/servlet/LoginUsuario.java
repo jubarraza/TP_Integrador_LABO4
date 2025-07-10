@@ -6,8 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
 
-import daoImpl.UsuarioImpl;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import entidad.Usuario;
 import negocioImpl.negocioCuentaImpl;
+import negocioImpl.negocioUsuarioImpl;
 import entidad.Cuenta;
 
 
@@ -49,7 +48,7 @@ public class LoginUsuario extends HttpServlet {
 		            String username = request.getParameter("username");
 		            String password = request.getParameter("password");
 		            
-		            UsuarioImpl dao = new UsuarioImpl();
+		            negocioUsuarioImpl dao = new negocioUsuarioImpl();
 		            Usuario usuario = dao.Autenticar(username, password);
 
 		            if (usuario != null) {
