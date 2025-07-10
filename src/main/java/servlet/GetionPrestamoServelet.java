@@ -113,7 +113,7 @@ public class GetionPrestamoServelet extends HttpServlet {
 
 	
 	public static double calcularCuota(double monto, double tasaAnual, int plazoMeses) {
-	    double tasaMensual = tasaAnual / 12 / 100;  // Convertir tasa anual a mensual (ej: 12% anual → 1% mensual)
+	    double tasaMensual = tasaAnual / 12 / 100;  // Convertir tasa anual a mensual
 	    double interesPorMes = monto * tasaMensual; // Interés simple del mes
 	    double amortizacion = monto / plazoMeses;   // Parte del monto que se paga cada mes (sin intereses)
 	    return amortizacion + interesPorMes;        // Amortización + interés = Cuota mensual final

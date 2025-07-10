@@ -26,7 +26,6 @@ public class MovimientoServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		// Obtener la conexión global desde tu clase Conexion
 		conn = Conexion.getConexion().getSQLConexion();
 	}
 

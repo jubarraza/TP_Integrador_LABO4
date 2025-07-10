@@ -17,7 +17,6 @@ public class EliminarCuentaServlet extends HttpServlet {
 
     public EliminarCuentaServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 

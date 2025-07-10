@@ -17,7 +17,6 @@ import Validacion.Validaciones;
 import daoImpl.Conexion;
 import daoImpl.LocalidadImpl;
 import daoImpl.ProvinciaImp;
-import daoImpl.UsuarioImpl;
 import entidad.Cliente;
 import entidad.Localidad;
 import entidad.Provincia;
@@ -47,7 +46,6 @@ public class InsertarUserClienteServlet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    // Parámetros del formulario 
 		request.setCharacterEncoding("UTF-8");
 		
 	    String dni = request.getParameter("txtDNI");
@@ -56,7 +54,7 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	    	mostrarError(request, response, "DNI inválido. Debe contener solo números.");
 			return;
 	    }
-	    // Validar si DNI ya existe en la BD
+	    // Validacion: si DNI ya existe en la BD
 	    if (Validaciones.existeDNI(dni)) {
 	    	setValoresFormularioEnRequest(request);
 	    	mostrarError(request, response, "El DNI ya está registrado.");
@@ -90,8 +88,6 @@ public class InsertarUserClienteServlet extends HttpServlet {
 
 	    
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-	    //LocalDate fechaNacimiento = LocalDate.parse(request.getParameter("txtFechaNac"), formatter);
-	    // Validar fecha de nacimiento con método existente (si querés)
 	    LocalDate fechaNacimiento;
 		try {
 			fechaNacimiento = LocalDate.parse(request.getParameter("txtFechaNac"), formatter);
@@ -174,7 +170,7 @@ public class InsertarUserClienteServlet extends HttpServlet {
 
 	    try {
 	        conexion = Conexion.getConexion().getSQLConexion();
-	        conexion.setAutoCommit(false); // IMPORTANTE: para manejar manualmente la transacción
+	        conexion.setAutoCommit(false); 
 
 	        // Insertar cliente
 	        negocioClienteImpl negocioClienteImpl = new negocioClienteImpl();
@@ -219,8 +215,6 @@ public class InsertarUserClienteServlet extends HttpServlet {
 	        	} 
 	        mostrarError(request, response, "Error de base de datos: " + e.getMessage());
 	    }
-	    //RequestDispatcher rd = request.getRequestDispatcher("/ABMUsuarios.jsp");
-		//rd.forward(request, response);
 
 	}
 	

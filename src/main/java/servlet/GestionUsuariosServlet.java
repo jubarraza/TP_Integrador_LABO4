@@ -2,7 +2,6 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,9 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.UsuarioDao;
 import daoImpl.Conexion;
-import daoImpl.UsuarioImpl;
 import entidad.Usuario;
 import negocio.negocioUsuario;
 import negocioImpl.negocioUsuarioImpl;
@@ -34,8 +31,6 @@ public class GestionUsuariosServlet extends HttpServlet {
         	
         	negocioUsuario usuarioNegocio = new negocioUsuarioImpl(conn);
             List<Usuario> listaUsuarios = usuarioNegocio.ReadAll();
-            
-            //System.out.println("DEBUG: Cantidad de usuarios encontrados en el DAO: " + listaUsuarios.size());
             
             request.setAttribute("listaUsuarios", listaUsuarios);
             

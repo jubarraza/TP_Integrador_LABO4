@@ -61,7 +61,7 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
         }
 
         try {
-            conn.setAutoCommit(false); // ✅ Clave
+            conn.setAutoCommit(false); 
 
             if (accion.equals("aprobar")) {
                 prestamo.setEstado(true);
@@ -91,7 +91,7 @@ public class AutorizacionPrestamoServlet extends HttpServlet {
                 mov.setImporte(prestamo.getImportePedido());
 
                 TipoDeMovimiento tipo = new TipoDeMovimiento();
-                tipo.setIdTipoMovimiento((short) 6); // Acreditación préstamo
+                tipo.setIdTipoMovimiento((short) 6); // tipo movimiento= 6 - Acreditación préstamo
                 mov.setIdTipoMovimiento(tipo);
                 mov.setNumDeCuenta(prestamo.getNumDeCuenta());
 

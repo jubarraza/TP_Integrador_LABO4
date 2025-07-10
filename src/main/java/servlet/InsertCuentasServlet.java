@@ -45,7 +45,6 @@ public class InsertCuentasServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		 // Obtener parámetros del formulario
 	    String dni = request.getParameter("txtDni");
 	    String numCuenta = request.getParameter("txtNumeroCuenta");
 	    String cbu = request.getParameter("txtCbu");
@@ -82,7 +81,6 @@ public class InsertCuentasServlet extends HttpServlet {
 	    
 	    int idTipo = Integer.parseInt(request.getParameter("tipoCuenta"));
 
-	    // Instancia de acceso a datos
 	    negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 
 	    // Verificar si el cliente existe por su DNI
@@ -113,10 +111,9 @@ public class InsertCuentasServlet extends HttpServlet {
 	    Cliente cliente = new Cliente();
 	    cliente.setIdCliente(idCliente); // ← correcto
 
-	    // Crear objeto Cuenta con saldo inicial, estado=true, fechaBaja=null
+	    // Crear Cuenta
 	    Cuenta cuenta = new Cuenta(numCuenta, cbu, fechaAlta, tipo, cliente);
 
-	    // Intentar insertar la cuenta
 	    boolean insertCuenta = negocioCuentaImpl.insert(cuenta);
 	    if (insertCuenta) {
 	        request.setAttribute("mensajeExito", "Cuenta agregada correctamente.");
@@ -124,7 +121,6 @@ public class InsertCuentasServlet extends HttpServlet {
 	        request.setAttribute("mensajeError", "No se pudo agregar la cuenta.");
 	    }
 
-	    // Redirigir a doGet
 	    doGet(request, response);
 	}
 

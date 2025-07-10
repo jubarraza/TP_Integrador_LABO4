@@ -27,14 +27,13 @@ public class ListarCuentasServlet extends HttpServlet {
 		
 		negocioCuentaImpl negocioCuentaImpl = new negocioCuentaImpl();
 
-		// Parametros ingresados
 		String filtroTipoCuenta = request.getParameter("filtroTipoCuenta");
 		String filtroEstado = request.getParameter("filtroEstado");
 		String filtroDni = request.getParameter("filtroDni");
 		boolean btnLimpiar = request.getParameter("btnLimpiarFiltros") != null;
 		
 
-		// "" = Todos
+		// Filtros : "" = Todos
 		if (filtroTipoCuenta == null) filtroTipoCuenta = "";
 		if (filtroEstado == null) filtroEstado = "";
 		if (filtroDni == null) filtroDni = "";
@@ -73,8 +72,6 @@ public class ListarCuentasServlet extends HttpServlet {
 		    listaCuentas = negocioCuentaImpl.readAll(); 
 		}
 
-
-		// Enviamos los Select
 		request.setAttribute("filtroTipoCuenta", filtroTipoCuenta);
 		request.setAttribute("filtroEstado", filtroEstado);
 		request.setAttribute("filtroDni", filtroDni);

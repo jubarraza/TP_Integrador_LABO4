@@ -1,9 +1,7 @@
 package servlet;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import daoImpl.PrestamoImpl;
 import entidad.Prestamo;
 import negocioImpl.negocioPrestamiImpl;
 
@@ -39,7 +36,7 @@ public class InsertarPrestamoServlet extends HttpServlet {
 	    String cantCuotas = request.getParameter("cuotas");
 	    String cuotaMensualStr = request.getParameter("cuotaMensual");
 
-	    HttpSession session = request.getSession(); // creo la sesion para guardar el mensaje
+	    HttpSession session = request.getSession(); // creamos la sesion para guardar el mensaje
 
 	    try {
 	        double monto = Double.parseDouble(montoPedido);
@@ -62,7 +59,6 @@ public class InsertarPrestamoServlet extends HttpServlet {
 	        session.setAttribute("toastError", "Error: datos inválidos en la solicitud.");
 	    }
 
-	    // Redirigir a la pantalla de préstamos
 	    response.sendRedirect("MisPrestamosServlet");
 	}
 
