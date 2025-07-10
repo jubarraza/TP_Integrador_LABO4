@@ -107,7 +107,7 @@
 
             <div class="d-flex justify-content-end gap-2">
             <a type="button" class="btn btn-outline-secondary" href="Transferencias.jsp" ><i class="bi bi-backspace"></i> Volver</a>
-              <button type="reset" class="btn btn-secondary"><i class="bi bi-x-circle me-1"></i>Cancelar</button>
+              <button type="reset" class="btn btn-secondary"><i class="bi bi-x-circle me-1"></i>Limpiar formulario</button>
               <button type="button" class="btn btn-primary" onclick="validarTransferencia()"><i class="bi bi-check-circle me-1"></i>Confirmar</button>
             </div>
             
